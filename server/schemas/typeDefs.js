@@ -22,6 +22,10 @@ const typeDefs = `
     image: String
     link: String
   }
+  type Tag {
+    _id: ID!
+    name: String!
+  }
 
 `;
 

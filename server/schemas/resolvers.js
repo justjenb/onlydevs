@@ -1,4 +1,4 @@
-const { User, Book } = require('../models');
+const { User, Book, Tags } = require('../models');
 const { AuthenticationError } = require('your-auth-library');
 
 const ERROR_MESSAGES = {
@@ -16,6 +16,20 @@ const resolvers = {
         return userData;
       }
       throw new AuthenticationError(ERROR_MESSAGES.auth);
+    },
+    getAllTags: async () => {
+      try {
+        return await Tags.find();
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    getTagbyId: async (_, { id }) => {
+      try {
+        return await Tags.findById(id);
+      } catch (err) {
+        console.error(err);
+      }
     },
   },
   Mutation: {
@@ -36,6 +50,8 @@ const resolvers = {
       const authToken = generateAuthToken(foundUser);
       return { authToken, user: foundUser };
     },
+    
+
     
     addNewUser: async (parent, { input }) => {
       const newUser = await User.create(input);
@@ -65,7 +81,14 @@ const resolvers = {
         return updatedUser;
       }
       throw new AuthenticationError(ERROR_MESSAGES.removeBook);
-    } 
+    },
+    createTag: async (_, { name, description }) => {
+      try {
+        return await Tags.create({ name, description });
+      } catch (err) {
+        console.error('failed to create tag');
+      }
+    },
   }
 };
 

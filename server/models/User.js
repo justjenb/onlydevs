@@ -21,6 +21,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    tags: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Tag'
+    }],
     // set savedBooks to be an array of data that adheres to the bookSchema
     savedBooks: [bookSchema],
   },
