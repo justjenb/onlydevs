@@ -4,17 +4,17 @@ const typeDefs = `
     username: String
     email: String
     password: String
-    books: INT
+    posts: INT
   }
-  type Book {
-    bookID: String
-    title: String
-    author: String
-    description: String
-    image: String
+  type Post {
+    user: String!
+    description: String!
+    postId: String!
     link: String
+    title: String
+    likes: INT
   }
-  type BookData {
+  type TAGs {
     bookID: String
     title: String
     author: String
