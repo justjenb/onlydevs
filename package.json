@@ -1,7 +1,7 @@
 {
-  "name": "googlebooks-app",
+  "name": "onlydevs",
   "version": "1.0.0",
-  "description": "",
+  "description": "Social Media - For Devs Only",
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
