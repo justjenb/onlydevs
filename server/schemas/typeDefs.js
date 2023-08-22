@@ -25,6 +25,7 @@ const typeDefs = `
   type Tag {
     _id: ID!
     name: String!
+    description: String
   }
 
 `;
