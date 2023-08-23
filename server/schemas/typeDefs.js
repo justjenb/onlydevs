@@ -4,7 +4,7 @@ const typeDefs = `
     username: String
     email: String
     password: String
-    posts: INT
+    posts: Number
   }
   type Post {
     user: String!
@@ -12,7 +12,7 @@ const typeDefs = `
     postId: String!
     link: String
     title: String
-    likes: INT
+    likes: Number
   }
   type Tag {
     _id: ID!
