@@ -14,7 +14,7 @@ const typeDefs = `
     title: String
     likes: INT
   }
-  type TAGs {
+  type PostData {
     bookID: String
     title: String
     author: String

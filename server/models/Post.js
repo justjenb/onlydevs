@@ -24,7 +24,7 @@ const postSchema = new Schema({
     type: String,
   },
   likes: {
-    type: INT,
+    type: Number,
   }
 });
 
