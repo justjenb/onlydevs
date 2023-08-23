@@ -1,6 +1,9 @@
-// see SignupForm.js for comments
+import { useGoogleLogin } from '@react-oauth/google';
 import React, { useState } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
+import { Form, Button, Alert, Container, Card } from 'react-bootstrap';
+import { IconGithub, IconGoogle } from "../assets/icons";
+
+const GITHUB_CLIENT_ID = import.meta.env.VITE_GITHUB_OAUTH_CLIENT_ID;
 
 import { loginUser } from '../utils/API';
 import Auth from '../utils/auth';
@@ -9,6 +12,21 @@ const LoginForm = () => {
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+
+  const loginToGithub = () => {
+    localStorage.setItem("loginWith", "GitHub");
+    window.location.assign(
+      `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}`
+    );
+  };
+
+  const loginToGoogle = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      localStorage.setItem("loginWith", "Google");
+      localStorage.setItem("accessToken", tokenResponse.access_token);
+      navigate("/home");
+    },
+  });
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -49,6 +67,28 @@ const LoginForm = () => {
 
   return (
     <>
+      <Container
+        className="d-flex align-items-center justify-content-center"
+        style={{ minHeight: "100vh" }}
+      >
+        <Card style={{ maxWidth: "420px", padding: "20px" }}>
+          <h1 className="text-center mb-3">
+            Login with
+          </h1>
+          <div className="mb-3 d-flex align-items-center justify-content-between">
+            <Button variant="outline-primary" onClick={() => loginToGithub()}>
+              <IconGithub className="mr-2" />
+            GitHub
+          </Button>
+          </div>
+          <div className="mb-3 d-flex align-items-center justify-content-between">
+            <Button variant="outline-primary" onClick={() => loginToGoogle()}>
+              <IconGoogle className="mr-2" />
+            Google
+          </Button>
+          </div>
+        </Card>
+      </Container>
       <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
         <Alert dismissible onClose={() => setShowAlert(false)} show={showAlert} variant='danger'>
           Something went wrong with your login credentials!

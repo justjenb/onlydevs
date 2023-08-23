@@ -14,20 +14,25 @@ const typeDefs = `
     title: String
     likes: INT
   }
-  type PostData {
-    bookID: String
-    title: String
-    author: String
-    description: String
-    image: String
-    link: String
-  }
   type Tag {
     _id: ID!
     name: String!
     description: String
   }
 
+type Auth {
+  token: String!
+  user: User!
+}
+
+type Mutation {
+  login(email: String!, password: String!): Auth!
+  addUser(username: String!, email: String!, password: String!): Auth!
+}
+
+type Query {
+  me: User
+}
 `;
 
 module.exports = typeDefs;
