@@ -20,6 +20,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+        tags: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Tag'
+    }],
         bio: {
             type: String,
             default: '',
