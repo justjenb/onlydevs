@@ -1,7 +1,6 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
-// import schema from Post.js
 const postSchema = require('./Post');
 
 const userSchema = new Schema(
@@ -21,15 +20,38 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    tags: [{
+        tags: [{
       type: Schema.Types.ObjectId,
       ref: 'Tag'
     }],
-    // set savedBooks to be an array of data that adheres to the bookSchema
-    userPosts: [postSchema],
-    likedPosts: [postSchema],
+        bio: {
+            type: String,
+            default: '',
   },
-  // set this to use virtual below
+        profilePicture: {
+            type: String,
+            default: '',
+        },
+        posts: [postSchema],
+        followers: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User',
+            },
+        ],
+        following: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User',
+            },
+        ],
+        friends: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User',
+            },
+        ],
+    },
   {
     toJSON: {
       virtuals: true,
@@ -52,9 +74,9 @@ userSchema.methods.isCorrectPassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-// when we query a user, we'll also get another field called `bookCount` with the number of saved books we have
+// when we query a user, we'll also get another field called `postCount` with the number of posts they have
 userSchema.virtual('postCount').get(function () {
-  return this.userPosts.length;
+    return this.posts.length;
 });
 
 const User = model('User', userSchema);

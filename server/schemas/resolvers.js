@@ -24,7 +24,7 @@ const resolvers = {
         console.error(err);
       }
     },
-    getTagbyId: async (_, { id }) => {
+    getTagById: async (_, { id }) => {
       try {
         return await Tags.findById(id);
       } catch (err) {
