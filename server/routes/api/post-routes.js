@@ -1,9 +1,9 @@
 const router = require('express').Router();
-const { createPost, deletePost } = require('../../controllers/user-controller');
+const { createPost, deletePost } = require('../../controllers/post-controller');
 const { authMiddleware } = require('../../utils/auth');
 
 
-router.route('/').put(authMiddleware, createPost);
-router.route('/:postId').delete(authMiddleware, deletePost);
+router.route('/posts').put(authMiddleware, createPost);
+router.route('/posts/:postId').delete(authMiddleware, deletePost);
 
 module.exports = router;
