@@ -4,16 +4,6 @@ const typeDefs = `
     username: String!
     email: String!
     posts: Int
-    savedBooks: [Book]  # Assuming saved books return a list of Book objects
-  }
-
-  type Book {
-    _id: ID!
-    title: String!
-    authors: [String]!
-    description: String
-    image: String
-    link: String
   }
 
   type Tag {
@@ -33,10 +23,6 @@ const typeDefs = `
     password: String!
   }
 
-  input SaveBookInput {
-    bookId: ID!
-  }
-
   input CreateTagInput {
     name: String!
     description: String
@@ -45,8 +31,6 @@ const typeDefs = `
   type Mutation {
     login(email: String!, password: String!): Auth!
     addNewUser(input: NewUserInput!): Auth!
-    addSavedBook(input: SaveBookInput!): User
-    removeSavedBook(bookId: ID!): User
     createTag(input: CreateTagInput!): Tag
   }
 
