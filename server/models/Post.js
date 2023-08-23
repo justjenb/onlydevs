@@ -12,7 +12,6 @@ const postSchema = new Schema({
     type: String,
     required: true,
   },
-  // saved book id from GoogleBooks
   postId: {
     type: String,
     required: true,

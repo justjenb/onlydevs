@@ -1,5 +1,6 @@
 const { User, Book, Tags } = require('../models');
-const { AuthenticationError } = require('your-auth-library');
+const { signToken } = require('../utils/auth');
+const { AuthenticationError } = require('apollo-server-express'); // Assuming you're using Apollo Server.
 
 const ERROR_MESSAGES = {
   auth: 'Must be logged in',
@@ -10,84 +11,39 @@ const ERROR_MESSAGES = {
 
 const resolvers = {
   Query: {
-    me: async (parent, args, context) => {
-      if (context.user) {
-        const userData = await User.findOne({ _id: context.user._id });
-        return userData;
-      }
+      me: async (parent, args, context) => {
+        if (context.user) {
+          return User.findOne({ _id: context.user._id }).populate('savedBooks');
+        }
       throw new AuthenticationError(ERROR_MESSAGES.auth);
     },
     getAllTags: async () => {
-      try {
         return await Tags.find();
-      } catch (err) {
-        console.error(err);
-      }
     },
     getTagById: async (_, { id }) => {
-      try {
         return await Tags.findById(id);
-      } catch (err) {
-        console.error(err);
-      }
     },
-  },
+    },
   Mutation: {
-    loginUser: async (parent, { input }) => {
-      const { email, password } = input;
-      const foundUser = await User.findOne({ email });
-    
-      if (!foundUser) {
+    login: async (parent, { email, password }) => {
+      const user = await User.findOne({ email });
+      if (!user) {
         throw new AuthenticationError(ERROR_MESSAGES.invalidCredentials);
       }
-    
-      const isPasswordCorrect = await foundUser.isCorrectPassword(password);
-    
-      if (!isPasswordCorrect) {
+      const correctPw = await user.isCorrectPassword(password);
+      if (!correctPw) {
         throw new AuthenticationError(ERROR_MESSAGES.invalidCredentials);
       }
-    
-      const authToken = generateAuthToken(foundUser);
-      return { authToken, user: foundUser };
+      const token = signToken(user);
+      return { token, user };
     },
-    
-
-    
     addNewUser: async (parent, { input }) => {
       const newUser = await User.create(input);
-      const authToken = generateAuthToken(newUser);
+      const authToken = signToken(newUser);  // Fixed function call
       return { authToken, user: newUser };
     },
-    
-    addSavedBook: async (parent, { input }, context) => {
-      if (context.user) {
-        const updatedUser = await User.findByIdAndUpdate(
-          context.user._id,
-          { $addToSet: { savedBooks: input } },
-          { new: true }
-        );
-        return updatedUser;
-      }
-      throw new AuthenticationError(ERROR_MESSAGES.saveBook);
-    },
-    
-    removeSavedBook: async (parent, { bookId }, context) => {
-      if (context.user) {
-        const updatedUser = await User.findOneAndUpdate(
-          context.user._id,
-          { $pull: { savedBooks: { bookId } } },
-          { new: true }
-        );
-        return updatedUser;
-      }
-      throw new AuthenticationError(ERROR_MESSAGES.removeBook);
-    },
     createTag: async (_, { name, description }) => {
-      try {
         return await Tags.create({ name, description });
-      } catch (err) {
-        console.error('failed to create tag');
-      }
     },
   }
 };
