@@ -1,5 +1,5 @@
-const dotenv = require('dotenv');
-const axios = require('axios');
+const dotenv = require("dotenv");
+const axios = require("axios");
 
 dotenv.config();
 
@@ -12,7 +12,7 @@ const getAccessToken = async (code) => {
       {},
       {
         headers: {
-          Accept: 'application/json',
+          Accept: "application/json",
         },
       }
     );
@@ -26,7 +26,7 @@ const getAccessToken = async (code) => {
 
 const getUserData = async (accessToken) => {
   try {
-    const { data } = await axios.get('https://api.github.com/user', {
+    const { data } = await axios.get("https://api.github.com/user", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -40,5 +40,5 @@ const getUserData = async (accessToken) => {
 
 module.exports = {
   getAccessToken,
-  getUserData
+  getUserData,
 };

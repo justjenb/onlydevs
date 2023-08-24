@@ -6,13 +6,12 @@ const postSchema = new Schema({
     ref: 'User',
     required: true,
   },
-  description: {
+  postText: {
     type: String,
-    required: true,
-  },
-  postId: {
-    type: String,
-    required: true,
+    required: 'You need to leave text!',
+    minlength: 1,
+    maxlength: 280,
+    trim: true,
   },
   link: {
     type: String,
@@ -23,10 +22,36 @@ const postSchema = new Schema({
   likes: {
     type: Number,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    get: (timestamp) => dateFormat(timestamp),
+  },
   tags: [{
     type: Schema.Types.ObjectId,
     ref: 'Tag'
   }],
+  comments: [
+    {
+      commentText: {
+        type: String,
+        required: true,
+        minlength: 1,
+        maxlength: 280,
+      },
+      commentAuthor: {
+        type: String,
+        required: true,
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+        get: (timestamp) => dateFormat(timestamp),
+      },
+    },
+  ],
 });
-const Post = model('Post', postSchema);
+
+const Post = model("Post", postSchema);
+
 module.exports = Post;

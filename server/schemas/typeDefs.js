@@ -1,10 +1,10 @@
 const typeDefs = `
-  type User {
-    _id: ID!
-    username: String!
-    email: String!
-    posts: Int
-  }
+type User {
+  _id: ID
+  username: String
+  email: String
+  password: String
+}
 
   type Tag {
     _id: ID!
@@ -16,22 +16,23 @@ const typeDefs = `
     _id: ID!
     user: String!
     description: String!
-    postId: String!
     link: String
     title: String
     likes: Int
+    tags: [Tag]
+    comments: [Comment]!
+  }
 
+  type Comment {
+    _id: ID
+    commentText: String
+    commentAuthor: String
+    createdAt: String
   }
 
   type Auth {
-    token: String!
+    token: ID!
     user: User!
-  }
-
-  input NewUserInput {
-    username: String!
-    email: String!
-    password: String!
   }
 
   input CreateTagInput {
@@ -41,15 +42,22 @@ const typeDefs = `
 
   type Mutation {
     login(email: String!, password: String!): Auth!
-    addNewUser(input: NewUserInput!): Auth!
+    addUser(username: String!, email: String!, password: String!): Auth!
     createTag(input: CreateTagInput!): Tag
     updateTags(userId: ID!, tags: [ID!]): User
     updatePostTags(postId: ID!, tags: [ID!]): Post
-    createPost(content: String!): Post
+    addPost(postText: String!): Post
+    addComment(postId: ID!, commentText: String!): Post
+    removePost(postId: ID!): Post
+    removeComment(postId: ID!, commentId: ID!): Post
   }
 
   type Query {
     me: User
+    user(username: String!): User
+    users: [User]
+    posts(username: String): [Post]
+    post(postId: ID!): Post
     getAllTags: [Tag]
     getTagById(id: ID!): Tag
   }
