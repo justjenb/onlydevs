@@ -11,19 +11,19 @@ const ERROR_MESSAGES = {
 
 const resolvers = {
   Query: {
-      me: async (parent, args, context) => {
-        if (context.user) {
-          return User.findOne({ _id: context.user._id }).populate('savedPosts');
-        }
+    me: async (parent, args, context) => {
+      if (context.user) {
+        return User.findOne({ _id: context.user._id }).populate('savedPosts');
+      }
       throw new AuthenticationError(ERROR_MESSAGES.auth);
     },
     getAllTags: async () => {
-        return await Tags.find();
+      return await Tags.find();
     },
     getTagById: async (_, { id }) => {
-        return await Tags.findById(id);
+      return await Tags.findById(id);
     },
-    },
+  },
   Mutation: {
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
@@ -43,11 +43,18 @@ const resolvers = {
       return { authToken, user: newUser };
     },
     createTag: async (_, { name, description }) => {
-        return await Tags.create({ name, description });
+      return await Tags.create({ name, description });
     },
     updateTags: async (_, { userId, tags }) => {
       return await User.findOneAndUpdate(
         { _id: userId },
+        { $set: { tags } },
+        { new: true }
+      );
+    },
+    updatePostTags: async (_, { postId, tags }) => {
+      return await Post.findOneAndUpdate(
+        { _id: postId },
         { $set: { tags } },
         { new: true }
       );

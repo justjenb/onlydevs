@@ -20,43 +20,41 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-        tags: [{
+    tags: [{
       type: Schema.Types.ObjectId,
       ref: 'Tag'
     }],
-        bio: {
-            type: String,
-            default: '',
-  },
-        profilePicture: {
-            type: String,
-            default: '',
-        },
-        posts: [
-          {
-            type: Schema.Types.ObjectId,
-            ref: 'Post',
-          },
-        ],
-        followers: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'User',
-            },
-        ],
-        following: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'User',
-            },
-        ],
-        friends: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'User',
-            },
-        ],
+    bio: {
+      type: String,
+      default: '',
     },
+    profilePicture: {
+      type: String,
+      default: '',
+    },
+    posts: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Post'
+    }],
+    followers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    following: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+  },
   {
     toJSON: {
       virtuals: true,
@@ -81,7 +79,7 @@ userSchema.methods.isCorrectPassword = async function (password) {
 
 // when we query a user, we'll also get another field called `postCount` with the number of posts they have
 userSchema.virtual('postCount').get(function () {
-    return this.posts.length;
+  return this.posts.length;
 });
 
 const User = model('User', userSchema);

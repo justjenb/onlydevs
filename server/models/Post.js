@@ -2,7 +2,8 @@ const { Schema, model } = require('mongoose');
 
 const postSchema = new Schema({
   user: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
   },
   description: {
@@ -21,8 +22,13 @@ const postSchema = new Schema({
   },
   likes: {
     type: Number,
-  }
+  },
+  tags: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Tag'
+  }],
 });
 const Post = model('Post', postSchema);
 
+const Post = model('Post', postSchema);
 module.exports = Post;

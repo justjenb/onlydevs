@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const db = require('./config/connection');
-const { User, Post, Tag } = require('./models');
+const db = require('../config/connection');
+const { User, Post, Tag } = require('../models');
 
 const staticTagData = require('./tags.json');
 const userData = require('./users.json');
