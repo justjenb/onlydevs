@@ -32,6 +32,7 @@ const typeDefs = `
     login(email: String!, password: String!): Auth!
     addNewUser(input: NewUserInput!): Auth!
     createTag(input: CreateTagInput!): Tag
+    updateTags(userId: ID!, tags: [ID!]): User
   }
 
   type Query {

@@ -45,6 +45,13 @@ const resolvers = {
     createTag: async (_, { name, description }) => {
         return await Tags.create({ name, description });
     },
+    updateTags: async (_, { userId, tags }) => {
+      return await User.findOneAndUpdate(
+        { _id: userId },
+        { $set: { tags } },
+        { new: true }
+      );
+    },
   }
 };
 
