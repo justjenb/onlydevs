@@ -1,6 +1,6 @@
 const { User, Book, Tags } = require('../models');
 const { signToken } = require('../utils/auth');
-const { AuthenticationError } = require('apollo-server-express'); // Assuming you're using Apollo Server.
+const { AuthenticationError } = require('apollo-server-express');
 
 const ERROR_MESSAGES = {
   auth: 'Must be logged in',
@@ -39,7 +39,7 @@ const resolvers = {
     },
     addNewUser: async (parent, { input }) => {
       const newUser = await User.create(input);
-      const authToken = signToken(newUser);  // Fixed function call
+      const authToken = signToken(newUser);
       return { authToken, user: newUser };
     },
     createTag: async (_, { name, description }) => {
