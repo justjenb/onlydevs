@@ -74,3 +74,12 @@ export const UPDATE_POST_TAGS = gql`
   }
 `;
 
+export const CREATE_POST = gql`
+  mutation createPost($content: String!) {
+    createPost(content: $content) {
+      _id
+      content
+    }
+  }
+`;
+

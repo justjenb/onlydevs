@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Avatar, Row, Col, Layout, Typography } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
+import { useQuery } from "@apollo/client";
+import { QUERY_POSTS } from '../../utils/queries';
+
 
 import { getAccessTokenGithub, getUserDataGithub, getUserDataGoogle } from "./services/home-services";
 
@@ -11,6 +14,7 @@ const { Text } = Typography;
 const Home = () => {
   const [userDataGithub, setUserDataGithub] = useState(null);
   const [userDataGoogle, setUserDataGoogle] = useState(null);
+  const { loading, error, data } = useQuery(QUERY_POSTS);
 
   const loginWith = useRef(localStorage.getItem("loginWith"));
   const navigate = useNavigate();
@@ -59,7 +63,14 @@ const Home = () => {
         <Content style={{ padding: '20px', textAlign: 'center' }}>
           <Row justify="center">
             <Col>
-              <Text strong>Please log in.</Text>
+              <Text strong>Welcome to OnlyDevs!</Text>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+            {loading && <div>Loading...</div>}
+            {error && <div>Error: {error.message}</div>}
+            {data && <PostList posts={data.posts} />}
             </Col>
           </Row>
         </Content>

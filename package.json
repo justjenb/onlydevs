@@ -8,6 +8,7 @@
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
+    "heroku-postbuild": "cd client && npm install && npm run build",
     "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm run dev\"",
     "install": "cd server && npm i && cd ../client && npm i",
     "build": "cd client && npm run build",
@@ -20,6 +21,9 @@
     "concurrently": "^5.1.0"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.5",
     "dotenv": "^16.3.1"
   }
 }
