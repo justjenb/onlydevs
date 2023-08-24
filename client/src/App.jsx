@@ -1,19 +1,48 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/home';
-import Navbar from './components/Navbar';
+import React from "react";
+import Home from "./pages/home";
+import Navbar from "./components/Navbar";
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  createHttpLink,
+} from "@apollo/client";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { setContext } from '@apollo/client/link/context';
+
+const httpLink = createHttpLink({
+  uri: 'http://localhost:3000/graphql',
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('id_token');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+});
 
 function App() {
   return (
-    <Router>
-      <>
+    <ApolloProvider client={client}>
+      <GoogleOAuthProvider
+        clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID}
+      >
+      <div className="flex-column justify-flex-start min-100-vh">
         <Navbar />
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='*' element={<h1 className='display-2'>Wrong page!</h1>} />
-        </Routes>
-      </>
-    </Router>
+        <div className="container">
+          <Home />
+        </div>
+      </div>
+    </GoogleOAuthProvider>
+    </ApolloProvider>
   );
 }
 

@@ -1,21 +1,34 @@
-import React from 'react';
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';  // Import this
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import { createRoot } from 'react-dom/client';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './index.css';
-import App from './App';
+import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom/dist";
+import "./index.css";
 
-const client = new ApolloClient({
-  uri: '/graphql',
-  cache: new InMemoryCache(),
-});
+import App from "./App.jsx";
+import Home from "./pages/home";
+import Profile from "./pages/profile";
+import Error from "./pages/error";
 
-const root = createRoot(document.getElementById('root'));
-root.render(
-  <ApolloProvider client={client}>              {/* Wrap your app with ApolloProvider */}
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID}>
-      <App />
-    </GoogleOAuthProvider>
-  </ApolloProvider>
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    error: <Error />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "/me",
+        element: <Profile />,
+      },
+      {
+        path: "/profiles/:profileId",
+        element: <Profile />,
+      },
+    ],
+  },
+]);
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <RouterProvider router={router} />
 );
