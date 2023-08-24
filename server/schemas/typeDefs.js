@@ -1,10 +1,9 @@
 const typeDefs = `
-  type User {
-    _id: ID!
-    username: String!
-    email: String!
-    posts: Int
-  }
+type User {
+  _id: ID!
+  username: String!
+  email: String!
+}
 
   type Tag {
     _id: ID!
@@ -17,12 +16,6 @@ const typeDefs = `
     user: User!
   }
 
-  input NewUserInput {
-    username: String!
-    email: String!
-    password: String!
-  }
-
   input CreateTagInput {
     name: String!
     description: String
@@ -30,7 +23,7 @@ const typeDefs = `
 
   type Mutation {
     login(email: String!, password: String!): Auth!
-    addNewUser(input: NewUserInput!): Auth!
+    addUser(username: String!, email: String!, password: String!): Auth!
     createTag(input: CreateTagInput!): Tag
   }
 
