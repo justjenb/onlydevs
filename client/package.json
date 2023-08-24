@@ -4,22 +4,38 @@
   "private": true,
   "proxy": "http://localhost:3001",
   "dependencies": {
+    "@ant-design/icons": "^5.2.5",
+    "@apollo/client": "^3.8.1",
+    "@react-oauth/google": "^0.11.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "antd": "^5.8.4",
+    "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
+    "dotenv": "^16.3.1",
     "jwt-decode": "^2.2.0",
-    "react": "^16.13.1",
+    "react": "^18.3.0-canary-dd480ef92-20230822",
     "react-bootstrap": "^2.7.0",
-    "react-dom": "^16.13.1",
-    "react-router-dom": "^5.1.2",
+    "react-dom": "^18.3.0-canary-dd480ef92-20230822",
+    "react-router-dom": "^6.15.0",
     "react-scripts": "^5.0.1"
   },
+  "devDependencies": {
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.3",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "vite": "^4.4.5"
+  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
   "eslintConfig": {
     "extends": "react-app"

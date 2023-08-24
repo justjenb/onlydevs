@@ -1,71 +1,57 @@
-const { User, Book } = require('../models');
-const { AuthenticationError } = require('your-auth-library');
+const { User, Book, Tags } = require('../models');
+const { signToken } = require('../utils/auth');
+const { AuthenticationError } = require('apollo-server-express');
 
 const ERROR_MESSAGES = {
   auth: 'Must be logged in',
   invalidCredentials: 'Invalid email or password',
-  saveBook: 'Must be logged in to save book',
-  removeBook: 'Must be logged in to remove book'
+  savePost: 'Must be logged in to save post',
+  removePost: 'Must be logged in to remove post'
 };
 
 const resolvers = {
   Query: {
-    me: async (parent, args, context) => {
-      if (context.user) {
-        const userData = await User.findOne({ _id: context.user._id });
-        return userData;
-      }
+      me: async (parent, args, context) => {
+        if (context.user) {
+          return User.findOne({ _id: context.user._id }).populate('savedPosts');
+        }
       throw new AuthenticationError(ERROR_MESSAGES.auth);
     },
-  },
-  Mutation: {
-    loginUser: async (parent, { input }) => {
-      const { email, password } = input;
-      const foundUser = await User.findOne({ email });
-    
-      if (!foundUser) {
-        throw new AuthenticationError(ERROR_MESSAGES.invalidCredentials);
-      }
-    
-      const isPasswordCorrect = await foundUser.isCorrectPassword(password);
-    
-      if (!isPasswordCorrect) {
-        throw new AuthenticationError(ERROR_MESSAGES.invalidCredentials);
-      }
-    
-      const authToken = generateAuthToken(foundUser);
-      return { authToken, user: foundUser };
+    getAllTags: async () => {
+        return await Tags.find();
     },
-    
+    getTagById: async (_, { id }) => {
+        return await Tags.findById(id);
+    },
+    },
+  Mutation: {
+    login: async (parent, { email, password }) => {
+      const user = await User.findOne({ email });
+      if (!user) {
+        throw new AuthenticationError(ERROR_MESSAGES.invalidCredentials);
+      }
+      const correctPw = await user.isCorrectPassword(password);
+      if (!correctPw) {
+        throw new AuthenticationError(ERROR_MESSAGES.invalidCredentials);
+      }
+      const token = signToken(user);
+      return { token, user };
+    },
     addNewUser: async (parent, { input }) => {
       const newUser = await User.create(input);
-      const authToken = generateAuthToken(newUser);
+      const authToken = signToken(newUser);
       return { authToken, user: newUser };
     },
-    
-    addSavedBook: async (parent, { input }, context) => {
-      if (context.user) {
-        const updatedUser = await User.findByIdAndUpdate(
-          context.user._id,
-          { $addToSet: { savedBooks: input } },
-          { new: true }
-        );
-        return updatedUser;
-      }
-      throw new AuthenticationError(ERROR_MESSAGES.saveBook);
+    createTag: async (_, { name, description }) => {
+        return await Tags.create({ name, description });
     },
-    
-    removeSavedBook: async (parent, { bookId }, context) => {
-      if (context.user) {
-        const updatedUser = await User.findOneAndUpdate(
-          context.user._id,
-          { $pull: { savedBooks: { bookId } } },
-          { new: true }
-        );
-        return updatedUser;
-      }
-      throw new AuthenticationError(ERROR_MESSAGES.removeBook);
-    } 
+    updateTags: async (_, { userId, tags }) => {
+      return await User.findOneAndUpdate(
+        { _id: userId },
+        { $set: { tags } },
+        { new: true }
+      );
+    },
   }
 };
 

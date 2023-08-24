@@ -1,0 +1,122 @@
+[
+    {
+        "name": "JavaScript",
+        "description": "All about JavaScript"
+    },
+    {
+        "name": "React",
+        "description": "All about React"
+    },
+    {
+        "name": "Node.js",
+        "description": "All about Node.js"
+    },
+    {
+        "name": "CSS",
+        "description": "All about CSS"
+    },
+    {
+        "name": "HTML",
+        "description": "All about HTML"
+    },
+    {
+        "name": "SQL",
+        "description": "All about SQL"
+    },
+    {
+        "name": "MongoDB",
+        "description": "All about MongoDB"
+    },
+    {
+        "name": "Python",
+        "description": "All about Python"
+    },
+    {
+        "name": "Java",
+        "description": "All about Java"
+    },
+    {
+        "name": "C",
+        "description": "All about C"
+    },
+    {
+        "name": "C++",
+        "description": "All about C++"
+    },
+    {
+        "name": "C#",
+        "description": "All about C#"
+    },
+    {
+        "name": "Ruby",
+        "description": "All about Ruby"
+    },
+    {
+        "name": "PHP",
+        "description": "All about PHP"
+    },
+    {
+        "name": "Swift",
+        "description": "All about Swift"
+    },
+    {
+        "name": "Kotlin",
+        "description": "All about Kotlin"
+    },
+    {
+        "name": "Go",
+        "description": "All about Go"
+    },
+    {
+        "name": "Rust",
+        "description": "All about Rust"
+    },
+    {
+        "name": "TypeScript",
+        "description": "All about TypeScript"
+    },
+    {
+        "name": "Angular",
+        "description": "All about Angular"
+    },
+    {
+        "name": "Vue",
+        "description": "All about Vue"
+    },
+    {
+        "name": "Django",
+        "description": "All about Django"
+    },
+    {
+        "name": "Flask",
+        "description": "All about Flask"
+    },
+    {
+        "name": "Spring",
+        "description": "All about Spring"
+    },
+    {
+        "name": "Laravel",
+        "description": "All about Laravel"
+    },
+    {
+        "name": "Rails",
+        "description": "All about Rails"
+    },
+    {
+        "name": "Express",
+        "description": "All about Express"
+    },
+    {
+        "name": "ASP.NET",
+        "description": "All about ASP.NET"
+    },
+    {
+        "name": "jQuery",
+        "description": "All about jQuery"
+    },
+    {
+        "name": "Bootstrap",
+        "description": "All about Bootstrap"
+    }
+]
