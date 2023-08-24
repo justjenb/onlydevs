@@ -28,7 +28,6 @@ const postSchema = new Schema({
     ref: 'Tag'
   }],
 });
-const Post = model('Post', postSchema);
 
 const Post = model('Post', postSchema);
 module.exports = Post;
