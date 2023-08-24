@@ -59,6 +59,13 @@ const resolvers = {
         { new: true }
       );
     },
+    createPost: async (_, { content }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('Must be logged in to create a post');
+      }
+      const newPost = await Post.create({ description: content, user: context.user._id });
+      return newPost;
+    },
   }
 };
 

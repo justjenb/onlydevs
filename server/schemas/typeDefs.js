@@ -45,6 +45,7 @@ const typeDefs = `
     createTag(input: CreateTagInput!): Tag
     updateTags(userId: ID!, tags: [ID!]): User
     updatePostTags(postId: ID!, tags: [ID!]): Post
+    createPost(content: String!): Post
   }
 
   type Query {
