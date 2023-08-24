@@ -24,6 +24,38 @@ export const ADD_USER = gql`
   }
 `;
 
+
+export const ADD_POST = gql`
+  mutation addPost($postText: String!) {
+    addThought(postText: $postText) {
+      _id
+      postText
+      user
+      createdAt
+      comments {
+        _id
+        commentText
+      }
+    }
+  }
+`;
+
+export const ADD_COMMENT = gql`
+  mutation addComment($postId: ID!, $commentText: String!) {
+    addComment(postId: $postId, commentText: $commentText) {
+      _id
+      postText
+      user
+      createdAt
+      comments {
+        _id
+        commentText
+        createdAt
+      }
+    }
+  }
+`;
+
 export const UPDATE_TAGS = gql`
   mutation updateTags($userId: ID!, $tags: [ID!]) {
     updateTags(userId: $userId, tags: $tags) {

@@ -1,8 +1,9 @@
 const typeDefs = `
 type User {
-  _id: ID!
-  username: String!
-  email: String!
+  _id: ID
+  username: String
+  email: String
+  password: String
 }
 
   type Tag {
@@ -15,15 +16,22 @@ type User {
     _id: ID!
     user: String!
     description: String!
-    postId: String!
     link: String
     title: String
     likes: Int
+    tags: [Tag]
+    comments: [Comment]!
+  }
 
+  type Comment {
+    _id: ID
+    commentText: String
+    commentAuthor: String
+    createdAt: String
   }
 
   type Auth {
-    token: String!
+    token: ID!
     user: User!
   }
 
@@ -38,10 +46,18 @@ type User {
     createTag(input: CreateTagInput!): Tag
     updateTags(userId: ID!, tags: [ID!]): User
     updatePostTags(postId: ID!, tags: [ID!]): Post
+    addPost(postText: String!): Post
+    addComment(postId: ID!, commentText: String!): Post
+    removePost(postId: ID!): Post
+    removeComment(postId: ID!, commentId: ID!): Post
   }
 
   type Query {
     me: User
+    user(username: String!): User
+    users: [User]
+    posts(username: String): [Post]
+    post(postId: ID!): Post
     getAllTags: [Tag]
     getTagById(id: ID!): Tag
   }

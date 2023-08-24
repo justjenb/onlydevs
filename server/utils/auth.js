@@ -1,42 +1,39 @@
+const { GraphQLError } = require('graphql');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const secret = process.env.PW_SECRET_HASH;
-const expiration = '2h';
+const expiration = "2h";
 
 module.exports = {
-  authMiddleware: function (req, res, next) {
-    let token = req.query.token || req.headers.authorization;
+  AuthenticationError: new GraphQLError('Could not authenticate user.', {
+    extensions: {
+      code: 'UNAUTHENTICATED',
+    },
+  }),
+  authMiddleware: function ({ req }) {
+    let token = req.body.token || req.query.token || req.headers.authorization;
 
     if (req.headers.authorization) {
       token = token.split(' ').pop().trim();
     }
 
     if (!token) {
-      if (req.path === '/graphql') {
-        return next();
-      }
-      return res.status(400).json({ message: 'You have no token!' });
+      return req;
     }
 
     // verify token and get user data out of it
     try {
-      const { data } = jwt.verify(token, secret, { maxAge: expiration });
-      req.user = data;
+      const { authenticatedPerson } = jwt.verify(token, secret, { maxAge: expiration });
+      req.user = authenticatedPerson;
     } catch {
       console.log('Invalid token');
-      if (req.path === '/graphql') {
-        return next();
-      }
-      return res.status(400).json({ message: 'invalid token!' });
     }
 
-    // send to next endpoint
-    next();
+    return req;
   },
-  signToken: function ({ username, email, _id }) {
-    const payload = { username, email, _id };
-
-    return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
+  signToken: function ({ email, username, _id }) {
+    const payload = { email, username, _id };
+    return jwt.sign({ authenticatedPerson: payload }, secret, { expiresIn: expiration });
   },
 };
