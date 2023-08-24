@@ -1,6 +1,9 @@
 {
   "name": "onlydevs",
   "version": "1.0.0",
+  "engines": {
+    "node": "18.16.0"
+  },
   "description": "Social Media - For Devs Only",
   "main": "server/server.js",
   "scripts": {
