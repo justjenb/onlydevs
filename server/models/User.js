@@ -20,37 +20,38 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    tags: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Tag",
-      },
-    ],
+    tags: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Tag'
+    }],
     bio: {
       type: String,
-      default: "",
+      default: '',
     },
     profilePicture: {
       type: String,
-      default: "",
+      default: '',
     },
-    posts: [postSchema],
+    posts: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Post'
+    }],
     followers: [
       {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
     following: [
       {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
     friends: [
       {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
   },
@@ -77,7 +78,7 @@ userSchema.methods.isCorrectPassword = async function (password) {
 };
 
 // when we query a user, we'll also get another field called `postCount` with the number of posts they have
-userSchema.virtual("postCount").get(function () {
+userSchema.virtual('postCount').get(function () {
   return this.posts.length;
 });
 

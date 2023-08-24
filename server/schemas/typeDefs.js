@@ -11,6 +11,17 @@ type User {
     description: String
   }
 
+  type Post {
+    _id: ID!
+    user: String!
+    description: String!
+    postId: String!
+    link: String
+    title: String
+    likes: Int
+
+  }
+
   type Auth {
     token: String!
     user: User!
@@ -25,6 +36,8 @@ type User {
     login(email: String!, password: String!): Auth!
     addUser(username: String!, email: String!, password: String!): Auth!
     createTag(input: CreateTagInput!): Tag
+    updateTags(userId: ID!, tags: [ID!]): User
+    updatePostTags(postId: ID!, tags: [ID!]): Post
   }
 
   type Query {

@@ -5,12 +5,17 @@ const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id }).populate("savedBooks");
+        return User.findOne({ _id: context.user._id }).populate('savedPosts');
       }
-      throw new Error("You need to be logged in!");
+      throw new AuthenticationError(ERROR_MESSAGES.auth);
+    },
+    getAllTags: async () => {
+      return await Tags.find();
+    },
+    getTagById: async (_, { id }) => {
+      return await Tags.findById(id);
     },
   },
-
   Mutation: {
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
@@ -34,7 +39,7 @@ const resolvers = {
     createTag: async (_, { name, description }) => {
       return await Tags.create({ name, description });
     },
-  },
+  }
 };
 
 module.exports = resolvers;

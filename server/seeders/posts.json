@@ -1,0 +1,17 @@
+[
+    {
+      "user": "john_doe",
+      "description": "This is a sample post by John.",
+      "postId": "sample_post_1"
+    },
+    {
+      "user": "jane_doe",
+      "description": "This is a sample post by Jane.",
+      "postId": "sample_post_2"
+    },
+    {
+      "user": "alice",
+      "description": "This is a sample post by Alice.",
+      "postId": "sample_post_3"
+    }
+  ]
