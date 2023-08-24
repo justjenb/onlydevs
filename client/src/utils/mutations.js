@@ -23,3 +23,22 @@ export const ADD_USER = gql`
     }
   }
 `;
+
+export const UPDATE_TAGS = gql`
+  mutation updateTags($userId: ID!, $tags: [ID!]) {
+    updateTags(userId: $userId, tags: $tags) {
+      _id
+      tags
+    }
+  }
+`;
+
+export const UPDATE_POST_TAGS = gql`
+  mutation updatePostTags($postId: ID!, $tags: [ID!]) {
+    updatePostTags(postId: $postId, tags: $tags) {
+      _id
+      tags
+    }
+  }
+`;
+

@@ -12,6 +12,5 @@ const tagSchema = new Schema({
     }
   });
   
-  const Tags = model('Tag', tagSchema);
-
-  module.exports = Tags;
+  const Tag = model('Tag', tagSchema);
+  module.exports = Tag;
