@@ -5,15 +5,15 @@ const { AuthenticationError } = require('apollo-server-express');
 const ERROR_MESSAGES = {
   auth: 'Must be logged in',
   invalidCredentials: 'Invalid email or password',
-  saveBook: 'Must be logged in to save book',
-  removeBook: 'Must be logged in to remove book'
+  savePost: 'Must be logged in to save post',
+  removePost: 'Must be logged in to remove post'
 };
 
 const resolvers = {
   Query: {
       me: async (parent, args, context) => {
         if (context.user) {
-          return User.findOne({ _id: context.user._id }).populate('savedBooks');
+          return User.findOne({ _id: context.user._id }).populate('savedPosts');
         }
       throw new AuthenticationError(ERROR_MESSAGES.auth);
     },
