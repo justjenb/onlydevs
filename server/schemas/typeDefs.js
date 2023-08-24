@@ -40,6 +40,14 @@ type User {
     description: String
   }
 
+  input CreatePostInput {
+    user: ID!
+    postText: String!
+    link: String
+    title: String
+    tags: [ID]
+  }
+
   type Mutation {
     login(email: String!, password: String!): Auth!
     addUser(username: String!, email: String!, password: String!): Auth!
@@ -50,6 +58,7 @@ type User {
     addComment(postId: ID!, commentText: String!): Post
     removePost(postId: ID!): Post
     removeComment(postId: ID!, commentId: ID!): Post
+    createPost(input: CreatePostInput!): Post
   }
 
   type Query {
