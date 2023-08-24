@@ -12,6 +12,17 @@ const typeDefs = `
     description: String
   }
 
+  type Post {
+    _id: ID!
+    user: String!
+    description: String!
+    postId: String!
+    link: String
+    title: String
+    likes: Int
+
+  }
+
   type Auth {
     token: String!
     user: User!
