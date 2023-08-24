@@ -15,9 +15,8 @@ const resolvers = {
     users: async () => {
       return User.find().populate('posts');
     },
-    posts: async (parent, { username }) => {
-      const params = username ? { username } : {};
-      return Post.find(params).sort({ createdAt: -1 });
+    posts: async () => {
+      return Post.find().sort({ createdAt: -1 });
     },
     post: async (parent, { thoughtId }) => {
       return Thought.findOne({ _id: thoughtId });
@@ -118,7 +117,6 @@ const resolvers = {
     createTag: async (_, { name, description }) => {
       return await Tags.create({ name, description });
     },
-  },
     createPost: async (_, { content }, context) => {
       if (!context.user) {
         throw new AuthenticationError('Must be logged in to create a post');
@@ -126,6 +124,7 @@ const resolvers = {
       const newPost = await Post.create({ description: content, user: context.user._id });
       return newPost;
     },
+  }, 
 };
 
 module.exports = resolvers;
