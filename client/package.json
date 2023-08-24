@@ -2,7 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3001",
+  "type":"module",
   "dependencies": {
     "@ant-design/icons": "^5.2.5",
     "@apollo/client": "^3.8.1",
@@ -15,10 +15,10 @@
     "bootstrap": "^5.2.3",
     "dotenv": "^16.3.1",
     "jwt-decode": "^2.2.0",
-    "react": "^18.3.0-canary-dd480ef92-20230822",
-    "react-bootstrap": "^2.7.0",
-    "react-dom": "^18.3.0-canary-dd480ef92-20230822",
-    "react-router-dom": "^6.15.0",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.7.4",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.11.2",
     "react-scripts": "^5.0.1"
   },
   "devDependencies": {
@@ -29,27 +29,12 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
-    "vite": "^4.4.5"
+    "vite": "^4.4.9"
   },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   }
 }
