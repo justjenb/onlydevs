@@ -2,7 +2,9 @@
     {
       "user": "john_doe",
       "description": "This is a sample post by John.",
-      "postId": "sample_post_1"
+      "postId": "sample_post_1",
+      "link" : "http://youtube.com",
+      "title" : "title text"
     },
     {
       "user": "jane_doe",

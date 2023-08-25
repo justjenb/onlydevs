@@ -6,7 +6,7 @@ const postSchema = new Schema({
     ref: 'User',
     required: true,
   },
-  postText: {
+  description: {
     type: String,
     required: 'You need to leave text!',
     minlength: 1,
