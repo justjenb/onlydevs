@@ -18,8 +18,8 @@ const resolvers = {
     posts: async () => {
       return Post.find().sort({ createdAt: -1 });
     },
-    post: async (parent, { thoughtId }) => {
-      return Thought.findOne({ _id: thoughtId });
+    post: async (parent, { postId }) => {
+      return Post.findOne({ _id: postId });
     },
     getAllTags: async () => {
       return await Tag.find();
@@ -85,7 +85,7 @@ const resolvers = {
       if (context.user) {
         const post = await Post.findOneAndDelete({
           _id: postId,
-          thoughtAuthor: context.user.username,
+          postAuthor: context.user.username,
         });
 
         await User.findOneAndUpdate(
