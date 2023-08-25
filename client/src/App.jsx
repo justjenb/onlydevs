@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import Home from "./pages/home";
 import Navbar from "./components/Navbar";
 import {
@@ -9,6 +9,7 @@ import {
 } from "@apollo/client";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { setContext } from '@apollo/client/link/context';
+import './App.css'
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:3000/graphql',
