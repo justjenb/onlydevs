@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export function getAccessTokenGithub(code) {
-    return axios.get(`http://localhost:3001/api/github/accessToken?code=${code}`, {
+    return axios.get(`http://localhost:3000/api/github/accessToken?code=${code}`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -9,7 +9,7 @@ export function getAccessTokenGithub(code) {
 }
 
 export function getUserDataGithub(accessToken) {
-    return axios.get(`http://localhost:3001/api/github/userData?accessToken=${accessToken}`, {
+    return axios.get(`http://localhost:3000/api/github/userData?accessToken=${accessToken}`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -17,7 +17,7 @@ export function getUserDataGithub(accessToken) {
 }
 
 export function getUserDataGoogle(accessToken) {
-    return axios.get(`http://localhost:3001/api/google/userData?accessToken=${accessToken}`, {
+    return axios.get(`http://localhost:3000/api/google/userData?accessToken=${accessToken}`, {
         headers: {
             "Content-Type": "application/json",
         },

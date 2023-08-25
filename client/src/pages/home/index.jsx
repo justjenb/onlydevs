@@ -3,10 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { Button, Avatar, Row, Col, Layout, Typography } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
 import { useQuery } from "@apollo/client";
-import { QUERY_POSTS } from '../../utils/queries';
+import { QUERY_POSTS } from "../../utils/queries";
+import AppNavbar from "../../components/Navbar";
 
-
-import { getAccessTokenGithub, getUserDataGithub, getUserDataGoogle } from "./services/home-services";
+import {
+  getAccessTokenGithub,
+  getUserDataGithub,
+  getUserDataGoogle,
+} from "./services/home-services";
 
 const { Header, Content } = Layout;
 const { Text } = Typography;
@@ -26,14 +30,14 @@ const Home = () => {
     const accessToken = localStorage.getItem("accessToken");
 
     if (codeParam && !accessToken && loginWith.current === "GitHub") {
-      getAccessTokenGithub(codeParam).then(resp => {
+      getAccessTokenGithub(codeParam).then((resp) => {
         localStorage.setItem("accessToken", resp.access_token);
-        getUserDataGithub(resp.access_token).then(resp => {
+        getUserDataGithub(resp.access_token).then((resp) => {
           setUserDataGithub(resp);
         });
       });
     } else if (codeParam && accessToken && loginWith.current === "GitHub") {
-      getUserDataGithub(accessToken).then(resp => {
+      getUserDataGithub(accessToken).then((resp) => {
         localStorage.setItem("accessToken", accessToken);
         setUserDataGithub(resp);
       });
@@ -44,7 +48,7 @@ const Home = () => {
     const accessToken = localStorage.getItem("accessToken");
 
     if (accessToken && loginWith.current === "Google") {
-      getUserDataGoogle(accessToken).then(resp => {
+      getUserDataGoogle(accessToken).then((resp) => {
         setUserDataGoogle(resp);
       });
     }
@@ -60,7 +64,7 @@ const Home = () => {
   if (!userDataGithub && !userDataGoogle) {
     return (
       <Layout>
-        <Content style={{ padding: '20px', textAlign: 'center' }}>
+        <Content style={{ padding: "20px", textAlign: "center" }}>
           <Row justify="center">
             <Col>
               <Text strong>Welcome to OnlyDevs!</Text>
@@ -68,9 +72,9 @@ const Home = () => {
           </Row>
           <Row>
             <Col>
-            {loading && <div>Loading...</div>}
-            {error && <div>Error: {error.message}</div>}
-            {data && <PostList posts={data.posts} />}
+              {loading && <div>Loading...</div>}
+              {error && <div>Error: {error.message}</div>}
+              {data && <PostList posts={data.posts} />}
             </Col>
           </Row>
         </Content>
@@ -80,30 +84,39 @@ const Home = () => {
 
   // If user data is available, show user details
   return (
-        <Layout>
-            <Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Avatar
-                    size="large"
-            src={loginWith.current === "GitHub" ? userDataGithub?.avatar_url : userDataGoogle?.picture}
+    <Layout>
+      <AppNavbar />
+      <Content style={{ padding: "20px", textAlign: "center" }}>
+        <Header
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Avatar
+            size="large"
+            src={
+              loginWith.current === "GitHub"
+                ? userDataGithub?.avatar_url
+                : userDataGoogle?.picture
+            }
           />
-            <Button
-                    type="primary" 
-                    icon={<LogoutOutlined />} 
-              onClick={setLogOut}
-            >
-              Log out
-            </Button>
-            </Header>
+          <Button type="primary" icon={<LogoutOutlined />} onClick={setLogOut}>
+            Log out
+          </Button>
+        </Header>
 
-            <Content style={{ padding: '20px', textAlign: 'center' }}>
-                <Row justify="center">
-                    <Col>
-                        <Text strong>Login with {loginWith.current}</Text>
-                    </Col>
-                </Row>
-            </Content>
-        </Layout>
+        <Content style={{ padding: "20px", textAlign: "center" }}>
+          <Row justify="center">
+            <Col>
+              <Text strong>Login with {loginWith.current}</Text>
+            </Col>
+          </Row>
+        </Content>
+      </Content>
+    </Layout>
   );
-}
+};
 
 export default Home;

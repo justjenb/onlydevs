@@ -1,6 +1,6 @@
+import './App.css';
 import React from "react";
 import Home from "./pages/home";
-import Navbar from "./components/Navbar";
 import {
   ApolloClient,
   ApolloProvider,
@@ -9,6 +9,9 @@ import {
 } from "@apollo/client";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { setContext } from '@apollo/client/link/context';
+import AppNavbar from "./components/Navbar";
+import { Outlet } from 'react-router-dom';
+
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:3000/graphql',
@@ -31,19 +34,16 @@ const client = new ApolloClient({
 
 function App() {
   return (
+    <>
     <ApolloProvider client={client}>
-      <GoogleOAuthProvider
-        clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID}
-      >
-      <div className="flex-column justify-flex-start min-100-vh">
-        <Navbar />
-        <div className="container">
-          <Home />
-        </div>
-      </div>
-    </GoogleOAuthProvider>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID}>
+          <AppNavbar />
+          <Outlet />
+      </GoogleOAuthProvider>
     </ApolloProvider>
+    </>
   );
 }
+
 
 export default App;
