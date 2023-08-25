@@ -1,4 +1,4 @@
-const { User, Post, Tags } = require("../models");
+const { User, Post, Tag } = require("../models");
 const { signToken, AuthenticationError } = require('../utils/auth');
 
 const resolvers = {
@@ -18,14 +18,14 @@ const resolvers = {
     posts: async () => {
       return Post.find().sort({ createdAt: -1 });
     },
-    post: async (parent, { thoughtId }) => {
-      return Thought.findOne({ _id: thoughtId });
+    post: async (parent, { postId }) => {
+      return Post.findOne({ _id: postId });
     },
     getAllTags: async () => {
-      return await Tags.find();
+      return await Tag.find();
     },
     getTagById: async (_, { id }) => {
-      return await Tags.findById(id);
+      return await Tag.findById(id);
     },
   },
   Mutation: {
@@ -85,7 +85,7 @@ const resolvers = {
       if (context.user) {
         const post = await Post.findOneAndDelete({
           _id: postId,
-          thoughtAuthor: context.user.username,
+          postAuthor: context.user.username,
         });
 
         await User.findOneAndUpdate(

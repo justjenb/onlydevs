@@ -6,47 +6,47 @@ type User {
   password: String
 }
 
-  type Tag {
-    _id: ID!
-    name: String!
-    description: String
-  }
+type Tag {
+  _id: ID!
+  name: String!
+  description: String
+}
 
-  type Post {
-    _id: ID!
-    user: String!
-    description: String!
-    link: String
-    title: String
-    likes: Int
-    tags: [Tag]
-    comments: [Comment]!
-  }
+type Post {
+  _id: ID!
+  user: String!
+  description: String!
+  link: String
+  title: String
+  likes: [Int]
+  tags: [Tag]
+  comments: [Comment]!
+}
 
-  type Comment {
-    _id: ID
-    commentText: String
-    commentAuthor: String
-    createdAt: String
-  }
+type Comment {
+  _id: ID
+  commentText: String
+  commentAuthor: String
+  createdAt: String
+}
 
-  type Auth {
-    token: ID!
-    user: User!
-  }
+type Auth {
+  token: ID!
+  user: User!
+}
 
-  input CreateTagInput {
-    name: String!
-    description: String
-  }
+input CreateTagInput {
+  name: String!
+  description: String
+}
 
-  input CreatePostInput {
-    user: ID!
-    postText: String!
-    link: String
-    title: String
-    tags: [ID]
-  }
+input CreatePostInput {
+  user: ID!
+  postText: String!
+  link: String
+  title: String
+  tags: [ID]
+}
 
   type Mutation {
     login(email: String!, password: String!): Auth!
