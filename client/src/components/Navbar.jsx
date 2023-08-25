@@ -26,6 +26,11 @@ console.log("Data:", data);
     setFocusedSuggestionIndex(-1);
   }, [suggestions]);
 
+  const handleSearch = () => {
+    console.log("Searching for:", searchTerm);
+    // Add your actual search logic here
+  };
+
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
@@ -46,6 +51,7 @@ console.log("Data:", data);
       setFocusedSuggestionIndex(nextIndex);
     } else if (e.key === "Enter" && focusedSuggestionIndex !== -1) {
       handleSuggestionClick(suggestions[focusedSuggestionIndex]);
+      handleSearch();
     }
   };
 
@@ -63,7 +69,6 @@ console.log("Data:", data);
           </Navbar.Brand>
 
           <Form inline className="mr-auto" onKeyDown={handleKeyDown}>
-            {/* Common parent div */}
             <div className="position-relative">
               <FormControl
                 type="text"
@@ -73,8 +78,6 @@ console.log("Data:", data);
                 onChange={handleSearchChange}
               />
               <Button variant="outline-success">Search</Button>
-
-              {/* Suggestions */}
               {suggestions.length > 0 && (
                 <ListGroup className="position-absolute w-100 suggestion-list">
                   {suggestions.map((suggestion, index) => (
