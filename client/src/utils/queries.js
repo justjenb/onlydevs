@@ -43,10 +43,11 @@ export const QUERY_POSTS = gql`
 `;
 
 export const GET_ALL_TAGS = gql`
-  query getAllTags {
-    getAllTags {
-      _id
-      name
-    }
+query {
+  getAllTags {
+    _id
+    name
+    description
   }
+}
 `;
