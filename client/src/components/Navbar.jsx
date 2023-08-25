@@ -21,7 +21,8 @@ const AppNavbar = () => {
           <Navbar.Collapse id="navbar">
             <Nav className="ml-auto">
               <Nav.Link as={Link} to="/feeds">
-Feeds              </Nav.Link>
+                Feeds{" "}
+              </Nav.Link>
               {Auth.loggedIn() ? (
                 <>
                   <Nav.Link as={Link} to="/saved">
