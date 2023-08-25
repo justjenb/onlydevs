@@ -1,4 +1,4 @@
-const { User, Post, Tags } = require("../models");
+const { User, Post, Tag } = require("../models");
 const { signToken, AuthenticationError } = require('../utils/auth');
 
 const resolvers = {
@@ -22,10 +22,10 @@ const resolvers = {
       return Thought.findOne({ _id: thoughtId });
     },
     getAllTags: async () => {
-      return await Tags.find();
+      return await Tag.find();
     },
     getTagById: async (_, { id }) => {
-      return await Tags.findById(id);
+      return await Tag.findById(id);
     },
   },
   Mutation: {

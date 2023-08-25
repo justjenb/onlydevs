@@ -1,14 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Navbar, Nav, Container, Modal, Button } from "react-bootstrap";
+import { Navbar, Nav, Container, Modal, Button, Form, FormControl, ListGroup } from "react-bootstrap";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
-
 import Auth from "../utils/auth";
+import { useQuery } from '@apollo/client';
+import { GET_ALL_TAGS } from '../utils/queries';
 
 const AppNavbar = () => {
   const [showModal, setShowModal] = useState(false);
-  const [showSignup, setShowSignup] = useState(false); // New state
+  const [showSignup, setShowSignup] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [focusedSuggestionIndex, setFocusedSuggestionIndex] = useState(-1);
+
+  const { loading, error, data } = useQuery(GET_ALL_TAGS);
+  let allPossibleSuggestions = [];
+
+  if (loading) return <p>Loading...</p>; 
+  if (error) return <p>Error: {error.message}</p>;
+
+  if (data) {
+    allPossibleSuggestions = data.getAllTags.map(tag => tag.name);
+  }
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    const newSuggestions = allPossibleSuggestions.filter(suggestion =>
+      suggestion.toLowerCase().includes(value.toLowerCase())
+    );
+    setSuggestions(newSuggestions);
+  };
+
+  useEffect(() => {
+    setFocusedSuggestionIndex(-1);
+  }, [suggestions]);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Tab" && !e.shiftKey) {
+      e.preventDefault();
+      const nextIndex = (focusedSuggestionIndex + 1) % suggestions.length;
+      setFocusedSuggestionIndex(nextIndex);
+    } else if (e.key === "Tab" && e.shiftKey) {
+      e.preventDefault();
+      const nextIndex = (focusedSuggestionIndex - 1 + suggestions.length) % suggestions.length;
+      setFocusedSuggestionIndex(nextIndex);
+    } else if (e.key === "Enter" && focusedSuggestionIndex !== -1) {
+      handleSuggestionClick(suggestions[focusedSuggestionIndex]);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerm(suggestion);
+    setSuggestions([]);
+  };
 
   return (
     <>
@@ -19,6 +64,29 @@ const AppNavbar = () => {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbar" />
           <Navbar.Collapse id="navbar">
+          <Form inline className="mr-auto" onKeyDown={handleKeyDown}>
+            <FormControl
+              type="text"
+              placeholder="Search"
+              className="mr-sm-2"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            <Button variant="outline-success">Search</Button>
+            {suggestions.length > 0 && (
+              <ListGroup>
+                {suggestions.map((suggestion, index) => (
+                  <ListGroup.Item
+                    key={index}
+                    onClick={() => handleSuggestionClick(suggestion)}
+                    className={index === focusedSuggestionIndex ? "focused" : ""}
+                  >
+                    {suggestion}
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            )}
+          </Form>
             <Nav className="ml-auto">
               <Nav.Link as={Link} to="/feeds">
 Feeds              </Nav.Link>
