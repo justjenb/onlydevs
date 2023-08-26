@@ -1,5 +1,5 @@
+const googleController = require('../../controllers/google-controller');
 const express = require('express');
-const googleController = require('../controllers/google-controller');
 const router = express.Router();
 
 router.get('/userData', (req, res) => {

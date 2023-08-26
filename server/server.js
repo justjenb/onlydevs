@@ -5,6 +5,7 @@ const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
 const path = require("path");
 const { authMiddleware } = require("./utils/auth");
+const routes = require('./routes'); // replace with the actual path
 
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
@@ -23,7 +24,7 @@ const startApolloServer = async () => {
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
   app.use(cookieParser());
-  
+
   // Session middleware
   app.use(
     session({
@@ -45,6 +46,9 @@ const startApolloServer = async () => {
       context: authMiddleware,
     })
   );
+
+  app.use('/', routes);
+
 
   // Production settings
   if (process.env.NODE_ENV === "production") {

@@ -47,5 +47,5 @@ const getUserData = async (accessToken) => {
 
 module.exports = {
   getAccessToken,
-  getUserData,
+  getUserData
 };

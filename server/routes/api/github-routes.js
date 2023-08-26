@@ -1,14 +1,25 @@
-import { getAccessToken, getUserData } from '../controllers/github-controller';
-const router = require('express').Router();
+const { getAccessToken, getUserData } = require('../../controllers/github-controller');
+const express = require('express');
+const router = express.Router();
 
 router.get('/accessToken', (req, res) => {
   const code = req.query.code;
-  getAccessToken(code).then(res => res.json(res));
+  getAccessToken(code)
+    .then(response => res.json(response))
+    .catch(err => {
+      console.error(err);
+      res.status(500).send('Error retrieving access token.');
+    });
 });
 
 router.get('/userData', (req, res) => {
   const accessToken = req.query.accessToken;
-  getUserData(accessToken).then(res => res.json(res));
+  getUserData(accessToken)
+    .then(response => res.json(response))
+    .catch(err => {
+      console.error(err);
+      res.status(500).send('Error retrieving user data.');
+    });
 });
 
 router.get('/sessions/oauth', async (req, res) => {
@@ -35,7 +46,5 @@ router.get('/sessions/oauth', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-
 
 module.exports = router;
