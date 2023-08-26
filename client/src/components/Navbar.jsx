@@ -14,15 +14,23 @@ const AppNavbar = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [focusedSuggestionIndex, setFocusedSuggestionIndex] = useState(-1);
 
-  const { loading, error, data } = useQuery(GET_ALL_TAGS);
-  let allPossibleSuggestions = [];
+  const { loading, data } = useQuery(GET_ALL_TAGS);
+console.log("Loading:", loading);
+console.log("Data:", data);
+  let allPossibleSuggestions = data?.getAllTags || [];
 
-  if (loading) return <p>Loading...</p>; 
-  if (error) return <p>Error: {error.message}</p>;
-
-  if (data) {
+  if (data && data.getAllTags) {
     allPossibleSuggestions = data.getAllTags.map(tag => tag.name);
   }
+  useEffect(() => {
+    setFocusedSuggestionIndex(-1);
+  }, [suggestions]);
+
+  const handleSearch = () => {
+    console.log("Searching for:", searchTerm);
+    // Add your actual search logic here
+  };
+
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
@@ -31,10 +39,6 @@ const AppNavbar = () => {
     );
     setSuggestions(newSuggestions);
   };
-
-  useEffect(() => {
-    setFocusedSuggestionIndex(-1);
-  }, [suggestions]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Tab" && !e.shiftKey) {
@@ -47,6 +51,7 @@ const AppNavbar = () => {
       setFocusedSuggestionIndex(nextIndex);
     } else if (e.key === "Enter" && focusedSuggestionIndex !== -1) {
       handleSuggestionClick(suggestions[focusedSuggestionIndex]);
+      handleSearch();
     }
   };
 
@@ -62,6 +67,34 @@ const AppNavbar = () => {
           <Navbar.Brand as={Link} to="/">
             OnlyDevs
           </Navbar.Brand>
+
+          <Form inline className="mr-auto" onKeyDown={handleKeyDown}>
+            <div className="position-relative">
+              <FormControl
+                type="text"
+                placeholder="Search"
+                className="mr-sm-2"
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+              <Button variant="outline-success">Search</Button>
+              {suggestions.length > 0 && (
+                <ListGroup className="position-absolute w-100 suggestion-list">
+                  {suggestions.map((suggestion, index) => (
+                    <ListGroup.Item 
+                      key={index} 
+                      onClick={() => handleSuggestionClick(suggestion)}
+                      className={index === focusedSuggestionIndex ? 'active' : ''}
+                      tabIndex={0}
+                    >
+                      {suggestion}
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              )}
+            </div>
+          </Form>
+
           <Navbar.Toggle aria-controls="navbar" />
           <Navbar.Collapse id="navbar">
           <Form inline className="mr-auto" onKeyDown={handleKeyDown}>
@@ -89,7 +122,8 @@ const AppNavbar = () => {
           </Form>
             <Nav className="ml-auto">
               <Nav.Link as={Link} to="/feeds">
-Feeds              </Nav.Link>
+                Feeds
+              </Nav.Link>
               {Auth.loggedIn() ? (
                 <>
                   <Nav.Link as={Link} to="/saved">
