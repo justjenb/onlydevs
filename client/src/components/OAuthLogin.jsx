@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Container, Card } from "react-bootstrap";
-import { useGoogleLogin } from "@react-oauth/google";
 import { IconGithub, IconGoogle } from "../assets/icons";
 import { useNavigate } from "react-router-dom";
 
 const GITHUB_CLIENT_ID = import.meta.env.VITE_GITHUB_OAUTH_CLIENT_ID;
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID;
 
 const OAuthLogin = () => {
   const navigate = useNavigate();
@@ -16,13 +16,25 @@ const OAuthLogin = () => {
     );
   };
 
-  const loginToGoogle = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
-      localStorage.setItem("loginWith", "Google");
-      localStorage.setItem("accessToken", tokenResponse.access_token);
-      navigate("/");
-    },
-  });
+  useEffect(() => {
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+      const googleAccounts = window.google.accounts.id;
+      googleAccounts.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleCredentialResponse
+      });
+      googleAccounts.renderButton(
+        document.getElementById("googleButtonDiv"),
+        { theme: "outline", size: "large" }
+      );
+    }
+  }, []);
+
+  const handleCredentialResponse = (credentialResponse) => {
+    console.log(credentialResponse);
+    localStorage.setItem("loginWith", "Google");
+    navigate("/");
+  };
 
   return (
     <Container className="d-flex align-items-center justify-content-center">
@@ -32,20 +44,11 @@ const OAuthLogin = () => {
       >
         <Button
           variant="outline-primary"
-          auto
-          ghost
-          onClick={() => loginToGithub()}
+          onClick={loginToGithub}
         >
           <IconGithub className="mr-2" /> GitHub
         </Button>
-        <Button
-          variant="outline-primary"
-          auto
-          ghost
-          onClick={() => loginToGoogle()}
-        >
-          <IconGoogle className="mr-2" /> Google
-        </Button>
+        <div id="googleButtonDiv"></div>
       </Card>
     </Container>
   );

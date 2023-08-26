@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Navbar, Nav, Container, Modal, Button, Form, FormControl, ListGroup } from "react-bootstrap";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 import Auth from "../utils/auth";
 import { useQuery } from '@apollo/client';
+import { toast } from "react-toastify";
+import useStore from "../store";
 import { GET_ALL_TAGS } from '../utils/queries';
 
 const AppNavbar = () => {
@@ -13,10 +15,12 @@ const AppNavbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [focusedSuggestionIndex, setFocusedSuggestionIndex] = useState(-1);
+  
+  const navigate = useNavigate();
+  const store = useStore();
+  const user = store.authUser;
 
   const { loading, data } = useQuery(GET_ALL_TAGS);
-console.log("Loading:", loading);
-console.log("Data:", data);
   let allPossibleSuggestions = data?.getAllTags || [];
 
   if (data && data.getAllTags) {
@@ -101,12 +105,18 @@ console.log("Data:", data);
               <Nav.Link as={Link} to="/feeds">
                 Feeds
               </Nav.Link>
-              {Auth.loggedIn() ? (
+
+              {user ? (
                 <>
+                  <Nav.Link as={Link} to="/profile">
+                    Profile
+                  </Nav.Link>
                   <Nav.Link as={Link} to="/saved">
                     See Your Books
                   </Nav.Link>
-                  <Nav.Link onClick={Auth.logout}>Logout</Nav.Link>
+                  <Nav.Link onClick={handleLogout}>
+                    Logout
+                  </Nav.Link>
                 </>
               ) : (
                 <Nav.Link onClick={() => setShowModal(true)}>

@@ -28,9 +28,42 @@ class AuthService {
     window.location.assign('/');
   }
 
-  logout() {
-    localStorage.removeItem('id_token');
-    window.location.reload();
+  async logout(authMethod = 'local') {
+    try {
+      switch (authMethod) {
+        case 'local':
+          localStorage.removeItem('id_token');
+          window.location.reload();
+          break;
+
+        case 'google':
+          if (window.gapi) {
+            const auth2 = window.gapi.auth2.getAuthInstance();
+            await auth2.signOut();
+          }
+          localStorage.removeItem('id_token'); // Remove token if you also save Google's token in localStorage.
+          window.location.reload();
+          break;
+
+        case 'github':
+          const VITE_SERVER_ENDPOINT = import.meta.env.VITE_SERVER_ENDPOINT;
+          const response = await fetch(`${VITE_SERVER_ENDPOINT}/api/auth/github/revoke`, {
+            credentials: "include",
+          });
+          if (!response.ok) {
+            throw new Error('Failed to revoke GitHub token');
+          }
+          localStorage.removeItem('id_token'); // Remove token if you also save GitHub's token in localStorage.
+          window.location.reload();
+          break;
+
+        default:
+          throw new Error('Unknown auth method');
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Handle error as needed (e.g., display an error message to the user)
+    }
   }
 
   getGitHubUrl(from) {
