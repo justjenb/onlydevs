@@ -18,7 +18,14 @@ const { Text } = Typography;
 const Home = () => {
   const [userDataGithub, setUserDataGithub] = useState(null);
   const [userDataGoogle, setUserDataGoogle] = useState(null);
+  const [allPosts, setAllPosts] = useState([]);
   const { loading, error, data } = useQuery(QUERY_POSTS);
+
+  useEffect(() => {
+    if (data && data.posts) {
+      setAllPosts(data.posts); 
+    }
+  }, [data]);
 
   const loginWith = useRef(localStorage.getItem("loginWith"));
   const navigate = useNavigate();
@@ -71,11 +78,23 @@ const Home = () => {
             </Col>
           </Row>
           <Row>
-            <Col>
-              {loading && <div>Loading...</div>}
-              {error && <div>Error: {error.message}</div>}
-              {data && <PostList posts={data.posts} />}
-            </Col>
+          <Col>
+            {loading && <div>Loading...</div>}
+            {error && <div>Error: {error.message}</div>}
+            {allPosts.length > 0 && (
+              <div>
+                <h3>Posts</h3>
+                <ul>
+                  {allPosts.map((post, index) => (
+                    <li key={index}>
+                    <strong>Title:</strong> {post.title} <br />
+                    <strong>Description:</strong> {post.description}
+                  </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </Col>
           </Row>
         </Content>
       </Layout>
