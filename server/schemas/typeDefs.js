@@ -14,13 +14,11 @@ type Tag {
 
 type Post {
   _id: ID!
-  user: String!
+  user: String
   description: String!
   link: String
   title: String
   likes: [Int]
-  tags: [Tag]
-  comments: [Comment]!
 }
 
 type Comment {

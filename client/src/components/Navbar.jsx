@@ -28,7 +28,7 @@ console.log("Data:", data);
 
   const handleSearch = () => {
     console.log("Searching for:", searchTerm);
-    // Add your actual search logic here
+    
   };
 
   const handleSearchChange = (e) => {
