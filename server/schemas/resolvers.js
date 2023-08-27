@@ -1,19 +1,19 @@
 const { User, Post, Tag } = require("../models");
-const { signToken, AuthenticationError } = require('../utils/auth');
+const { signToken, AuthenticationError } = require("../utils/auth");
 
 const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id }).populate('savedPosts');
+        return User.findOne({ _id: context.user._id }).populate("savedPosts");
       }
       throw new AuthenticationError(ERROR_MESSAGES.auth);
     },
     user: async (parent, { username }) => {
-      return User.findOne({ username }).populate('posts');
+      return User.findOne({ username }).populate("posts");
     },
     users: async () => {
-      return User.find().populate('posts');
+      return User.find().populate("posts");
     },
     posts: async () => {
       return Post.find().sort({ createdAt: -1 });
@@ -40,6 +40,16 @@ const resolvers = {
       }
       const token = signToken(user);
       return { token, user };
+    },
+    loginWithGoogle: async (parent, args, context) => {
+      const user = context.user;
+      if (!user) throw new Error("User not authenticated through Google.");
+      const token = signToken(user);
+      return { token, user };
+    },
+    logout: (parent, args, context) => {
+      context.res.clearCookie("token");
+      return { message: "Logged out successfully" };
     },
 
     addUser: async (parent, { username, email, password }) => {
@@ -119,13 +129,15 @@ const resolvers = {
     },
     createPost: async (_, { content }, context) => {
       if (!context.user) {
-        throw new AuthenticationError('Must be logged in to create a post');
+        throw new AuthenticationError("Must be logged in to create a post");
       }
-      const newPost = await Post.create({ description: content, user: context.user._id });
+      const newPost = await Post.create({
+        description: content,
+        user: context.user._id,
+      });
       return newPost;
     },
-  }, 
+  },
 };
 
 module.exports = resolvers;
-

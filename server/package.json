@@ -20,8 +20,10 @@
     "express": "^4.17.1",
     "express-session": "^1.17.3",
     "graphql": "^16.6.0",
-    "jsonwebtoken": "^9.0.0",
-    "mongoose": "^7.0.2"
+    "jsonwebtoken": "^9.0.1",
+    "mongoose": "^7.0.2",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.3"

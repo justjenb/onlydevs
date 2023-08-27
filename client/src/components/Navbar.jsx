@@ -15,6 +15,7 @@ const AppNavbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [focusedSuggestionIndex, setFocusedSuggestionIndex] = useState(-1);
+  const { authUser, setAuthUser } = useStore();
   
   const navigate = useNavigate();
   const store = useStore();
@@ -64,6 +65,12 @@ const AppNavbar = () => {
     setSuggestions([]);
   };
 
+  const handleLogout = () => {
+    Auth.logout();
+    setAuthUser(null);
+    navigate('/');
+};
+
   return (
     <>
       <Navbar bg="dark" variant="dark" expand="lg">
@@ -72,7 +79,7 @@ const AppNavbar = () => {
             OnlyDevs
           </Navbar.Brand>
 
-          <Form inline className="mr-auto" onKeyDown={handleKeyDown}>
+          <Form as="div" className="mr-auto" onKeyDown={handleKeyDown}>
             <div className="position-relative">
               <FormControl
                 type="text"

@@ -7,7 +7,21 @@ class AuthService {
 
   loggedIn() {
     const token = this.getToken();
-    return token && !this.isTokenExpired(token) ? true : false;
+    if (!token) {
+      return false;
+    }
+    
+    try {
+      if (this.isTokenExpired(token)) {
+        console.error("Token has expired.");
+        return false;
+      } else {
+        return true;
+      }
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return false;
+    }
   }
 
   isTokenExpired(token) {
@@ -35,28 +49,17 @@ class AuthService {
           localStorage.removeItem('id_token');
           window.location.reload();
           break;
-
+  
         case 'google':
-          if (window.gapi) {
-            const auth2 = window.gapi.auth2.getAuthInstance();
-            await auth2.signOut();
-          }
           localStorage.removeItem('id_token'); // Remove token if you also save Google's token in localStorage.
           window.location.reload();
           break;
-
+  
         case 'github':
-          const VITE_SERVER_ENDPOINT = import.meta.env.VITE_SERVER_ENDPOINT;
-          const response = await fetch(`${VITE_SERVER_ENDPOINT}/api/auth/github/revoke`, {
-            credentials: "include",
-          });
-          if (!response.ok) {
-            throw new Error('Failed to revoke GitHub token');
-          }
-          localStorage.removeItem('id_token'); // Remove token if you also save GitHub's token in localStorage.
+          await this.clearServerToken(); // Clear server side token
           window.location.reload();
           break;
-
+  
         default:
           throw new Error('Unknown auth method');
       }
@@ -66,21 +69,6 @@ class AuthService {
     }
   }
 
-  getGitHubUrl(from) {
-    const rootURl = "https://github.com/login/oauth/authorize";
-  
-    const options = {
-      'client_id': import.meta.env.VITE_GITHUB_OAUTH_CLIENT_ID,
-      'redirect_uri': import.meta.env.VITE_GITHUB_OAUTH_REDIRECT_URL,
-      'scope': "user:email",
-      'state': from,
-    };
-  
-    const qs = new URLSearchParams(options);
-  
-    return `${rootURl}?${qs.toString()}`;
-  }
-  
 }
 
 export default new AuthService();

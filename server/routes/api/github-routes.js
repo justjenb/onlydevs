@@ -24,9 +24,11 @@ router.get('/userData', (req, res) => {
 
 router.get('/callback', async (req, res) => {
   const code = req.query.code;
-  
+  console.log(`Token code ${tokenData}`)
+
   try {
     const tokenData = await getAccessToken(code);
+    console.log(`Token Data ${tokenData}`)
     if (tokenData.error) {
       return res.status(400).json(tokenData);
     }

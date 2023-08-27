@@ -2,6 +2,8 @@ build
 package-lock.json
 dist/
 
+.pem
+
 # Logs
 logs
 *.log

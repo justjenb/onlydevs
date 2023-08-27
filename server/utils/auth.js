@@ -14,6 +14,8 @@ module.exports = {
   authMiddleware: function ({ req }) {
     let token = req.body.token || req.query.token || req.headers.authorization;
 
+    console.log(`token: ${token}`);
+
     if (req.headers.authorization) {
       token = token.split(' ').pop().trim();
     }
@@ -21,6 +23,12 @@ module.exports = {
     if (!token) {
       return req;
     }
+
+    const decodedPayload = jwt.decode(token);
+    console.log("Decoded Token:", decodedPayload);
+    const expirationDate = new Date(decodedPayload.exp * 1000);
+    console.log("Token expiration date:", expirationDate);
+    console.log("Server current date:", new Date());
 
     try {
       const { authenticatedPerson } = jwt.verify(token, secret, { maxAge: expiration });
