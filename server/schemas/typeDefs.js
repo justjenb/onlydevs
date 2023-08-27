@@ -52,6 +52,7 @@ input CreatePostInput {
     createTag(input: CreateTagInput!): Tag
     updateTags(userId: ID!, tags: [ID!]): User
     updatePostTags(postId: ID!, tags: [ID!]): Post
+    updateLikes(postId: ID!): Post
     addPost(postText: String!): Post
     addComment(postId: ID!, commentText: String!): Post
     removePost(postId: ID!): Post

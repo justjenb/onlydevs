@@ -68,7 +68,7 @@ console.log("Data:", data);
             OnlyDevs
           </Navbar.Brand>
 
-          <Form inline className="mr-auto" onKeyDown={handleKeyDown}>
+          <Form inline="true" className="mr-auto" onKeyDown={handleKeyDown}>
             <div className="position-relative">
               <FormControl
                 type="text"
