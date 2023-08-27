@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { UPDATE_LIKES } from '../../utils/mutations';
@@ -23,6 +23,9 @@ const PostList = ({
       setLocalPosts(
         localPosts.map((post) => (post._id === postId ? updatedPost : post))
       );
+
+      console.log(`Liked post with ID: ${postId}`);
+      console.log(localPosts, setLocalPosts);
     } catch (err){
       console.error(err);
     }
