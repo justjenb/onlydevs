@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { UPDATE_LIKES } from '../../utils/mutations';
@@ -70,6 +71,13 @@ const PostList = ({
       ))}
     </div>
   );
+};
+
+PostList.propTypes = {
+  posts: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired,
+  showTitle: PropTypes.bool,
+  showUsername: PropTypes.bool,
 };
 
 export default PostList;
