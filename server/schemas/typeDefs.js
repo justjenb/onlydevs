@@ -18,7 +18,7 @@ type Post {
   description: String!
   link: String
   title: String
-  likes: [Int]
+  likes: [ID!]
 }
 
 type Comment {
@@ -46,6 +46,10 @@ input CreatePostInput {
   tags: [ID]
 }
 
+type LogoutResponse {
+  message: String!
+}
+
   type Mutation {
     login(email: String!, password: String!): Auth!
     addUser(username: String!, email: String!, password: String!): Auth!
@@ -57,6 +61,8 @@ input CreatePostInput {
     removePost(postId: ID!): Post
     removeComment(postId: ID!, commentId: ID!): Post
     createPost(input: CreatePostInput!): Post
+    loginWithGoogle(token: String!): Auth!
+    logout: LogoutResponse!
   }
 
   type Query {

@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Container, Card } from "react-bootstrap";
-import { useGoogleLogin } from "@react-oauth/google";
 import { IconGithub, IconGoogle } from "../assets/icons";
-import { useNavigate } from "react-router-dom";
+import Auth from "../utils/auth";
 
 const GITHUB_CLIENT_ID = import.meta.env.VITE_GITHUB_OAUTH_CLIENT_ID;
 
 const OAuthLogin = () => {
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    if (token) {
+      Auth.login(token);
+    }
+  }, []);
 
   const loginToGithub = () => {
     localStorage.setItem("loginWith", "GitHub");
@@ -16,13 +22,10 @@ const OAuthLogin = () => {
     );
   };
 
-  const loginToGoogle = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
-      localStorage.setItem("loginWith", "Google");
-      localStorage.setItem("accessToken", tokenResponse.access_token);
-      navigate("/");
-    },
-  });
+  const loginToGoogle = () => {
+    localStorage.setItem("loginWith", "Google"); 
+    window.location.assign("https://localhost:3001/api/google/auth");
+  };
 
   return (
     <Container className="d-flex align-items-center justify-content-center">
@@ -32,17 +35,13 @@ const OAuthLogin = () => {
       >
         <Button
           variant="outline-primary"
-          auto
-          ghost
-          onClick={() => loginToGithub()}
+          onClick={loginToGithub}
         >
           <IconGithub className="mr-2" /> GitHub
         </Button>
         <Button
           variant="outline-primary"
-          auto
-          ghost
-          onClick={() => loginToGoogle()}
+          onClick={loginToGoogle}
         >
           <IconGoogle className="mr-2" /> Google
         </Button>
