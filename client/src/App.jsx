@@ -1,26 +1,26 @@
-import './App.css';
+import "./App.css";
 import React from "react";
-import Home from "./pages/home";
 import {
   ApolloClient,
   ApolloProvider,
   InMemoryCache,
   createHttpLink,
 } from "@apollo/client";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import { setContext } from '@apollo/client/link/context';
+import { setContext } from "@apollo/client/link/context";
 import AppNavbar from "./components/Navbar";
-import { Outlet } from 'react-router-dom';
+import { Outlet } from "react-router-dom";
+import Auth from './utils/auth';
+import useStore from './store/index';
 import { SearchProvider } from './context/SearchContext'; 
 
 
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3000/graphql',
+  uri: "https://localhost:3001/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('id_token');
+  const token = localStorage.getItem("id_token");
   return {
     headers: {
       ...headers,
@@ -34,19 +34,36 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-function App() {
+function AppContent() {
+  const { authUser, setAuthUser } = useStore();
+
+  React.useEffect(() => {
+    const token = Auth.getToken();
+
+    if (token && Auth.loggedIn()) {
+      const userProfile = Auth.getProfile();
+      setAuthUser(userProfile);
+      console.log(`Auth user ${userProfile}`);
+    } else {
+      setAuthUser(null);
+    }
+  }, []);
+
   return (
     <>
     <ApolloProvider client={client}>
-      <SearchProvider>
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID}>
           <AppNavbar />
           <Outlet />
       </GoogleOAuthProvider>
-      </SearchProvider>
     </ApolloProvider>
     </>
   );
+}
+
+
+function App() {
+  return <AppContent />;
 }
 
 
