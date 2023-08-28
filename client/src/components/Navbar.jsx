@@ -13,6 +13,8 @@ const AppNavbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [focusedSuggestionIndex, setFocusedSuggestionIndex] = useState(-1);
+  const [searchResults, setSearchResults] = useState([]);
+
 
   const { loading, data } = useQuery(GET_ALL_TAGS);
 console.log("Loading:", loading);
@@ -27,8 +29,13 @@ console.log("Data:", data);
   }, [suggestions]);
 
   const handleSearch = () => {
-    console.log("Searching for:", searchTerm);
-    
+    if (searchTerm.startsWith("#")) {
+      console.log("Searching for tag:", searchTerm);
+    } else if (searchTerm.startsWith("@")) {
+      console.log("Searching for username:", searchTerm);
+    } else {
+      console.log("Performing general search for:", searchTerm);
+    }
   };
 
   const handleSearchChange = (e) => {

@@ -46,6 +46,8 @@ input CreatePostInput {
   tags: [ID]
 }
 
+union SearchResult = User | Post
+
   type Mutation {
     login(email: String!, password: String!): Auth!
     addUser(username: String!, email: String!, password: String!): Auth!
@@ -67,6 +69,7 @@ input CreatePostInput {
     post(postId: ID!): Post
     getAllTags: [Tag]
     getTagById(id: ID!): Tag
+    search(query: String!): [SearchResult]
   }
 `;
 

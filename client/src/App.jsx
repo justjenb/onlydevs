@@ -11,6 +11,8 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { setContext } from '@apollo/client/link/context';
 import AppNavbar from "./components/Navbar";
 import { Outlet } from 'react-router-dom';
+import { SearchProvider } from './context/SearchContext'; 
+
 
 
 const httpLink = createHttpLink({
@@ -36,10 +38,12 @@ function App() {
   return (
     <>
     <ApolloProvider client={client}>
+      <SearchProvider>
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID}>
           <AppNavbar />
           <Outlet />
       </GoogleOAuthProvider>
+      </SearchProvider>
     </ApolloProvider>
     </>
   );
