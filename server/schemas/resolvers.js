@@ -108,6 +108,17 @@ const resolvers = {
       }
       throw AuthenticationError;
     },
+    updateLikes: async (parent, { postId }, context) => {
+      if (context.user) {
+        const post = await Post.findByIdAndUpdate(
+          postId,
+          { $inc: { likes: 1 } },
+          { new: true }
+        );
+        return post;
+      }
+      throw new AuthenticationError('You need to be logged in!');
+    },
     removePost: async (parent, { postId }, context) => {
       if (context.user) {
         const post = await Post.findOneAndDelete({
