@@ -32,21 +32,21 @@ export const QUERY_USER = gql`
 `;
 
 export const QUERY_POSTS = gql`
-  query getPosts {
-    getPosts {
-      _id
-      postText
-      user
-      createdAt
-    }
+query {
+  posts {
+    title
+    user
+    description
   }
+}
 `;
 
 export const GET_ALL_TAGS = gql`
-  query getAllTags {
-    getAllTags {
-      _id
-      name
-    }
+query {
+  getAllTags {
+    _id
+    name
+    description
   }
+}
 `;

@@ -1,11 +1,12 @@
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom/dist";
-// import "./index.css";
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 import App from "./App.jsx";
 import Home from "./pages/home";
 import Profile from "./pages/profile";
 import Error from "./pages/error";
+import CallbackHandler from './components/CallbackHandler.jsx';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
         path: "/profiles/:profileId",
         element: <Profile />,
       },
+      {
+        path: "/api/google/auth/callback",
+        element: <CallbackHandler />,
+      },      
     ],
   },
 ]);
