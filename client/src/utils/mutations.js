@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
 
+
 export const LOGIN_USER = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
@@ -10,6 +11,26 @@ export const LOGIN_USER = gql`
       }
     }
   }
+`;
+
+export const LOGOUT_MUTATION = gql`
+mutation Logout {
+  logout {
+    message
+  }
+}
+`;
+export const LOGIN_WITH_GOOGLE = gql`
+mutation LoginWithGoogle($token: String!) {
+  loginWithGoogle(token: $token) {
+    token
+    user {
+      _id
+      username
+      email
+    }
+  }
+}
 `;
 
 export const ADD_USER = gql`
@@ -70,6 +91,15 @@ export const UPDATE_POST_TAGS = gql`
     updatePostTags(postId: $postId, tags: $tags) {
       _id
       tags
+    }
+  }
+`;
+
+export const UPDATE_LIKES = gql`
+  mutation updateLikes($postId: ID!) {
+    updateLikes(postId: $postId) {
+      _id
+      likes
     }
   }
 `;

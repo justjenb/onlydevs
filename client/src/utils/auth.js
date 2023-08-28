@@ -7,7 +7,21 @@ class AuthService {
 
   loggedIn() {
     const token = this.getToken();
-    return token && !this.isTokenExpired(token) ? true : false;
+    if (!token) {
+      return false;
+    }
+    
+    try {
+      if (this.isTokenExpired(token)) {
+        console.error("Token has expired.");
+        return false;
+      } else {
+        return true;
+      }
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return false;
+    }
   }
 
   isTokenExpired(token) {
@@ -28,10 +42,33 @@ class AuthService {
     window.location.assign('/');
   }
 
-  logout() {
-    localStorage.removeItem('id_token');
-    window.location.reload();
+  async logout(authMethod = 'local') {
+    try {
+      switch (authMethod) {
+        case 'local':
+          localStorage.removeItem('id_token');
+          window.location.reload();
+          break;
+  
+        case 'google':
+          localStorage.removeItem('id_token'); // Remove token if you also save Google's token in localStorage.
+          window.location.reload();
+          break;
+  
+        case 'github':
+          await this.clearServerToken(); // Clear server side token
+          window.location.reload();
+          break;
+  
+        default:
+          throw new Error('Unknown auth method');
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Handle error as needed (e.g., display an error message to the user)
+    }
   }
+
 }
 
 export default new AuthService();

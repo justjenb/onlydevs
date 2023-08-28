@@ -1,31 +1,31 @@
-const { User, Post, Tags } = require("../models");
-const { signToken, AuthenticationError } = require('../utils/auth');
+const { User, Post, Tag } = require("../models");
+const { signToken, AuthenticationError } = require("../utils/auth");
 
 const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id }).populate('savedPosts');
+        return User.findOne({ _id: context.user._id }).populate("savedPosts");
       }
       throw new AuthenticationError(ERROR_MESSAGES.auth);
     },
     user: async (parent, { username }) => {
-      return User.findOne({ username }).populate('posts');
+      return User.findOne({ username }).populate("posts");
     },
     users: async () => {
-      return User.find().populate('posts');
+      return User.find().populate("posts");
     },
     posts: async () => {
       return Post.find().sort({ createdAt: -1 });
     },
-    post: async (parent, { thoughtId }) => {
-      return Thought.findOne({ _id: thoughtId });
+    post: async (parent, { postId }) => {
+      return Post.findOne({ _id: postId });
     },
     getAllTags: async () => {
-      return await Tags.find();
+      return await Tag.find();
     },
     getTagById: async (_, { id }) => {
-      return await Tags.findById(id);
+      return await Tag.findById(id);
     },
   },
   Mutation: {
@@ -40,6 +40,16 @@ const resolvers = {
       }
       const token = signToken(user);
       return { token, user };
+    },
+    loginWithGoogle: async (parent, args, context) => {
+      const user = context.user;
+      if (!user) throw new Error("User not authenticated through Google.");
+      const token = signToken(user);
+      return { token, user };
+    },
+    logout: (parent, args, context) => {
+      context.res.clearCookie("token");
+      return { message: "Logged out successfully" };
     },
 
     addUser: async (parent, { username, email, password }) => {
@@ -81,11 +91,22 @@ const resolvers = {
       }
       throw AuthenticationError;
     },
+    updateLikes: async (parent, { postId }, context) => {
+      if (context.user) {
+        const post = await Post.findByIdAndUpdate(
+          postId,
+          { $inc: { likes: 1 } },
+          { new: true }
+        );
+        return post;
+      }
+      throw new AuthenticationError('You need to be logged in!');
+    },
     removePost: async (parent, { postId }, context) => {
       if (context.user) {
         const post = await Post.findOneAndDelete({
           _id: postId,
-          thoughtAuthor: context.user.username,
+          postAuthor: context.user.username,
         });
 
         await User.findOneAndUpdate(
@@ -119,13 +140,15 @@ const resolvers = {
     },
     createPost: async (_, { content }, context) => {
       if (!context.user) {
-        throw new AuthenticationError('Must be logged in to create a post');
+        throw new AuthenticationError("Must be logged in to create a post");
       }
-      const newPost = await Post.create({ description: content, user: context.user._id });
+      const newPost = await Post.create({
+        description: content,
+        user: context.user._id,
+      });
       return newPost;
     },
-  }, 
+  },
 };
 
 module.exports = resolvers;
-

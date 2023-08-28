@@ -5,10 +5,14 @@ dotenv.config();
 
 const getAccessToken = async (code) => {
   try {
-    const params = `?client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_CLIENT_SECRET}&code=${code}`;
-
+    const params = new URLSearchParams({
+      client_id: process.env.GITHUB_OAUTH_CLIENT_ID,
+      client_secret: process.env.GITHUB_OAUTH_CLIENT_SECRET,
+      code: code
+    });
+    
     const { data } = await axios.post(
-      `https://github.com/login/oauth/access_token${params}`,
+      `https://github.com/login/oauth/access_token?${params.toString()}`,
       {},
       {
         headers: {
@@ -16,11 +20,16 @@ const getAccessToken = async (code) => {
         },
       }
     );
+    
+    if (data.error) {
+      throw new Error(data.error_description || "Error fetching access token");
+    }
 
     return data;
+
   } catch (error) {
-    console.log(error);
-    return null;
+    console.error(error.message || error);
+    return { error: error.message || "Unexpected error occurred" };
   }
 };
 
@@ -33,12 +42,14 @@ const getUserData = async (accessToken) => {
     });
 
     return data;
+
   } catch (error) {
-    return null;
+    console.error(error.message || error);
+    return { error: error.message || "Unexpected error occurred" };
   }
 };
 
 module.exports = {
   getAccessToken,
-  getUserData,
+  getUserData
 };
