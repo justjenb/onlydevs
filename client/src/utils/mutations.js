@@ -12,6 +12,26 @@ export const LOGIN_USER = gql`
   }
 `;
 
+export const LOGOUT_MUTATION = gql`
+mutation Logout {
+  logout {
+    message
+  }
+}
+`;
+export const LOGIN_WITH_GOOGLE = gql`
+mutation LoginWithGoogle($token: String!) {
+  loginWithGoogle(token: $token) {
+    token
+    user {
+      _id
+      username
+      email
+    }
+  }
+}
+`;
+
 export const ADD_USER = gql`
   mutation AddUser($username: String!, $email: String!, $password: String!) {
     addUser(username: $username, email: $email, password: $password) {

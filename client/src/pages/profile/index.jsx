@@ -18,7 +18,6 @@ const Profile = () => {
   const user = data?.me || data?.user || {};
   if (
     Auth.loggedIn() && 
-    /* Run the getProfile() method to get access to the unencrypted token value in order to retrieve the user's username, and compare it to the userParam variable */
     Auth.getProfile().authenticatedPerson.username === userParam
   ) {
     return <Navigate to="/me" />;
@@ -45,9 +44,9 @@ const Profile = () => {
         </h2>
 
         <div className="col-12 col-md-10 mb-5">
-          <ThoughtList
-            thoughts={user.thoughts}
-            title={`${user.username}'s thoughts...`}
+          <PostList
+            posts={user.posts}
+            title={`${user.username}'s posts...`}
             showTitle={false}
             showUsername={false}
           />
