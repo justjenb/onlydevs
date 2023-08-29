@@ -14,9 +14,8 @@ import useStore from './store/index';
 import { SearchProvider } from './context/SearchContext'; 
 
 
-
 const httpLink = createHttpLink({
-  uri: "https://localhost:3001/graphql",
+  uri: '/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
