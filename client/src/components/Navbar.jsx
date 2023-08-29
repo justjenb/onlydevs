@@ -11,8 +11,10 @@ import { GET_ALL_TAGS, SEARCH } from '../utils/queries';
 import { useSearch } from '../context/SearchContext';
 import '../App.css';
 import { Home, NotificationsActiveSharp, NotificationsNoneSharp, Search, ThreeP, AddCircle, AccountCircle }  from '@mui/icons-material';
-import { Tooltip } from '@mui/material'
+import { Tooltip, Grid } from '@mui/material'
 import CreatePostForm from './CreatePostForm';
+
+
 
 const AppNavbar = () => {
   const [showModal, setShowModal] = useState(false);
@@ -93,6 +95,7 @@ const AppNavbar = () => {
   return (
     <>
      <div className="side-navbar">
+  
       <div className="nav-item">
         <Link to="/" className="logo">
           OnlyDevs
@@ -176,6 +179,7 @@ const AppNavbar = () => {
           </Link>
         </div>
       )}
+   
     </div>
        <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} aria-labelledby="login-modal">
         <Modal.Header closeButton>

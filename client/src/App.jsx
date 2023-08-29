@@ -12,7 +12,6 @@ import { Outlet } from "react-router-dom";
 import Auth from './utils/auth';
 import useStore from './store/index';
 import { SearchProvider } from './context/SearchContext'; 
-// import { Container, Row, Col } from 'react-bootstrap';
 import { Grid } from '@mui/material';
 
 const httpLink = createHttpLink({
@@ -52,16 +51,16 @@ function AppContent() {
   return (
     <>
     <SearchProvider>
-      <ApolloProvider client={client}>
-      <Grid columns={16}>
-          <Grid xs={6} id="sidebar-wrapper">  
-            <AppNavbar />
-          </Grid>
-          <Grid  xs={10} id="page-content-wrapper">
-            <Outlet />
-          </Grid>
+    <ApolloProvider client={client}>
+      <Grid container>
+        <Grid xs={3} id="sidebar-wrapper">
+          <AppNavbar />
         </Grid>
-      </ApolloProvider>
+        <Grid xs={9} id="page-content-wrapper">
+          <Outlet />
+        </Grid>
+      </Grid>
+    </ApolloProvider>
     </SearchProvider>
     </>
   );
