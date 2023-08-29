@@ -17,15 +17,22 @@ const AppNavbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [focusedSuggestionIndex, setFocusedSuggestionIndex] = useState(-1);
+
+
   const { searchResults, setSearchResults } = useSearch();
 
   const { authUser, setAuthUser } = useStore();
-
   const navigate = useNavigate();
   const store = useStore();
   const user = store.authUser;
 
   const [search, { data: searchData }] = useLazyQuery(SEARCH);
+
+  useEffect(() => {
+    if (searchData) {
+      setSearchResults(searchData.search);
+    }
+  }, [searchData]);
 
   const { loading, data } = useQuery(GET_ALL_TAGS);
   let allPossibleSuggestions = data?.getAllTags || [];
@@ -33,6 +40,7 @@ const AppNavbar = () => {
   if (data && data.getAllTags) {
     allPossibleSuggestions = data.getAllTags.map(tag => tag.name);
   }
+  
   useEffect(() => {
     setFocusedSuggestionIndex(-1);
   }, [suggestions]);

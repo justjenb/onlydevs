@@ -7,6 +7,8 @@ import { QUERY_POSTS } from "../../utils/queries";
 import { UPDATE_LIKES } from '../../utils/mutations';
 import AppNavbar from "../../components/Navbar";
 import PostList from "../../components/PostList/index";
+import { useSearch } from '../path/to/SearchContext';
+
 
 import {
   getAccessTokenGithub,
@@ -21,6 +23,9 @@ const Home = () => {
   const [userDataGithub, setUserDataGithub] = useState(null);
   const [userDataGoogle, setUserDataGoogle] = useState(null);
   const [allPosts, setAllPosts] = useState([]);
+
+  const { searchResults } = useSearch();
+  
   const { loading, error, data } = useQuery(QUERY_POSTS);
   const [updateLikes] = useMutation(UPDATE_LIKES);
 
@@ -146,7 +151,7 @@ const Home = () => {
           </Button>
         </Header>
         <div>Hello</div>
-        <PostList posts={allPosts} title="Recent Posts" />
+        <PostList posts={allPosts} searchResults={searchResults} title="Recent Posts"/>
       </Content>
     </Layout>
   );
