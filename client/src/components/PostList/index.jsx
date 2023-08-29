@@ -6,9 +6,9 @@ import { UPDATE_LIKES, ADD_COMMENT, REPOST } from '../../utils/mutations';
 
 
 const PostList = ({ 
-  posts,
+  posts = [], 
   title, 
-  searchResults = [],
+  searchResults = [], 
   showTitle = true, 
   showUsername = true 
 }) => {
@@ -123,6 +123,7 @@ PostList.propTypes = {
   title: PropTypes.string.isRequired,
   showTitle: PropTypes.bool,
   showUsername: PropTypes.bool,
+  searchResults: PropTypes.array
 };
 
 export default PostList;
