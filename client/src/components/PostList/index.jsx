@@ -1,18 +1,33 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { UPDATE_LIKES } from '../../utils/mutations';
+import { UPDATE_LIKES, ADD_COMMENT } from '../../utils/mutations';
 
 const PostList = ({ 
   posts,
   title, 
   showTitle = true, 
-  showUsername = true }) => {
-
+  showUsername = true 
+}) => {
   const [updateLikes] = useMutation(UPDATE_LIKES);
   const [localPosts, setLocalPosts] = useState(posts);
+  const [addComment] = useMutation(ADD_COMMENT);
+  const [commentText, setCommentText] = useState('');
 
+  const handleAddComment = async (postId, text) => {
+    try {
+      const { data } = await addComment({
+        variables: { postId, text }
+      });
+      const updatedPost = data.addComment;
+      setLocalPosts(
+        localPosts.map((post) => (post._id === postId ? updatedPost : post))
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleLike = async (postId) => {
     try {
@@ -20,14 +35,10 @@ const PostList = ({
         variables: { postId }
       });
       const updatedPost = data.updateLikes;
-      // update local state
       setLocalPosts(
         localPosts.map((post) => (post._id === postId ? updatedPost : post))
       );
-
-      console.log(`Liked post with ID: ${postId}`);
-      console.log(localPosts, setLocalPosts);
-    } catch (err){
+    } catch (err) {
       console.error(err);
     }
   };
@@ -61,6 +72,18 @@ const PostList = ({
             <p>{post.postText}</p>
           </div>
           <button onClick={() => handleLike(post._id)}>Like</button>
+          <input 
+            type="text" 
+            placeholder="Add a comment..." 
+            value={commentText} 
+            onChange={(e) => setCommentText(e.target.value)} 
+          />
+          <button onClick={() => handleAddComment(post._id, commentText)}>Comment</button>
+          {post.comments && post.comments.map((comment, index) => (
+            <div key={index}>
+              <p>{comment.text} - {comment.username}</p>
+            </div>
+          ))}
           <Link
             className="btn btn-primary btn-block btn-squared"
             to={`/posts/${post._id}`}

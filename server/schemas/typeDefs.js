@@ -19,6 +19,7 @@ type Post {
   link: String
   title: String
   likes: [ID!]
+  comments: [ID!]
 }
 
 type Comment {

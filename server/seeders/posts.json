@@ -4,7 +4,8 @@
       "description": "This is a sample post by John.",
       "postId": "sample_post_1",
       "link" : "http://youtube.com",
-      "title" : "title text"
+      "title" : "title text",
+      "comment": "peepeepoopoo"
     },
     {
       "user": "jane_doe",

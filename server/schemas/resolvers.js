@@ -89,7 +89,7 @@ const resolvers = {
           }
         );
       }
-      throw AuthenticationError;
+      throw AuthenticationError('You need to be logged in!');
     },
     updateLikes: async (parent, { postId }, context) => {
       if (context.user) {

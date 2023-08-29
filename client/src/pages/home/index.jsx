@@ -21,22 +21,22 @@ const Home = () => {
   const [userDataGithub, setUserDataGithub] = useState(null);
   const [userDataGoogle, setUserDataGoogle] = useState(null);
   const [allPosts, setAllPosts] = useState([]);
-  const { loading, error, data } = useQuery(QUERY_POSTS);
+  const { loading, error, data: queryData } = useQuery(QUERY_POSTS);
   const [updateLikes] = useMutation(UPDATE_LIKES);
 
   useEffect(() => {
-    if (data && data.posts) {
-      setAllPosts(data.posts); 
+    if (queryData && queryData.posts) {
+      setAllPosts(queryData.posts); 
     }
-  }, [data]);
+  }, [queryData]);
 
   const handleLike = async (postId) => {
     try {
       console.log("Post ID:", postId)
-      const { data } = await updateLikes({
+      const { data: mutationData } = await updateLikes({
         variables: { postId }
       });
-      console.log('Updated likes:', data);
+      console.log('Updated likes:', mutationData);
     
     } catch (err) {
       console.error('Error updating likes:', err);
@@ -103,7 +103,7 @@ const Home = () => {
                   
                   <ul>
                     {allPosts.map((post, index) => (
-                       console.log("Current post object:", post),
+                      //  console.log("Current post object:", post),
                       <li key={index}>
                         <strong>Title:</strong> {post.title} <br />
                         <strong>Description:</strong> {post.description} <br />
