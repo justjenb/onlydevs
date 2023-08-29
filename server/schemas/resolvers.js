@@ -27,6 +27,23 @@ const resolvers = {
     getTagById: async (_, { id }) => {
       return await Tag.findById(id);
     },
+    search: async (_, { query }) => {
+      if (query.startsWith('#')) {
+        const tag = query.slice(1);
+        return await Post.find({ tags: tag }).sort({ createdAt: -1 });
+      } else if (query.startsWith('@')) {
+        const username = query.slice(1);
+        return await User.find({ username: new RegExp(username, 'i') });
+      } else {
+        const posts = await Post.find({ 
+          description: new RegExp(query, 'i')
+        });
+        const users = await User.find({
+          username: new RegExp(query, 'i')
+        });
+        return [...posts, ...users];
+      }
+    },
   },
   Mutation: {
     login: async (parent, { email, password }) => {

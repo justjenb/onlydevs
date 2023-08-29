@@ -46,6 +46,8 @@ input CreatePostInput {
   tags: [ID]
 }
 
+union SearchResult = User | Post
+
 type LogoutResponse {
   message: String!
 }
@@ -74,6 +76,7 @@ type LogoutResponse {
     post(postId: ID!): Post
     getAllTags: [Tag]
     getTagById(id: ID!): Tag
+    search(query: String!): [SearchResult]
   }
 `;
 
