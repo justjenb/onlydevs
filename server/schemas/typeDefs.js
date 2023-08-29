@@ -4,6 +4,7 @@ type User {
   username: String
   email: String
   password: String
+  posts: [Post]
 }
 
 type Tag {
@@ -68,6 +69,7 @@ type LogoutResponse {
     createPost(input: CreatePostInput!): Post
     loginWithGoogle(token: String!): Auth!
     logout: LogoutResponse!
+    repost(postId: ID!): Post
   }
 
   type Query {

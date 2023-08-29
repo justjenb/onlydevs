@@ -68,7 +68,6 @@ class AuthService {
       // Handle error as needed (e.g., display an error message to the user)
     }
   }
-
 }
 
 export default new AuthService();

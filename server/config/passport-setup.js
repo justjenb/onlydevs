@@ -1,7 +1,7 @@
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const User = require('../models/User');
-require("dotenv")
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const User = require("../models/User");
+require("dotenv");
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -15,19 +15,19 @@ passport.deserializeUser(async (id, done) => {
 const googleCallbackURL =
   process.env.NODE_ENV === "production"
     ? "https://onlydevs-504c5476d7ee.herokuapp.com/api/google/auth/callback"
-    : "https://localhost:3001/api/google/auth/callback";
+    : "http://localhost:3001/api/google/auth/callback";
 
-    const githubCallbackURL =
+const githubCallbackURL =
   process.env.NODE_ENV === "production"
     ? "https://onlydevs-504c5476d7ee.herokuapp.com/api/github/auth/callback"
-    : "https://localhost:3001/api/github/auth/callback";
+    : "http://localhost:3001/api/github/auth/callback";
 
 passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      googleCallbackURL,
+      callbackURL: googleCallbackURL,
     },
     async (accessToken, refreshToken, profile, done) => {
       let user = await User.findOne({ googleId: profile.id });
@@ -45,7 +45,7 @@ passport.use(
           if (error.code === 11000) {
             // Duplicate key error
             // This block will handle the duplicate key error, you can adjust the logic as needed
-            user = await User.findOne({ username: profile.displayName });
+            user = await User.findOrCreate({ username: profile.displayName });
             if (!user) {
               return done(new Error("Failed to handle duplicate username"));
             }
@@ -73,7 +73,10 @@ passport.use(
             githubId: profile.id,
             username: profile.username,
             // email might not always be public with GitHub, consider error handling
-            email: profile.emails && profile.emails[0] ? profile.emails[0].value : null, 
+            email:
+              profile.emails && profile.emails[0]
+                ? profile.emails[0].value
+                : null,
             password: "GITHUB_SIGNED_IN_USER",
           });
           await user.save();

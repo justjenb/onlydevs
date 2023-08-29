@@ -24,7 +24,7 @@ const OAuthLogin = () => {
 
   const loginToGoogle = () => {
     localStorage.setItem("loginWith", "Google"); 
-    window.location.assign("https://localhost:3001/api/google/auth");
+    window.location.assign("http://localhost:3001/api/google/auth");
   };
 
   return (
