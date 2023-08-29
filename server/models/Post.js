@@ -53,7 +53,7 @@ const postSchema = new Schema({
   ],
   reposts: [{
     type: Schema.Types.ObjectId,
-    ref: User
+    ref: "User"
   }]
 });
 

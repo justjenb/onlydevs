@@ -1,6 +1,6 @@
 const typeDefs = `
 type User {
-  _id: ID
+  _id: ID!
   username: String
   email: String
   password: String
@@ -22,6 +22,7 @@ type Post {
   likes: [ID!]
   comments: [ID!]
   reposts: [ID!]
+  tags: [Tag]
 }
 
 type Comment {
