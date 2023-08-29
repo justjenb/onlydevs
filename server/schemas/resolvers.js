@@ -29,10 +29,10 @@ const resolvers = {
     },
     search: async (_, { query }) => {
       if (query.startsWith('#')) {
-        const tag = query.substring(1);
-        return await Post.find({ tags: tag });
+        const tag = query.slice(1);
+        return await Post.find({ tags: tag }).sort({ createdAt: -1 });
       } else if (query.startsWith('@')) {
-        const username = query.substring(1);
+        const username = query.slice(1);
         return await User.find({ username: new RegExp(username, 'i') });
       } else {
         const posts = await Post.find({ 

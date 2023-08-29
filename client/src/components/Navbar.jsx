@@ -4,10 +4,12 @@ import { Navbar, Nav, Container, Modal, Button, Form, FormControl, ListGroup } f
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 import Auth from "../utils/auth";
-import { useQuery } from '@apollo/client';
+import { useQuery, useLazyQuery } from '@apollo/client';
 import { toast } from "react-toastify";
 import useStore from "../store";
-import { GET_ALL_TAGS } from '../utils/queries';
+import { GET_ALL_TAGS, SEARCH } from '../utils/queries';
+import { useSearch } from '../context/SearchContext';
+
 
 const AppNavbar = () => {
   const [showModal, setShowModal] = useState(false);
@@ -15,13 +17,15 @@ const AppNavbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [focusedSuggestionIndex, setFocusedSuggestionIndex] = useState(-1);
-  const [searchResults, setSearchResults] = useState([]);
+  const { searchResults, setSearchResults } = useSearch();
 
   const { authUser, setAuthUser } = useStore();
-  
+
   const navigate = useNavigate();
   const store = useStore();
   const user = store.authUser;
+
+  const [search, { data: searchData }] = useLazyQuery(SEARCH);
 
   const { loading, data } = useQuery(GET_ALL_TAGS);
   let allPossibleSuggestions = data?.getAllTags || [];
@@ -34,13 +38,9 @@ const AppNavbar = () => {
   }, [suggestions]);
 
   const handleSearch = () => {
-    if (searchTerm.startsWith("#")) {
-      console.log("Searching for tag:", searchTerm);
-    } else if (searchTerm.startsWith("@")) {
-      console.log("Searching for username:", searchTerm);
-    } else {
-      console.log("Performing general search for:", searchTerm);
-    }
+    search({
+      variables: { query: searchTerm }
+    });
   };
 
   const handleSearchChange = (e) => {
@@ -76,7 +76,7 @@ const AppNavbar = () => {
     Auth.logout();
     setAuthUser(null);
     navigate('/');
-};
+  };
 
   return (
     <>
@@ -95,12 +95,12 @@ const AppNavbar = () => {
                 value={searchTerm}
                 onChange={handleSearchChange}
               />
-              <Button variant="outline-success">Search</Button>
+              <Button variant="outline-success" onClick={handleSearch}>Search</Button>
               {suggestions.length > 0 && (
                 <ListGroup className="position-absolute w-100 suggestion-list">
                   {suggestions.map((suggestion, index) => (
-                    <ListGroup.Item 
-                      key={index} 
+                    <ListGroup.Item
+                      key={index}
                       onClick={() => handleSuggestionClick(suggestion)}
                       className={index === focusedSuggestionIndex ? 'active' : ''}
                       tabIndex={0}

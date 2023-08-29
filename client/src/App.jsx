@@ -51,12 +51,12 @@ function AppContent() {
 
   return (
     <>
+    <SearchProvider>
     <ApolloProvider client={client}>
-      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID}>
           <AppNavbar />
           <Outlet />
-      </GoogleOAuthProvider>
     </ApolloProvider>
+    </SearchProvider>
     </>
   );
 }
