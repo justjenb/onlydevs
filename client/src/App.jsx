@@ -12,9 +12,8 @@ import { Outlet } from "react-router-dom";
 import Auth from './utils/auth';
 import useStore from './store/index';
 
-
 const httpLink = createHttpLink({
-  uri: "https://localhost:3001/graphql",
+  uri: '/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
