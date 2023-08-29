@@ -1,20 +1,72 @@
 [
-    {
-      "user": "john_doe",
-      "description": "This is a sample post by John.",
-      "postId": "sample_post_1",
-      "link" : "http://youtube.com",
-      "title" : "title text",
-      "comment": "peepeepoopoo"
-    },
-    {
-      "user": "jane_doe",
-      "description": "This is a sample post by Jane.",
-      "postId": "sample_post_2"
-    },
-    {
-      "user": "alice",
-      "description": "This is a sample post by Alice.",
-      "postId": "sample_post_3"
-    }
-  ]
+  {
+    "user": "john_doe",
+    "description": "This is a sample post by John.",
+    "postId": "sample_post_1",
+    "title": "Exploring YouTube",
+    "tags": ["JavaScript", "Node.js"]
+  },
+  {
+    "user": "jane_doe",
+    "description": "This is a sample post by Jane.",
+    "postId": "sample_post_2",
+    "title": "Jane's Thoughts",
+    "tags": ["React", "CSS"]
+  },
+  {
+    "user": "alice",
+    "description": "This is a sample post by Alice.",
+    "postId": "sample_post_3",
+    "title": "Alice in Wonderland",
+    "tags": ["HTML", "CSS"]
+  },
+  {
+    "user": "bob",
+    "description": "This is a sample post by Bob.",
+    "postId": "sample_post_4",
+    "title": "Bob the Builder",
+    "tags": ["SQL", "MongoDB"]
+  },
+  {
+    "user": "charlie",
+    "description": "This is a sample post by Charlie.",
+    "postId": "sample_post_5",
+    "title": "Charlie's Adventures",
+    "tags": ["Python", "Java"]
+  },
+  {
+    "user": "david",
+    "description": "This is a sample post by David.",
+    "postId": "sample_post_6",
+    "title": "David's Diary",
+    "tags": ["C", "C++"]
+  },
+  {
+    "user": "emily",
+    "description": "This is a sample post by Emily.",
+    "postId": "sample_post_7",
+    "title": "Emily's Eats",
+    "tags": ["Ruby", "PHP"]
+  },
+  {
+    "user": "frank",
+    "description": "This is a sample post by Frank.",
+    "postId": "sample_post_8",
+    "title": "Frank's Films",
+    "tags": ["Swift", "Kotlin"]
+  },
+  {
+    "user": "grace",
+    "description": "This is a sample post by Grace.",
+    "postId": "sample_post_9",
+    "title": "Grace's Garden",
+    "tags": ["Go", "Rust"]
+  },
+  {
+    "user": "harry",
+    "description": "This is a sample post by Harry.",
+    "postId": "sample_post_10",
+    "title": "Harry's Hobbies",
+    "tags": ["TypeScript", "Angular"]
+  }
+]

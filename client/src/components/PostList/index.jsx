@@ -8,6 +8,7 @@ import { UPDATE_LIKES, ADD_COMMENT, REPOST } from '../../utils/mutations';
 const PostList = ({ 
   posts,
   title, 
+  searchResults = [],
   showTitle = true, 
   showUsername = true 
 }) => {
@@ -60,8 +61,10 @@ const PostList = ({
       console.error(err);
     }
   };
+  const displayPosts = searchResults.length > 0 ? searchResults : posts;
 
-  if (!posts.length) {
+
+  if (!displayPosts.length) {
     return <h3>No Thoughts Yet</h3>;
   }
 
