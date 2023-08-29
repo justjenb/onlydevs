@@ -20,6 +20,7 @@ type Post {
   title: String
   likes: [ID!]
   comments: [ID!]
+  reposts: [ID!]
 }
 
 type Comment {

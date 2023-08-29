@@ -148,6 +148,21 @@ const resolvers = {
       });
       return newPost;
     },
+    repost: async (parent, { postId }, context) => {
+      if (context.user) {
+        const post = await Post.findByIdAndUpdate(
+          postId,
+          { $addToSet: { reposts: context.user._id } },
+          { new: true }
+        );
+        await User.findByIdAndUpdate(
+          context.user._id,
+          { $addToSet: { posts: post._id } }
+        );
+        return post;
+      }
+      throw new AuthenticationError('You need to be logged in!');
+    },
   },
 };
 

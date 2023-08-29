@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { UPDATE_LIKES, ADD_COMMENT } from '../../utils/mutations';
+import { UPDATE_LIKES, ADD_COMMENT, REPOST } from '../../utils/mutations';
+
 
 const PostList = ({ 
   posts,
@@ -14,6 +15,7 @@ const PostList = ({
   const [localPosts, setLocalPosts] = useState(posts);
   const [addComment] = useMutation(ADD_COMMENT);
   const [commentText, setCommentText] = useState('');
+  const [repost] = useMutation(REPOST);
 
   const handleAddComment = async (postId, text) => {
     try {
@@ -26,6 +28,7 @@ const PostList = ({
       );
     } catch (err) {
       console.error(err);
+      console.log('this-is-a-test');
     }
   };
 
@@ -35,6 +38,21 @@ const PostList = ({
         variables: { postId }
       });
       const updatedPost = data.updateLikes;
+      setLocalPosts(
+        localPosts.map((post) => (post._id === postId ? updatedPost : post))
+      );
+    } catch (err) {
+      console.error(err);
+      console.log('this-is-another-test');
+    }
+  };
+
+  const handleRepost = async (postId) => {
+    try {
+      const { data } = await repost({
+        variables: { postId }
+      });
+      const updatedPost = data.repost;
       setLocalPosts(
         localPosts.map((post) => (post._id === postId ? updatedPost : post))
       );
@@ -72,6 +90,7 @@ const PostList = ({
             <p>{post.postText}</p>
           </div>
           <button onClick={() => handleLike(post._id)}>Like</button>
+          <button onClick={() => handleRepost(post._id)}>Repost</button>
           <input 
             type="text" 
             placeholder="Add a comment..." 

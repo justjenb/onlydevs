@@ -32,7 +32,7 @@ const Home = () => {
 
   const handleLike = async (postId) => {
     try {
-      console.log("Post ID:", postId)
+      // console.log("Post ID:", postId)
       const { data: mutationData } = await updateLikes({
         variables: { postId }
       });
@@ -82,7 +82,7 @@ const Home = () => {
     localStorage.removeItem("loginWith");
     navigate("/");
   };
-  console.log("Posts" , allPosts)
+  // console.log("Posts" , allPosts)
   // If user data is not available, show a log in message
   if (!userDataGithub && !userDataGoogle) {
     return (

@@ -110,3 +110,12 @@ export const CREATE_POST = gql`
   }
 `;
 
+export const REPOST = gql`
+  mutation repost($postId: ID!) {
+    repost(postId: $postId) {
+      _id
+      reposts
+    }
+  }
+`;
+
