@@ -7,7 +7,7 @@ import { QUERY_POSTS } from "../../utils/queries";
 import { UPDATE_LIKES } from '../../utils/mutations';
 import AppNavbar from "../../components/Navbar";
 import PostList from "../../components/PostList/index";
-import { useSearch } from '../path/to/SearchContext';
+import { useSearch } from '../../context/SearchContext';
 
 
 import {
