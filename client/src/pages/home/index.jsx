@@ -2,9 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Avatar, Row, Col, Layout, Typography } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { QUERY_POSTS } from "../../utils/queries";
+import { UPDATE_LIKES } from '../../utils/mutations';
 import AppNavbar from "../../components/Navbar";
+import PostList from "../../components/PostList/index";
+import { useSearch } from '../path/to/SearchContext';
+
 
 import {
   getAccessTokenGithub,
@@ -19,13 +23,30 @@ const Home = () => {
   const [userDataGithub, setUserDataGithub] = useState(null);
   const [userDataGoogle, setUserDataGoogle] = useState(null);
   const [allPosts, setAllPosts] = useState([]);
-  const { loading, error, data } = useQuery(QUERY_POSTS);
+
+  const { searchResults } = useSearch();
+  
+  const { loading, error, data: queryData } = useQuery(QUERY_POSTS);
+  const [updateLikes] = useMutation(UPDATE_LIKES);
 
   useEffect(() => {
-    if (data && data.posts) {
-      setAllPosts(data.posts); 
+    if (queryData && queryData.posts) {
+      setAllPosts(queryData.posts); 
     }
-  }, [data]);
+  }, [queryData]);
+
+  const handleLike = async (postId) => {
+    try {
+      // console.log("Post ID:", postId)
+      const { data: mutationData } = await updateLikes({
+        variables: { postId }
+      });
+      console.log('Updated likes:', mutationData);
+    
+    } catch (err) {
+      console.error('Error updating likes:', err);
+    }
+  };
 
   const loginWith = useRef(localStorage.getItem("loginWith"));
   const navigate = useNavigate();
@@ -66,7 +87,7 @@ const Home = () => {
     localStorage.removeItem("loginWith");
     navigate("/");
   };
-
+  // console.log("Posts" , allPosts)
   // If user data is not available, show a log in message
   if (!userDataGithub && !userDataGoogle) {
     return (
@@ -78,28 +99,32 @@ const Home = () => {
             </Col>
           </Row>
           <Row>
-          <Col>
-            {loading && <div>Loading...</div>}
-            {error && <div>Error: {error.message}</div>}
-            {allPosts.length > 0 && (
-              <div>
-                <h3>Posts</h3>
-                <ul>
-                  {allPosts.map((post, index) => (
-                    <li key={index}>
-                    <strong>Title:</strong> {post.title} <br />
-                    <strong>Description:</strong> {post.description}
-                  </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </Col>
+            <Col>
+              {loading && <div>Loading...</div>}
+              {error && <div>Error: {error.message}</div>}
+              {allPosts.length > 0 && (
+                <div>
+                  <h3>Posts</h3>
+                  
+                  <ul>
+                    {allPosts.map((post, index) => (
+                      //  console.log("Current post object:", post),
+                      <li key={index}>
+                        <strong>Title:</strong> {post.title} <br />
+                        <strong>Description:</strong> {post.description} <br />
+                        <button onClick={() => handleLike(post._id)}>Like</button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </Col>
           </Row>
         </Content>
       </Layout>
     );
   }
+  
 
   // If user data is available, show user details
   return (
@@ -125,14 +150,8 @@ const Home = () => {
             Log out
           </Button>
         </Header>
-
-        <Content style={{ padding: "20px", textAlign: "center" }}>
-          <Row justify="center">
-            <Col>
-              <Text strong>Login with {loginWith.current}</Text>
-            </Col>
-          </Row>
-        </Content>
+        <div>Hello</div>
+        <PostList posts={allPosts} searchResults={searchResults} title="Recent Posts"/>
       </Content>
     </Layout>
   );

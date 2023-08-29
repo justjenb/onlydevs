@@ -11,6 +11,8 @@ import AppNavbar from "./components/Navbar";
 import { Outlet } from "react-router-dom";
 import Auth from './utils/auth';
 import useStore from './store/index';
+import { SearchProvider } from './context/SearchContext'; 
+
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -48,10 +50,12 @@ function AppContent() {
 
   return (
     <>
-      <ApolloProvider client={client}>
-        <AppNavbar />
-        <Outlet />
-      </ApolloProvider>
+    <SearchProvider>
+    <ApolloProvider client={client}>
+          <AppNavbar />
+          <Outlet />
+    </ApolloProvider>
+    </SearchProvider>
     </>
   );
 }

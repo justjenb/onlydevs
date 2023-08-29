@@ -19,6 +19,8 @@ type Post {
   link: String
   title: String
   likes: [ID!]
+  comments: [ID!]
+  reposts: [ID!]
 }
 
 type Comment {
@@ -46,6 +48,8 @@ input CreatePostInput {
   tags: [ID]
 }
 
+union SearchResult = User | Post
+
 type LogoutResponse {
   message: String!
 }
@@ -56,6 +60,7 @@ type LogoutResponse {
     createTag(input: CreateTagInput!): Tag
     updateTags(userId: ID!, tags: [ID!]): User
     updatePostTags(postId: ID!, tags: [ID!]): Post
+    updateLikes(postId: ID!): Post
     addPost(postText: String!): Post
     addComment(postId: ID!, commentText: String!): Post
     removePost(postId: ID!): Post
@@ -73,6 +78,7 @@ type LogoutResponse {
     post(postId: ID!): Post
     getAllTags: [Tag]
     getTagById(id: ID!): Tag
+    search(query: String!): [SearchResult]
   }
 `;
 

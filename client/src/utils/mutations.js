@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
 
+
 export const LOGIN_USER = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
@@ -64,9 +65,6 @@ export const ADD_COMMENT = gql`
   mutation addComment($postId: ID!, $commentText: String!) {
     addComment(postId: $postId, commentText: $commentText) {
       _id
-      postText
-      user
-      createdAt
       comments {
         _id
         commentText
@@ -94,11 +92,29 @@ export const UPDATE_POST_TAGS = gql`
   }
 `;
 
+export const UPDATE_LIKES = gql`
+  mutation updateLikes($postId: ID!) {
+    updateLikes(postId: $postId) {
+      _id
+      likes
+    }
+  }
+`;
+
 export const CREATE_POST = gql`
   mutation createPost($content: String!) {
     createPost(content: $content) {
       _id
       content
+    }
+  }
+`;
+
+export const REPOST = gql`
+  mutation repost($postId: ID!) {
+    repost(postId: $postId) {
+      _id
+      reposts
     }
   }
 `;
