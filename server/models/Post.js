@@ -50,6 +50,10 @@ const postSchema = new Schema({
       },
     },
   ],
+  reposts: [{
+    type: Schema.Types.ObjectId,
+    ref: User
+  }]
 });
 
 const Post = model("Post", postSchema);
