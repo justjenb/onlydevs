@@ -19,6 +19,8 @@ type Post {
   link: String
   title: String
   likes: [ID!]
+  comments: [ID!]
+  reposts: [ID!]
 }
 
 type Comment {
@@ -45,6 +47,8 @@ input CreatePostInput {
   title: String
   tags: [ID]
 }
+
+union SearchResult = User | Post
 
 type LogoutResponse {
   message: String!
@@ -74,6 +78,7 @@ type LogoutResponse {
     post(postId: ID!): Post
     getAllTags: [Tag]
     getTagById(id: ID!): Tag
+    search(query: String!): [SearchResult]
   }
 `;
 

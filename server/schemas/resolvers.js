@@ -27,6 +27,23 @@ const resolvers = {
     getTagById: async (_, { id }) => {
       return await Tag.findById(id);
     },
+    search: async (_, { query }) => {
+      if (query.startsWith('#')) {
+        const tag = query.slice(1);
+        return await Post.find({ tags: tag }).sort({ createdAt: -1 });
+      } else if (query.startsWith('@')) {
+        const username = query.slice(1);
+        return await User.find({ username: new RegExp(username, 'i') });
+      } else {
+        const posts = await Post.find({ 
+          description: new RegExp(query, 'i')
+        });
+        const users = await User.find({
+          username: new RegExp(query, 'i')
+        });
+        return [...posts, ...users];
+      }
+    },
   },
   Mutation: {
     login: async (parent, { email, password }) => {
@@ -89,7 +106,7 @@ const resolvers = {
           }
         );
       }
-      throw AuthenticationError;
+      throw AuthenticationError('You need to be logged in!');
     },
     updateLikes: async (parent, { postId }, context) => {
       if (context.user) {
@@ -147,6 +164,21 @@ const resolvers = {
         user: context.user._id,
       });
       return newPost;
+    },
+    repost: async (parent, { postId }, context) => {
+      if (context.user) {
+        const post = await Post.findByIdAndUpdate(
+          postId,
+          { $addToSet: { reposts: context.user._id } },
+          { new: true }
+        );
+        await User.findByIdAndUpdate(
+          context.user._id,
+          { $addToSet: { posts: post._id } }
+        );
+        return post;
+      }
+      throw new AuthenticationError('You need to be logged in!');
     },
   },
 };

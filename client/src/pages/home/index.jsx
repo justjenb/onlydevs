@@ -7,6 +7,8 @@ import { QUERY_POSTS } from "../../utils/queries";
 import { UPDATE_LIKES } from '../../utils/mutations';
 import AppNavbar from "../../components/Navbar";
 import PostList from "../../components/PostList/index";
+import { useSearch } from '../path/to/SearchContext';
+
 
 import {
   getAccessTokenGithub,
@@ -21,22 +23,25 @@ const Home = () => {
   const [userDataGithub, setUserDataGithub] = useState(null);
   const [userDataGoogle, setUserDataGoogle] = useState(null);
   const [allPosts, setAllPosts] = useState([]);
-  const { loading, error, data } = useQuery(QUERY_POSTS);
+
+  const { searchResults } = useSearch();
+  
+  const { loading, error, data: queryData } = useQuery(QUERY_POSTS);
   const [updateLikes] = useMutation(UPDATE_LIKES);
 
   useEffect(() => {
-    if (data && data.posts) {
-      setAllPosts(data.posts); 
+    if (queryData && queryData.posts) {
+      setAllPosts(queryData.posts); 
     }
-  }, [data]);
+  }, [queryData]);
 
   const handleLike = async (postId) => {
     try {
-      console.log("Post ID:", postId)
-      const { data } = await updateLikes({
+      // console.log("Post ID:", postId)
+      const { data: mutationData } = await updateLikes({
         variables: { postId }
       });
-      console.log('Updated likes:', data);
+      console.log('Updated likes:', mutationData);
     
     } catch (err) {
       console.error('Error updating likes:', err);
@@ -82,7 +87,7 @@ const Home = () => {
     localStorage.removeItem("loginWith");
     navigate("/");
   };
-  console.log("Posts" , allPosts)
+  // console.log("Posts" , allPosts)
   // If user data is not available, show a log in message
   if (!userDataGithub && !userDataGoogle) {
     return (
@@ -103,7 +108,7 @@ const Home = () => {
                   
                   <ul>
                     {allPosts.map((post, index) => (
-                       console.log("Current post object:", post),
+                      //  console.log("Current post object:", post),
                       <li key={index}>
                         <strong>Title:</strong> {post.title} <br />
                         <strong>Description:</strong> {post.description} <br />
@@ -146,7 +151,7 @@ const Home = () => {
           </Button>
         </Header>
         <div>Hello</div>
-        <PostList posts={allPosts} title="Recent Posts" />
+        <PostList posts={allPosts} searchResults={searchResults} title="Recent Posts"/>
       </Content>
     </Layout>
   );
