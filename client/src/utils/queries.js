@@ -50,3 +50,20 @@ query {
   }
 }
 `;
+
+export const SEARCH = gql`
+  query Search($query: String!) {
+    search(query: $query) {
+      ... on User {
+        _id
+        username
+      }
+      ... on Post {
+        _id
+        title
+        description
+        tags
+      }
+    }
+  }
+`;

@@ -54,12 +54,11 @@ router.get('/callback', async (req, res) => {
       secure: process.env.NODE_ENV === 'production'
     });
 
-    res.redirect('http://localhost:3000');
+    res.redirect('https://localhost:3000');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 
 module.exports = router;

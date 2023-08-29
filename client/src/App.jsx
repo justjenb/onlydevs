@@ -11,10 +11,12 @@ import AppNavbar from "./components/Navbar";
 import { Outlet } from "react-router-dom";
 import Auth from './utils/auth';
 import useStore from './store/index';
-import { Container, Row, Col } from 'react-bootstrap';
+import { SearchProvider } from './context/SearchContext'; 
+// import { Container, Row, Col } from 'react-bootstrap';
+import { Grid } from '@mui/material';
 
 const httpLink = createHttpLink({
-  uri: "https://localhost:3001/graphql",
+  uri: '/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -49,32 +51,21 @@ function AppContent() {
 
   return (
     <>
+    <SearchProvider>
       <ApolloProvider client={client}>
-        <Container fluid>
-          <Row>
-            <Col xs={2} id="sidebar-wrapper">  
-              <AppNavbar />
-            </Col>
-            <Col  xs={10} id="page-content-wrapper">
+      <Grid columns={16}>
+          <Grid xs={6} id="sidebar-wrapper">  
+            <AppNavbar />
+          </Grid>
+          <Grid  xs={10} id="page-content-wrapper">
             <Outlet />
-            </Col> 
-        </Row>
-        </Container>
-
-        </ApolloProvider>
+          </Grid>
+        </Grid>
+      </ApolloProvider>
+    </SearchProvider>
     </>
   );
 }
-
-// return (
-//     <>
-//       <ApolloProvider client={client}>
-//         <AppNavbar />
-//         <Outlet />
-//       </ApolloProvider>
-//     </>
-//   );
-// }
 
 
 function App() {
