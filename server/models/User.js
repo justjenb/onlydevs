@@ -54,6 +54,12 @@ const userSchema = new Schema(
         ref: 'User',
       },
     ],
+    githubId: {
+      type: String,
+      unique: true,
+    },
+    githubUsername: String,
+    githubAccessToken: String,
   },
   {
     toJSON: {

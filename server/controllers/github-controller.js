@@ -1,55 +1,55 @@
-const dotenv = require("dotenv");
-const axios = require("axios");
+const passport = require("passport");
+const GitHubStrategy = require("passport-github-oauth20").Strategy;
+const User = require("../models/User");
+const { findOrCreateUser } = require('./user-controller'); // Import the findOrCreateUser function
 
-dotenv.config();
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
 
-const getAccessToken = async (code) => {
+passport.deserializeUser(async (id, done) => {
   try {
-    const params = new URLSearchParams({
-      client_id: process.env.GITHUB_OAUTH_CLIENT_ID,
-      client_secret: process.env.GITHUB_OAUTH_CLIENT_SECRET,
-      code: code
-    });
-    
-    const { data } = await axios.post(
-      `https://github.com/login/oauth/access_token?${params.toString()}`,
-      {},
-      {
-        headers: {
-          Accept: "application/json",
-        },
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err, null);
+  }
+});
+
+const githubCallbackURL =
+  process.env.NODE_ENV === "production"
+    ? "https://onlydevs-504c5476d7ee.herokuapp.com/api/github/auth/callback"
+    : "http://localhost:3001/api/github/auth/callback";
+
+passport.use(
+  new GitHubStrategy(
+    {
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: githubCallbackURL,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        
+        const authData = {
+          githubId: profile.id,
+          name: profile.name,
+          username: profile.username,
+          email: profile.email,
+          githubUsername: profile.username,
+          githubAccessToken: accessToken,
+          githubRefreshToken: refreshToken,
+          password: "GITHUB_SIGNED_IN_USER",
+        };
+
+        const user = await findOrCreateUser(profile.emails[0].value, authData);
+
+        done(null, user);
+      } catch (error) {
+        return done(error, null);
       }
-    );
-    
-    if (data.error) {
-      throw new Error(data.error_description || "Error fetching access token");
     }
+  )
+);
 
-    return data;
-
-  } catch (error) {
-    console.error(error.message || error);
-    return { error: error.message || "Unexpected error occurred" };
-  }
-};
-
-const getUserData = async (accessToken) => {
-  try {
-    const { data } = await axios.get("https://api.github.com/user", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    return data;
-
-  } catch (error) {
-    console.error(error.message || error);
-    return { error: error.message || "Unexpected error occurred" };
-  }
-};
-
-module.exports = {
-  getAccessToken,
-  getUserData
-};
+module.exports = passport;

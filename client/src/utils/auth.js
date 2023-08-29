@@ -51,12 +51,12 @@ class AuthService {
           break;
   
         case 'google':
-          localStorage.removeItem('id_token'); // Remove token if you also save Google's token in localStorage.
+          localStorage.removeItem('id_token');
           window.location.reload();
           break;
   
         case 'github':
-          await this.clearServerToken(); // Clear server side token
+          localStorage.removeItem('id_token');
           window.location.reload();
           break;
   
@@ -65,7 +65,6 @@ class AuthService {
       }
     } catch (error) {
       console.error('Error during logout:', error);
-      // Handle error as needed (e.g., display an error message to the user)
     }
   }
 }

@@ -12,7 +12,7 @@ function CallbackHandler() {
 
     if (token) {
       AuthService.login(token);
-      navigate('/');  // Or wherever you want
+      navigate('/'); 
     } else {
       navigate('/login');
     }
