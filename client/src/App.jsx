@@ -11,7 +11,7 @@ import AppNavbar from "./components/Navbar";
 import { Outlet } from "react-router-dom";
 import Auth from './utils/auth';
 import useStore from './store/index';
-
+import { Container, Row, Col } from 'react-bootstrap';
 
 const httpLink = createHttpLink({
   uri: "https://localhost:3001/graphql",
@@ -50,12 +50,31 @@ function AppContent() {
   return (
     <>
       <ApolloProvider client={client}>
-        <AppNavbar />
-        <Outlet />
-      </ApolloProvider>
+        <Container fluid>
+          <Row>
+            <Col xs={2} id="sidebar-wrapper">  
+              <AppNavbar />
+            </Col>
+            <Col  xs={10} id="page-content-wrapper">
+            <Outlet />
+            </Col> 
+        </Row>
+        </Container>
+
+        </ApolloProvider>
     </>
   );
 }
+
+// return (
+//     <>
+//       <ApolloProvider client={client}>
+//         <AppNavbar />
+//         <Outlet />
+//       </ApolloProvider>
+//     </>
+//   );
+// }
 
 
 function App() {
