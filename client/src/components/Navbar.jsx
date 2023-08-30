@@ -11,7 +11,7 @@ import { GET_ALL_TAGS, SEARCH } from '../utils/queries';
 import { useSearch } from '../context/SearchContext';
 import '../App.css';
 import { Home, NotificationsActiveSharp, NotificationsNoneSharp, Search, ThreeP, AddCircle, AccountCircle }  from '@mui/icons-material';
-import { Tooltip, Grid } from '@mui/material'
+import { Tooltip, Grid, Fab } from '@mui/material'
 import CreatePostForm from './CreatePostForm';
 
 
@@ -95,7 +95,6 @@ const AppNavbar = () => {
   return (
     <>
      <div className="side-navbar">
-  
       <div className="nav-item">
         <Link to="/" className="logo">
           OnlyDevs
@@ -103,13 +102,17 @@ const AppNavbar = () => {
       </div>
       <Tooltip className="nav-item" title="Home">
         <Link to="/" className="home-nav icon">
-          <Home />
+        <Fab size="small" color="secondary" aria-label="home">
+        <Home />
+        </Fab>
         </Link>
       </Tooltip>
       <Tooltip className="nav-item" title="Search">
         {!isExpanded ? (
           <span onClick={() => setExpanded(true)}>
+          <Fab size="small" color="secondary" aria-label="search">
             <Search className="icon"/>
+            </Fab>
             </span>
         ) : (
           <Form onKeyDown={handleKeyDown}>
@@ -141,22 +144,26 @@ const AppNavbar = () => {
       {/* TODO Set Link */}
       {/* {!isExpanded ? (
         <span onClick={() => setExpanded(true)}> */}
+        <Fab size="small" color="secondary" aria-label="post">
           <AddCircle className="icon post"/>
-
+          </Fab>
             {/* </span>
         ) : ( <CreatePostForm onClick={() => setExpanded(false)}/>)
         } */}
-
         </Tooltip>
       <Tooltip className="nav-item" title="Notifications">
       {/* TODO Set Link */}
         <Link to="/" className="notif icon">
+        <Fab size="small" color="secondary" aria-label="notification">
           <NotificationsNoneSharp />
+          </Fab>
         </Link>
       </Tooltip>
       <Tooltip className="nav-item" title="Messages">
         <Link to="/messages">
+        <Fab size="small" color="secondary" aria-label="messages">
             <ThreeP className="icon"/>
+            </Fab>
         </Link>
       </Tooltip>
       {user ? (
@@ -164,7 +171,9 @@ const AppNavbar = () => {
           <Tooltip className="nav-item" title="Account">
           {/* NOTES: Add to show image? */}
             <Link to="/profile">
+            <Fab size="small" color="secondary" aria-label="messages">
               <AccountCircle className="icon account"/>
+              </Fab>
             </Link>
           </Tooltip>
           <Tooltip className="nav-item" title="Logout">

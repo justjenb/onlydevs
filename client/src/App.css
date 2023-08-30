@@ -1,5 +1,7 @@
 body {
   font-family: 'Rubik', sans-serif;
+  background-color: #f6f6f6;
+  background-image: url("https://www.transparenttextures.com/patterns/3px-tile.png");
 }
 
 h1,
