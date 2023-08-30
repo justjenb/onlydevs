@@ -5,8 +5,12 @@ import { LogoutOutlined } from "@ant-design/icons";
 import { useQuery, useMutation } from "@apollo/client";
 import { QUERY_POSTS } from "../../utils/queries";
 import { UPDATE_LIKES } from '../../utils/mutations';
-import AppNavbar from "../../components/Navbar";
+// import AppNavbar from "../../components/Navbar";
 import PostList from "../../components/PostList/index";
+import { useSearch } from '../../context/SearchContext';
+
+import { Container, Box, CssBaseline } from '@mui/material'
+
 
 import {
   getAccessTokenGithub,
@@ -21,22 +25,25 @@ const Home = () => {
   const [userDataGithub, setUserDataGithub] = useState(null);
   const [userDataGoogle, setUserDataGoogle] = useState(null);
   const [allPosts, setAllPosts] = useState([]);
-  const { loading, error, data } = useQuery(QUERY_POSTS);
+
+  const { searchResults } = useSearch();
+  
+  const { loading, error, data: queryData } = useQuery(QUERY_POSTS);
   const [updateLikes] = useMutation(UPDATE_LIKES);
 
   useEffect(() => {
-    if (data && data.posts) {
-      setAllPosts(data.posts); 
+    if (queryData && queryData.posts) {
+      setAllPosts(queryData.posts); 
     }
-  }, [data]);
+  }, [queryData]);
 
   const handleLike = async (postId) => {
     try {
-      console.log("Post ID:", postId)
-      const { data } = await updateLikes({
+      // console.log("Post ID:", postId)
+      const { data: mutationData } = await updateLikes({
         variables: { postId }
       });
-      console.log('Updated likes:', data);
+      console.log('Updated likes:', mutationData);
     
     } catch (err) {
       console.error('Error updating likes:', err);
@@ -82,57 +89,56 @@ const Home = () => {
     localStorage.removeItem("loginWith");
     navigate("/");
   };
-  console.log("Posts" , allPosts)
+  // console.log("Posts" , allPosts)
   // If user data is not available, show a log in message
-  if (!userDataGithub && !userDataGoogle) {
-    return (
-      <Layout>
-        <Content style={{ padding: "20px", textAlign: "center" }}>
-          <Row justify="center">
-            <Col>
-              <Text strong>Welcome to OnlyDevs!</Text>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              {loading && <div>Loading...</div>}
-              {error && <div>Error: {error.message}</div>}
-              {allPosts.length > 0 && (
-                <div>
-                  <h3>Posts</h3>
+  // if (!userDataGithub && !userDataGoogle) {
+  //   return (
+  //     <Layout>
+  //       <Content style={{ padding: "20px", textAlign: "center" }}>
+  //         <Row justify="center">
+  //           <Col>
+  //             <Text strong>Welcome to OnlyDevs!</Text>
+  //            </Col> 
+  //         </Row>
+  //         <Row>
+  //           <Col>
+  //             {loading && <div>Loading...</div>}
+  //             {error && <div>Error: {error.message}</div>}
+  //             {allPosts.length > 0 && (
+  //               <div>
+  //                 <h3>Posts</h3>
                   
-                  <ul>
-                    {allPosts.map((post, index) => (
-                       console.log("Current post object:", post),
-                      <li key={index}>
-                        <strong>Title:</strong> {post.title} <br />
-                        <strong>Description:</strong> {post.description} <br />
-                        <button onClick={() => handleLike(post._id)}>Like</button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </Col>
-          </Row>
-        </Content>
-      </Layout>
-    );
-  }
+  //                 <ul>
+  //                   {allPosts.map((post, index) => (
+  //                     //  console.log("Current post object:", post),
+  //                     <li key={index}>
+  //                       <strong>Title:</strong> {post.title} <br />
+  //                       <strong>Description:</strong> {post.description} <br />
+  //                       <button onClick={() => handleLike(post._id)}>Like</button>
+  //                     </li>
+  //                   ))}
+  //                 </ul>
+  //               </div>
+  //             )}
+  //           </Col> 
+  //       </Row>
+  //       </Content>
+  //     </Layout>
+  //   );
+  // } 
   
 
   // If user data is available, show user details
   return (
-    <Layout>
-      <AppNavbar />
-      <Content style={{ padding: "20px", textAlign: "center" }}>
-        <Header
+    <Container fixed>
+      <Box style={{height: '100vh'}}>
+        {/* <Header
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
           }}
-        >
+        > */}
           <Avatar
             size="large"
             src={
@@ -144,12 +150,41 @@ const Home = () => {
           <Button type="primary" icon={<LogoutOutlined />} onClick={setLogOut}>
             Log out
           </Button>
-        </Header>
+        {/* </Header> */}
         <div>Hello</div>
-        <PostList posts={allPosts} title="Recent Posts" />
-      </Content>
-    </Layout>
+        <PostList posts={allPosts} searchResults={searchResults} title="Recent Posts"/>
+      </Box>
+    </Container>
   );
 };
+
+  // return (
+  //   <Layout>
+  //     <Content style={{ padding: "20px", textAlign: "center" }}>
+  //       <Header
+  //         style={{
+  //           display: "flex",
+  //           alignItems: "center",
+  //           justifyContent: "space-between",
+  //         }}
+  //       >
+  //         <Avatar
+  //           size="large"
+  //           src={
+  //             loginWith.current === "GitHub"
+  //               ? userDataGithub?.avatar_url
+  //               : userDataGoogle?.picture
+  //           }
+  //         />
+  //         <Button type="primary" icon={<LogoutOutlined />} onClick={setLogOut}>
+  //           Log out
+  //         </Button>
+  //       </Header>
+  //       <div>Hello</div>
+  //       <PostList posts={allPosts} searchResults={searchResults} title="Recent Posts"/>
+  //     </Content>
+  //   </Layout>
+  // );
+// };
 
 export default Home;

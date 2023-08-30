@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Navbar, Nav, Container, Modal, Button, Form, FormControl, ListGroup } from "react-bootstrap";
+import { Modal, Button, Form, FormControl, ListGroup } from "react-bootstrap";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 import Auth from "../utils/auth";
-import { useQuery } from '@apollo/client';
-import { toast } from "react-toastify";
+import { useQuery, useLazyQuery } from '@apollo/client';
+// import { toast } from "react-toastify";
 import useStore from "../store";
-import { GET_ALL_TAGS } from '../utils/queries';
+import { GET_ALL_TAGS, SEARCH } from '../utils/queries';
+import { useSearch } from '../context/SearchContext';
+import '../App.css';
+import { Home, NotificationsActiveSharp, NotificationsNoneSharp, Search, ThreeP, AddCircle, AccountCircle }  from '@mui/icons-material';
+import { Tooltip, Grid } from '@mui/material'
+import CreatePostForm from './CreatePostForm';
 
 const AppNavbar = () => {
   const [showModal, setShowModal] = useState(false);
@@ -15,11 +20,22 @@ const AppNavbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [focusedSuggestionIndex, setFocusedSuggestionIndex] = useState(-1);
-  const { authUser, setAuthUser } = useStore();
-  
+  const [isExpanded, setExpanded] = useState(false);
+
+  const { searchResults, setSearchResults } = useSearch();
+
+  const { authUser, setAuthUser } = useStore(state => ({ authUser: state.authUser, setAuthUser: state.setAuthUser }));
   const navigate = useNavigate();
   const store = useStore();
   const user = store.authUser;
+
+  const [search, { data: searchData }] = useLazyQuery(SEARCH);
+
+  useEffect(() => {
+    if (searchData) {
+      setSearchResults(searchData.search);
+    }
+  }, [searchData]);
 
   const { loading, data } = useQuery(GET_ALL_TAGS);
   let allPossibleSuggestions = data?.getAllTags || [];
@@ -27,13 +43,15 @@ const AppNavbar = () => {
   if (data && data.getAllTags) {
     allPossibleSuggestions = data.getAllTags.map(tag => tag.name);
   }
+  
   useEffect(() => {
     setFocusedSuggestionIndex(-1);
   }, [suggestions]);
 
   const handleSearch = () => {
-    console.log("Searching for:", searchTerm);
-    
+    search({
+      variables: { query: searchTerm }
+    });
   };
 
   const handleSearchChange = (e) => {
@@ -69,78 +87,98 @@ const AppNavbar = () => {
     Auth.logout();
     setAuthUser(null);
     navigate('/');
-};
+  };
 
   return (
     <>
-      <Navbar bg="dark" variant="dark" expand="lg">
-        <Container fluid>
-          <Navbar.Brand as={Link} to="/">
-            OnlyDevs
-          </Navbar.Brand>
-
-          <Form as="div" className="mr-auto" onKeyDown={handleKeyDown}>
-            <div className="position-relative">
-              <FormControl
-                type="text"
-                placeholder="Search"
-                className="mr-sm-2"
-                value={searchTerm}
-                onChange={handleSearchChange}
-              />
-              <Button variant="outline-success">Search</Button>
-              {suggestions.length > 0 && (
-                <ListGroup className="position-absolute w-100 suggestion-list">
-                  {suggestions.map((suggestion, index) => (
-                    <ListGroup.Item 
-                      key={index} 
-                      onClick={() => handleSuggestionClick(suggestion)}
-                      className={index === focusedSuggestionIndex ? 'active' : ''}
-                      tabIndex={0}
-                    >
-                      {suggestion}
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              )}
-            </div>
+     <div className="side-navbar">
+  
+      <div className="nav-item">
+        <Link to="/" className="logo">
+          OnlyDevs
+        </Link>
+      </div>
+      <Tooltip className="nav-item" title="Home">
+        <Link to="/" className="home-nav icon">
+          <Home />
+        </Link>
+      </Tooltip>
+      <Tooltip className="nav-item" title="Search">
+        {!isExpanded ? (
+          <span onClick={() => setExpanded(true)}>
+            <Search className="icon"/>
+            </span>
+        ) : (
+          <Form onKeyDown={handleKeyDown}>
+            <FormControl
+              type="text"
+              placeholder="Search"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onBlur={() => setExpanded(false)}
+            />
+            {suggestions.length > 0 && (
+              <ListGroup className="suggestion-list">
+                {suggestions.map((suggestion, index) => (
+                  <ListGroup.Item 
+                    key={index} 
+                    onClick={() => handleSuggestionClick(suggestion)}
+                    className={index === focusedSuggestionIndex ? 'active' : ''}
+                    tabIndex={0}
+                  >
+                    {suggestion}
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            )}
           </Form>
+        )}
+      </Tooltip>
+      <Tooltip className="nav-item" title="Post">
+      {/* TODO Set Link */}
+      {/* {!isExpanded ? (
+        <span onClick={() => setExpanded(true)}> */}
+          <AddCircle className="icon post"/>
 
-          <Navbar.Toggle aria-controls="navbar" />
-          <Navbar.Collapse id="navbar">
-            <Nav className="ml-auto">
-              <Nav.Link as={Link} to="/feeds">
-                Feeds
-              </Nav.Link>
+            {/* </span>
+        ) : ( <CreatePostForm onClick={() => setExpanded(false)}/>)
+        } */}
 
-              {user ? (
-                <>
-                  <Nav.Link as={Link} to="/profile">
-                    Profile
-                  </Nav.Link>
-                  <Nav.Link as={Link} to="/saved">
-                    See Your Books
-                  </Nav.Link>
-                  <Nav.Link onClick={handleLogout}>
-                    Logout
-                  </Nav.Link>
-                </>
-              ) : (
-                <Nav.Link onClick={() => setShowModal(true)}>
-                  Login/Sign Up
-                </Nav.Link>
-              )}
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-
-      <Modal
-        size="lg"
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        aria-labelledby="login-modal"
-      >
+        </Tooltip>
+      <Tooltip className="nav-item" title="Notifications">
+      {/* TODO Set Link */}
+        <Link to="/" className="notif icon">
+          <NotificationsNoneSharp />
+        </Link>
+      </Tooltip>
+      <Tooltip className="nav-item" title="Messages">
+        <Link to="/messages">
+            <ThreeP className="icon"/>
+        </Link>
+      </Tooltip>
+      {user ? (
+        <div>
+          <Tooltip className="nav-item" title="Account">
+          {/* NOTES: Add to show image? */}
+            <Link to="/profile">
+              <AccountCircle className="icon account"/>
+            </Link>
+          </Tooltip>
+          <Tooltip className="nav-item" title="Logout">
+            <Link onClick={handleLogout}>
+              Logout
+            </Link>
+          </Tooltip>
+        </div>) : (
+        <div className="nav-item">
+          <Link onClick={() => setShowModal(true)}>
+            Login/ Sign Up
+          </Link>
+        </div>
+      )}
+   
+    </div>
+       <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} aria-labelledby="login-modal">
         <Modal.Header closeButton>
           <Modal.Title id="login-modal">
             {showSignup ? "Sign Up" : "Login"}
@@ -166,7 +204,7 @@ const AppNavbar = () => {
         </Modal.Footer>
       </Modal>
     </>
-  );
-};
+  );  
+  }
 
 export default AppNavbar;

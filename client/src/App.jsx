@@ -9,12 +9,14 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import AppNavbar from "./components/Navbar";
 import { Outlet } from "react-router-dom";
-import Auth from './utils/auth';
-import useStore from './store/index';
-
+import Auth from "./utils/auth";
+import useStore from "./store/index";
+import { SearchProvider } from "./context/SearchContext";
+import { Grid } from "@mui/material";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const httpLink = createHttpLink({
-  uri: "https://localhost:3001/graphql",
+  uri: "/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -41,7 +43,7 @@ function AppContent() {
     if (token && Auth.loggedIn()) {
       const userProfile = Auth.getProfile();
       setAuthUser(userProfile);
-      console.log(`Auth user ${userProfile}`);
+      // console.log(`Auth user: ${JSON.stringify(userProfile, null, 2)}`);
     } else {
       setAuthUser(null);
     }
@@ -49,18 +51,27 @@ function AppContent() {
 
   return (
     <>
-      <ApolloProvider client={client}>
-        <AppNavbar />
-        <Outlet />
-      </ApolloProvider>
+      {" "}
+      <ErrorBoundary>
+        <SearchProvider>
+          <ApolloProvider client={client}>
+            <Grid container>
+              <Grid xs={3} id="sidebar-wrapper">
+                <AppNavbar />
+              </Grid>
+              <Grid xs={9} id="page-content-wrapper">
+                <Outlet />
+              </Grid>
+            </Grid>
+          </ApolloProvider>
+        </SearchProvider>
+      </ErrorBoundary>
     </>
   );
 }
 
-
 function App() {
   return <AppContent />;
 }
-
 
 export default App;

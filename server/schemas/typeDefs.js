@@ -4,6 +4,8 @@ type User {
   username: String
   email: String
   password: String
+  posts: [Post]
+  savedPosts: [Post]
 }
 
 type Tag {
@@ -19,6 +21,9 @@ type Post {
   link: String
   title: String
   likes: [ID!]
+  comments: [ID!]
+  reposts: [ID!]
+  tags: [Tag]
 }
 
 type Comment {
@@ -29,8 +34,8 @@ type Comment {
 }
 
 type Auth {
-  token: ID!
-  user: User!
+  token: ID
+  user: User
 }
 
 input CreateTagInput {
@@ -46,14 +51,16 @@ input CreatePostInput {
   tags: [ID]
 }
 
+union SearchResult = User | Post
+
 type LogoutResponse {
   message: String!
 }
 
   type Mutation {
-    login(email: String!, password: String!): Auth!
-    addUser(username: String!, email: String!, password: String!): Auth!
-    createTag(input: CreateTagInput!): Tag
+    login(email: String!, password: String!): Auth
+    addUser(username: String!, email: String!, password: String!): Auth
+    createTag(name: String!): Tag!
     updateTags(userId: ID!, tags: [ID!]): User
     updatePostTags(postId: ID!, tags: [ID!]): Post
     updateLikes(postId: ID!): Post
@@ -62,8 +69,9 @@ type LogoutResponse {
     removePost(postId: ID!): Post
     removeComment(postId: ID!, commentId: ID!): Post
     createPost(input: CreatePostInput!): Post
-    loginWithGoogle(token: String!): Auth!
+    loginWithGoogle(token: String!): Auth
     logout: LogoutResponse!
+    repost(postId: ID!): Post
   }
 
   type Query {
@@ -74,6 +82,7 @@ type LogoutResponse {
     post(postId: ID!): Post
     getAllTags: [Tag]
     getTagById(id: ID!): Tag
+    search(query: String!): [SearchResult]
   }
 `;
 
