@@ -22,12 +22,6 @@ module.exports = {
       return req;
     }
 
-    // const decodedPayload = jwt.decode(token);
-    // console.log("Decoded Token:", decodedPayload);
-    // const expirationDate = new Date(decodedPayload.exp * 1000);
-    // console.log("Token expiration date:", expirationDate);
-    // console.log("Server current date:", new Date());
-
     try {
       const { authenticatedPerson } = jwt.verify(token, secret, { maxAge: expiration });
       req.user = authenticatedPerson;

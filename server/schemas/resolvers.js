@@ -1,6 +1,10 @@
 const { User, Post, Tag } = require("../models");
 const { signToken, AuthenticationError } = require("../utils/auth");
 
+const ERROR_MESSAGES = {
+  auth: "You must be logged in!"
+};
+
 const resolvers = {
   SearchResult: {
     __resolveType(obj, context, info){
