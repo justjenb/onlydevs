@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -17,7 +17,7 @@ const PostList = ({
   const [addComment] = useMutation(ADD_COMMENT);
   const [commentText, setCommentText] = useState('');
   const [repost] = useMutation(REPOST);
-
+  
   const handleAddComment = async (postId, text) => {
     try {
       const { data } = await addComment({
@@ -61,8 +61,13 @@ const PostList = ({
       console.error(err);
     }
   };
-  const displayPosts = searchResults.length > 0 ? searchResults : posts;
 
+  useEffect(() => {
+    setLocalPosts(posts);
+  }, [posts]);
+
+  const displayPosts = searchResults.length > 0 ? searchResults : posts;
+  console.log("Display Posts:", displayPosts);
 
   if (!displayPosts.length) {
     return <h3>No Thoughts Yet</h3>;
@@ -71,7 +76,8 @@ const PostList = ({
   return (
     <div>
       {showTitle && <h3>{title}</h3>}
-      {posts.map((post) => (
+       {displayPosts.map((post, index) => (
+        console.log("Rendering post:", post),
         <div key={post._id} className="card mb-3">
           <h4 className="card-header bg-primary text-light p-2 m-0">
             {showUsername ? (
@@ -90,7 +96,7 @@ const PostList = ({
             )}
           </h4>
           <div className="card-body bg-light p-2">
-            <p>{post.postText}</p>
+            <p>{post.description}</p>
           </div>
           <button onClick={() => handleLike(post._id)}>Like</button>
           <button onClick={() => handleRepost(post._id)}>Repost</button>
@@ -113,7 +119,7 @@ const PostList = ({
             Join the discussion on this thought.
           </Link>
         </div>
-      ))}
+      ))};
     </div>
   );
 };

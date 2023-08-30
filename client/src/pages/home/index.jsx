@@ -30,12 +30,18 @@ const Home = () => {
   
   const { loading, error, data: queryData } = useQuery(QUERY_POSTS);
   const [updateLikes] = useMutation(UPDATE_LIKES);
+  
 
   useEffect(() => {
+    console.log("useEffect is running, queryData:", queryData);
     if (queryData && queryData.posts) {
       setAllPosts(queryData.posts); 
+      console.log(allPosts)
     }
   }, [queryData]);
+
+  console.log("Search Results:", searchResults);
+console.log("All Posts:", allPosts);
 
   const handleLike = async (postId) => {
     try {
@@ -89,43 +95,45 @@ const Home = () => {
     localStorage.removeItem("loginWith");
     navigate("/");
   };
-  // console.log("Posts" , allPosts)
+  
+  const postsToDisplay = searchResults.length > 0 ? searchResults : allPosts;
+  console.log("Posts" , allPosts)
   // If user data is not available, show a log in message
-  // if (!userDataGithub && !userDataGoogle) {
-  //   return (
-  //     <Layout>
-  //       <Content style={{ padding: "20px", textAlign: "center" }}>
-  //         <Row justify="center">
-  //           <Col>
-  //             <Text strong>Welcome to OnlyDevs!</Text>
-  //            </Col> 
-  //         </Row>
-  //         <Row>
-  //           <Col>
-  //             {loading && <div>Loading...</div>}
-  //             {error && <div>Error: {error.message}</div>}
-  //             {allPosts.length > 0 && (
-  //               <div>
-  //                 <h3>Posts</h3>
+  if (!userDataGithub && !userDataGoogle) {
+    return (
+      <Layout>
+        <Content style={{ padding: "20px", textAlign: "center" }}>
+          <Row justify="center">
+            <Col>
+              <Text strong>Welcome to OnlyDevs!</Text>
+             </Col> 
+          </Row>
+          <Row>
+            <Col>
+              {loading && <div>Loading...</div>}
+              {error && <div>Error: {error.message}</div>}
+              {allPosts.length > 0 && (
+                <div>
+                  <h3>Posts</h3>
                   
-  //                 <ul>
-  //                   {allPosts.map((post, index) => (
-  //                     //  console.log("Current post object:", post),
-  //                     <li key={index}>
-  //                       <strong>Title:</strong> {post.title} <br />
-  //                       <strong>Description:</strong> {post.description} <br />
-  //                       <button onClick={() => handleLike(post._id)}>Like</button>
-  //                     </li>
-  //                   ))}
-  //                 </ul>
-  //               </div>
-  //             )}
-  //           </Col> 
-  //       </Row>
-  //       </Content>
-  //     </Layout>
-  //   );
-  // } 
+                  <ul>
+                    {allPosts.map((post, index) => (
+                      //  console.log("Current post object:", post),
+                      <li key={index}>
+                        <strong>Title:</strong> {post.title} <br />
+                        <strong>Description:</strong> {post.description} <br />
+                        <button onClick={() => handleLike(post._id)}>Like</button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </Col> 
+        </Row>
+        </Content>
+      </Layout>
+    );
+  } 
   
 
   // If user data is available, show user details
@@ -152,7 +160,7 @@ const Home = () => {
           </Button>
         {/* </Header> */}
         <div>Hello</div>
-        <PostList posts={allPosts} searchResults={searchResults} title="Recent Posts"/>
+        <PostList posts={postsToDisplay} title="Recent Posts"/>
       </Box>
     </Container>
   );
