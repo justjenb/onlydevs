@@ -1,14 +1,32 @@
 import React, { useState, useEffect } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
+
 import { Modal, Button, Form, FormControl, ListGroup } from "react-bootstrap";
+
 import LoginForm from "./LoginForm";
+
 import SignupForm from "./SignupForm";
+
 import Auth from "../utils/auth";
+
 import { useQuery, useLazyQuery } from '@apollo/client';
+
 // import { toast } from "react-toastify";
+
 import useStore from "../store";
+
 import { GET_ALL_TAGS, SEARCH } from '../utils/queries';
+
 import { useSearch } from '../context/SearchContext';
+
+import '../App.css';
+
+import { Home, NotificationsActiveSharp, NotificationsNoneSharp, Search, ThreeP, AddCircle, AccountCircle }  from '@mui/icons-material';
+
+import { Tooltip, Grid } from '@mui/material'
+
+import CreatePostForm from './CreatePostForm';
 
 
 const AppNavbar = () => {
