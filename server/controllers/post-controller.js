@@ -52,7 +52,52 @@ const deletePost = async (req, res) => {
   }
 };
 
+const updateLikes = async (req, res) => {
+  try{
+    const postId = req.params.postId;
+    const userId = req.user.id;
+    const post = await Post.findById(postId);
+
+    // check if user already liked post
+    if (post.likes.includes(userId)) {
+      // remove like
+      post.likes = post.likes.filter((id) => id.toString() !== userId.toString());
+    } else {
+      // add like
+      post.likes.push(userId);
+    }
+    const updatedPost = await post.save();
+    res.status(200).json(updatedPost);
+  }catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'An error occurred.' });
+  }
+}
+
+const updateComments = async (req, res) => {
+  try{
+    const postId = req.params.postId;
+    const userId = req.user.id;
+    const post = await Post.findById(postId);
+
+    // check if user already liked post
+    if (post.comments.includes(userId)) {
+      // remove like
+      post.comments = post.comments.filter((id) => id.toString() !== userId.toString());
+    } else {
+      // add like
+      post.comments.push(userId);
+    }
+    const updatedPost = await post.save();
+    res.status(200).json(updatedPost);
+  }catch (error){
+    console.error(error);
+    return res.status(500).json({ message: 'An error occurred.' });
+  }
+}
 module.exports = {
+  updateLikes,
   createPost,
   deletePost,
+  updateComments
 };
