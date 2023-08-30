@@ -14,8 +14,8 @@ router.route('/').post(findOrCreateUser);
 
 router.route('/login').post(login);
 
-router.route('/me').get(authMiddleware, getSingleUser);
+router.route('/profile').get(authMiddleware, getSingleUser);
 
 router.use('/posts', postRoutes);
 
-module.exports = router;
+module.exports = router; 
