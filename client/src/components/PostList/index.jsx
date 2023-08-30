@@ -6,16 +6,16 @@ import { UPDATE_LIKES, ADD_COMMENT, REPOST } from '../../utils/mutations';
 
 
 const PostList = ({ 
-  posts,
+  posts = [], 
   title, 
-  searchResults = [],
+  searchResults = [], 
   showTitle = true, 
   showUsername = true 
 }) => {
   const [updateLikes] = useMutation(UPDATE_LIKES);
   const [localPosts, setLocalPosts] = useState(posts);
   const [addComment] = useMutation(ADD_COMMENT);
-  const [commentText, setCommentText] = useState('');
+  const [commentText, setCommentText] = useState({});
   const [repost] = useMutation(REPOST);
   
   const handleAddComment = async (postId, text) => {
@@ -72,10 +72,15 @@ const PostList = ({
   if (!displayPosts.length) {
     return <h3>No Posts Yet</h3>;
   }
-
+console.log("Posts", posts);
+console.log(posts.length);
+console.log(displayPosts.length);
+console.log(posts.user);
+console.log(posts.showUsername);
   return (
     <div>
       {showTitle && <h3>{title}</h3>}
+<<<<<<< HEAD
        {displayPosts.map((post, index) => (
         console.log("Rendering post:", post),
         <div key={post._id} className="card mb-3">
@@ -98,26 +103,23 @@ const PostList = ({
           <div className="card-body bg-light p-2">
             <p>{post.description}</p>
           </div>
+=======
+      {displayPosts.map((post) => (
+        // console.log("Current post object:", post),
+        <div key={post.user} className="card mb-3">
+          <strong>User:</strong> {post.user} <br />
+          <strong>Title:</strong> {post.title} <br />
+          <strong>Description:</strong> {post.description} <br />
+>>>>>>> 1c28e556ec0e40f01639e25695d76380cc8da890
           <button onClick={() => handleLike(post._id)}>Like</button>
           <button onClick={() => handleRepost(post._id)}>Repost</button>
           <input 
             type="text" 
             placeholder="Add a comment..." 
-            value={commentText} 
-            onChange={(e) => setCommentText(e.target.value)} 
+            value={commentText[post._id] || ''} 
+            onChange={(e) => setCommentText({ ...commentText, [post._id]: e.target.value })} 
           />
-          <button onClick={() => handleAddComment(post._id, commentText)}>Comment</button>
-          {post.comments && post.comments.map((comment, index) => (
-            <div key={index}>
-              <p>{comment.text} - {comment.username}</p>
-            </div>
-          ))}
-          <Link
-            className="btn btn-primary btn-block btn-squared"
-            to={`/posts/${post._id}`}
-          >
-            Join the discussion on this thought.
-          </Link>
+          <button onClick={() => handleAddComment(post._id, commentText[post._id])}>Comment</button>
         </div>
       ))};
     </div>
@@ -129,6 +131,7 @@ PostList.propTypes = {
   title: PropTypes.string.isRequired,
   showTitle: PropTypes.bool,
   showUsername: PropTypes.bool,
+  searchResults: PropTypes.array
 };
 
 export default PostList;

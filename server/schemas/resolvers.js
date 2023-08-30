@@ -102,8 +102,8 @@ const resolvers = {
     addPost: async (parent, { postText }, context) => {
       if (context.user) {
         const post = await Post.create({
-          postText,
-          postAuthor: context.user.username,
+          description: postText,
+          user: context.user._id,
         });
 
         await User.findOneAndUpdate(
@@ -194,16 +194,16 @@ const resolvers = {
         throw error;
       }
     },
-    createPost: async (_, { content }, context) => {
-      if (!context.user) {
-        throw createAuthenticationError("Must be logged in to create a post");
-      }
-      const newPost = await Post.create({
-        content: content,
-        user: context.user._id,
-      });
-      return newPost;
-    },
+    // createPost: async (_, { content }, context) => {
+    //   if (!context.user) {
+    //     throw createAuthenticationError("Must be logged in to create a post");
+    //   }
+    //   const newPost = await Post.create({
+    //     content: content,
+    //     user: context.user._id,
+    //   });
+    //   return newPost;
+    // },
     // repost: async (parent, { postId }, context) => {
     //   if (context.user) {
     //     const post = await Post.findByIdAndUpdate(
