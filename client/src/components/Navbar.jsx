@@ -15,8 +15,6 @@ import { Tooltip, Grid, Fab } from '@mui/material'
 import CreatePostForm from './CreatePostForm';
 import logo from '../assets/images/olives.svg';
 
-
-
 const AppNavbar = () => {
   const [showModal, setShowModal] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
@@ -25,10 +23,9 @@ const AppNavbar = () => {
   const [focusedSuggestionIndex, setFocusedSuggestionIndex] = useState(-1);
   const [isExpanded, setExpanded] = useState(false);
 
-
   const { searchResults, setSearchResults } = useSearch();
 
-  const { authUser, setAuthUser } = useStore();
+  const { authUser, setAuthUser } = useStore(state => ({ authUser: state.authUser, setAuthUser: state.setAuthUser }));
   const navigate = useNavigate();
   const store = useStore();
   const user = store.authUser;
