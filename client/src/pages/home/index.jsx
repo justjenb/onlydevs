@@ -29,6 +29,7 @@ const Home = () => {
   const { searchResults } = useSearch();
   
   const { loading, error, data: queryData } = useQuery(QUERY_POSTS);
+
   const [updateLikes] = useMutation(UPDATE_LIKES);
   
 
@@ -96,7 +97,11 @@ console.log("All Posts:", allPosts);
     navigate("/");
   };
   
-  const postsToDisplay = searchResults.length > 0 ? searchResults : allPosts;
+  useEffect(() => {
+    if (searchResults.length > 0) {
+      setAllPosts(searchResults);
+    }
+  }, [searchResults]);
   console.log("Posts" , allPosts)
   // If user data is not available, show a log in message
   if (!userDataGithub && !userDataGoogle) {
@@ -160,7 +165,7 @@ console.log("All Posts:", allPosts);
           </Button>
         {/* </Header> */}
         <div>Hello</div>
-        <PostList posts={postsToDisplay} title="Recent Posts"/>
+        <PostList posts={allPosts} title="Recent Posts"/>
       </Box>
     </Container>
   );
