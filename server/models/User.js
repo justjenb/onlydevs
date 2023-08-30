@@ -13,56 +13,61 @@ const userSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      match: [/.+@.+\..+/, 'Must match an email address!'],
+      match: [/.+@.+\..+/, "Must match an email address!"],
     },
     password: {
       type: String,
       required: true,
       minlength: 5,
     },
-    tags: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Tag'
-    }],
+    tags: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Tag",
+      },
+    ],
     bio: {
       type: String,
-      default: '',
+      default: "",
     },
     profilePicture: {
       type: String,
-      default: '',
+      default: "",
     },
-    posts: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Post'
-    }],
+    posts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
     followers: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
       },
     ],
     following: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
       },
     ],
     friends: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
       },
     ],
     savedPosts: [
       {
-          type: Schema.Types.ObjectId,
-          ref: 'Post'
-      }
-  ],
+        type: Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
     githubId: {
       type: String,
       unique: true,
+      sparse: true,
     },
     githubUsername: String,
     githubAccessToken: String,
@@ -74,8 +79,8 @@ const userSchema = new Schema(
   }
 );
 
-userSchema.pre('save', async function (next) {
-  if (this.isNew || this.isModified('password')) {
+userSchema.pre("save", async function (next) {
+  if (this.isNew || this.isModified("password")) {
     const saltRounds = 10;
     this.password = await bcrypt.hash(this.password, saltRounds);
   }
@@ -89,7 +94,7 @@ userSchema.methods.isCorrectPassword = async function (password) {
 };
 
 // when we query a user, we'll also get another field called `postCount` with the number of posts they have
-userSchema.virtual('postCount').get(function () {
+userSchema.virtual("postCount").get(function () {
   return this.posts.length;
 });
 

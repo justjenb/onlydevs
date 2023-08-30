@@ -7,7 +7,12 @@ const userData = require('./users.json');
 const postData = require('./posts.json');
 
 db.once('open', async () => {
-  await User.deleteMany({});
+  try {
+    // Drop the entire user collection
+    await User.collection.drop();
+  } catch (error) {
+    console.log("Could not drop users collection, it might not exist yet. Continuing...");
+  }
   await Post.deleteMany({});
   await Tag.deleteMany({});
 

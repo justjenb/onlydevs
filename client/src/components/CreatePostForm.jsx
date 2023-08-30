@@ -46,7 +46,7 @@ function CreatePostForm() {
 
     try {
       const { data } = await createPost({
-        variables: { content: postContent },
+        variables: { postText: postContent },
       });
 
     console.log('Post created successfully:', data.createPost);

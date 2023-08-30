@@ -25,6 +25,7 @@ const Profile = () => {
 
   const user = data?.me || data?.user || {};
 
+  console.log("user data:", user);
   if (
     Auth.loggedIn() &&
     Auth.getProfile().authenticatedPerson.username === userParam
