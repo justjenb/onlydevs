@@ -13,6 +13,7 @@ import '../App.css';
 import { Home, NotificationsActiveSharp, NotificationsNoneSharp, Search, ThreeP, AddCircle, AccountCircle }  from '@mui/icons-material';
 import { Tooltip, Grid, Fab } from '@mui/material'
 import CreatePostForm from './CreatePostForm';
+import logo from '../assets/images/olives.svg';
 
 
 
@@ -96,9 +97,12 @@ const AppNavbar = () => {
     <>
      <div className="side-navbar">
       <div className="nav-item">
-        <Link to="/" className="logo">
-          OnlyDevs
+      <Tooltip className="nav-item" title="Home">
+      <Link to="/" className="notif icon">
+        OD <br/>
+          {/* <img src={logo} width="50" height="50" className="logo"/> */}
         </Link>
+      </Tooltip>
       </div>
       <Tooltip className="nav-item" title="Home">
         <Link to="/" className="home-nav icon">
@@ -218,5 +222,7 @@ const AppNavbar = () => {
     </>
   );  
   }
+
+// export default AppNavbar;
 
 export default AppNavbar;

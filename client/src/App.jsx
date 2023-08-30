@@ -14,6 +14,10 @@ import useStore from "./store/index";
 import { SearchProvider } from "./context/SearchContext";
 import { Grid } from "@mui/material";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { Navbar } from "react-bootstrap";
+
+import { Layout, Menu } from 'antd';
+const { Header, Content, Sider, Footer } = Layout;
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -54,21 +58,44 @@ function AppContent() {
       {" "}
       <ErrorBoundary>
         <SearchProvider>
-          <ApolloProvider client={client}>
-            <Grid container>
-              <Grid xs={3} id="sidebar-wrapper">
-                <AppNavbar />
-              </Grid>
-              <Grid xs={9} id="page-content-wrapper">
+          <ApolloProvider client={client} >
+            <Layout hasSider >
+              <Sider >
+                <AppNavbar/>
+              </Sider>
+              <Layout id="main">
+                <Header style={{ padding: 0 }} />
                 <Outlet />
-              </Grid>
-            </Grid>
+                <Footer style={{ textAlign: 'center' }}>Copyright ©2023 OnlyDevs</Footer>
+              </Layout>
+            </Layout>
           </ApolloProvider>
         </SearchProvider>
       </ErrorBoundary>
     </>
   );
 }
+
+// return (
+//   <>
+//     {" "}
+//     <ErrorBoundary>
+//       <SearchProvider>
+//         <ApolloProvider client={client}>
+//           <Grid container>
+//             <Grid xs={2} id="sidebar-wrapper">
+//               <AppNavbar />
+//             </Grid>
+//             <Grid xs={10} id="page-content-wrapper">
+//               <Outlet />
+//             </Grid>
+//           </Grid>
+//         </ApolloProvider>
+//       </SearchProvider>
+//     </ErrorBoundary>
+//   </>
+// );
+// }
 
 function App() {
   return <AppContent />;

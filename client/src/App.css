@@ -1,8 +1,8 @@
 body {
-  font-family: 'Rubik', sans-serif;
-  background-color: #f6f6f6;
-  background-image: url("https://www.transparenttextures.com/patterns/3px-tile.png");
-}
+font-family: 'Rubik', sans-serif;
+
+} 
+
 
 h1,
 h2,
@@ -13,10 +13,20 @@ h6 {
   font-family: 'Rubik Mono One', sans-serif;
 }
 
+:root {
+  --neonpurptrans: #bf00ffa8;
+  --blacktrans: #00000033;
+}
+
+#main {
+  background-color: #000000;
+background-image: url("https://www.transparenttextures.com/patterns/gravel.png");
+}
+
 /* SECTION: SIDEBAR */
 /* https://stackoverflow.com/questions/60482018/make-a-sidebar-from-react-bootstrap */
 
- #sidebar-wrapper{
+ /* #sidebar-wrapper{
   min-height: 100vh !important;
   width: 100vw;
   margin-left: -1rem;
@@ -24,30 +34,45 @@ h6 {
   -moz-transition: margin .25s ease-out;
   -o-transition: margin .25s ease-out;
   transition: margin .25s ease-out;
-} 
-
+}  */
+/* 
 #sidebar-wrapper .sidebar-heading {
   padding: 0.875rem 1.25rem;
   font-size: 1.2rem;
-} 
+}  */
 
-#page-content-wrapper {
+/* #page-content-wrapper {
   min-width: 0;
   width: 100%;
-}
+} */
 
 .side-navbar {
+  /* overflow: 'auto';
+  height: '100vh';
+  position: 'fixed';
+  left: 0;
+  top: 0;
+  bottom: 0; */
+
+
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 100vh;
+  width: 20%;
  justify-content: space-around;
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
+
+
+
   /* https://www.transparenttextures.com/ */
-  background: url("./assets/images/holo-purp.jpg") no-repeat center center;
+  background: linear-gradient(
+    to bottom,
+    #00000080,
+    #ff6bf348), url("./assets/images/holo-purp.jpg") no-repeat center center;
   padding: 1em;
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
   /* position: fixed;
@@ -66,8 +91,8 @@ h6 {
   /* transition: #292828 0.3s ease; */
 }
 
-.icon {
-  color:  #9e03ff4b,
+.logo{
+  color: var(--neonpurptrans);
 }
 
 /* .nav-item:hover {
@@ -80,6 +105,13 @@ h6 {
   height:36;
   borderRadius:18;   
   backgroundColor:red;
+ }
+
+ .main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
  }
 
 .small {
