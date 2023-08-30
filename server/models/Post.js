@@ -7,6 +7,11 @@ const postSchema = new Schema({
     ref: 'User',
     required: true,
   },
+  username:{
+    type: Schema.Types.String,
+    ref: 'User',
+    required: true,
+  },
   description: {
     type: String,
     required: 'You need to leave text!',
