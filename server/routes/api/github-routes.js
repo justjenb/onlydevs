@@ -16,7 +16,7 @@ router.get("/auth/callback",
   passport.authenticate("github", { failureRedirect: "/" }),
   function (req, res) {
     const token = jwt.sign({ userId: req.user.id }, secret, { expiresIn: expiration });
-    res.redirect(`http://localhost:3000/api/github/auth/callback?code=${token}`);  }
+    res.redirect(`http://localhost:3000/api/github/auth/callback?token=${token}`);  }
 );
 
 module.exports = router;

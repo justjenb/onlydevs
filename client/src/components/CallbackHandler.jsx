@@ -16,7 +16,7 @@ function CallbackHandler() {
     const token = queryParams.get('token') || queryParams.get('githubAccessToken')
 
     console.log("token data:", JSON.stringify(token, null, 2));
-    console.log("token data:", token);
+    console.log("Parsed token:", token);
 
     if (token) {
       AuthService.login(token);
