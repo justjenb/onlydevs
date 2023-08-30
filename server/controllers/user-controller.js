@@ -18,18 +18,8 @@ module.exports = {
         .json({ message: "Cannot find a user with this id!" });
     }
 
-    res.json(foundUser);
+    res.json({ data: { user: foundUser } });
   },
-
-  // async createUser({ body }, res) {
-  //   const user = await User.create(body);
-
-  //   if (!user) {
-  //     return res.status(400).json({ message: "Something is wrong!" });
-  //   }
-  //   const token = signToken(user);
-  //   res.json({ token, user });
-  // },
 
   async findOrCreateUser(email, authData, res) {
     let user = await User.findOne({ email });
