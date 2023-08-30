@@ -1,9 +1,10 @@
 const typeDefs = `
 type User {
-  _id: ID
+  _id: ID!
   username: String
   email: String
   password: String
+  posts: [Post]
 }
 
 type Tag {
@@ -21,6 +22,7 @@ type Post {
   likes: [ID!]
   comments: [ID!]
   reposts: [ID!]
+  tags: [Tag]
 }
 
 type Comment {
@@ -68,6 +70,7 @@ type LogoutResponse {
     createPost(input: CreatePostInput!): Post
     loginWithGoogle(token: String!): Auth!
     logout: LogoutResponse!
+    repost(postId: ID!): Post
   }
 
   type Query {

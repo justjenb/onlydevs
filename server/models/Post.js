@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const User = './models/User';
 
 const postSchema = new Schema({
   user: {
@@ -52,7 +53,7 @@ const postSchema = new Schema({
   ],
   reposts: [{
     type: Schema.Types.ObjectId,
-    ref: User
+    ref: "User"
   }]
 });
 

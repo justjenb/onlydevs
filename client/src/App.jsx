@@ -9,13 +9,14 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import AppNavbar from "./components/Navbar";
 import { Outlet } from "react-router-dom";
-import Auth from './utils/auth';
-import useStore from './store/index';
-import { SearchProvider } from './context/SearchContext'; 
-
+import Auth from "./utils/auth";
+import useStore from "./store/index";
+import { SearchProvider } from "./context/SearchContext";
+import { Grid } from "@mui/material";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const httpLink = createHttpLink({
-  uri: '/graphql',
+  uri: "/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -50,20 +51,27 @@ function AppContent() {
 
   return (
     <>
-    <SearchProvider>
-    <ApolloProvider client={client}>
-          <AppNavbar />
-          <Outlet />
-    </ApolloProvider>
-    </SearchProvider>
+      {" "}
+      <ErrorBoundary>
+        <SearchProvider>
+          <ApolloProvider client={client}>
+            <Grid container>
+              <Grid xs={3} id="sidebar-wrapper">
+                <AppNavbar />
+              </Grid>
+              <Grid xs={9} id="page-content-wrapper">
+                <Outlet />
+              </Grid>
+            </Grid>
+          </ApolloProvider>
+        </SearchProvider>
+      </ErrorBoundary>
     </>
   );
 }
 
-
 function App() {
   return <AppContent />;
 }
-
 
 export default App;
