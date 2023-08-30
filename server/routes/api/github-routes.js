@@ -15,8 +15,21 @@ router.get("/auth", passport.authenticate("github", {
 router.get("/auth/callback",
   passport.authenticate("github", { failureRedirect: "/" }),
   function (req, res) {
-    const token = jwt.sign({ userId: req.user.id }, secret, { expiresIn: expiration });
-    res.redirect(`http://localhost:3000/api/github/auth/callback?token=${token}`);  }
+    const { email, githubUsername, _id, name, username, githubAccessToken, githubRefreshToken } = req.user;
+    
+    const payload = {
+      email,
+      githubUsername,
+      _id,
+      name,
+      username,
+      githubAccessToken,
+      githubRefreshToken
+    };
+    
+    const token = jwt.sign({ authenticatedPerson: payload }, secret, { expiresIn: expiration });
+    res.redirect(`http://localhost:3000/api/github/auth/callback?token=${token}`);
+  }
 );
 
 module.exports = router;

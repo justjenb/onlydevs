@@ -10,13 +10,14 @@ import Auth from "../../utils/auth";
 
 const Profile = () => {
   const { username: userParam } = useParams();
-
+  
   const queryOptions = userParam
     ? { query: QUERY_USER, variables: { username: userParam } }
     : { query: QUERY_ME };
 
   const { loading, error, data } = useQuery(queryOptions.query, {
     variables: userParam ? { username: userParam } : {},
+    fetchPolicy: "no-cache"
   });
 
   if (loading) return <div>Loading...</div>;

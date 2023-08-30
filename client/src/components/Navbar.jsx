@@ -24,7 +24,7 @@ const AppNavbar = () => {
 
   const { searchResults, setSearchResults } = useSearch();
 
-  const { authUser, setAuthUser } = useStore();
+  const { authUser, setAuthUser } = useStore(state => ({ authUser: state.authUser, setAuthUser: state.setAuthUser }));
   const navigate = useNavigate();
   const store = useStore();
   const user = store.authUser;
