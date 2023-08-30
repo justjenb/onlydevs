@@ -9,7 +9,7 @@ require('dotenv').config();
 const secret = process.env.PW_SECRET_HASH;
 
 router.get("/auth", passport.authenticate("github", { 
-  scope: ["user"] 
+  scope: ['user', 'user:email'] 
 }));
 
 router.get("/auth/callback",

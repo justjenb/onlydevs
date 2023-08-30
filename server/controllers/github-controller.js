@@ -7,7 +7,7 @@ passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser(async (id, done) => {
+passport.deserializeUser(async (id, done) => {  
   try {
     const user = await User.findById(id);
     done(null, user);
@@ -36,15 +36,20 @@ passport.use(
           name: profile.name,
           username: profile.username,
           email: profile.email,
-          githubUsername: profile.username,
+          githubUsername: profile.login,
           githubAccessToken: accessToken,
           githubRefreshToken: refreshToken,
           password: "GITHUB_SIGNED_IN_USER",
         };
 
+        // console.log("user data:", JSON.stringify(profile, null, 2));
+        // console.log("auth data:", JSON.stringify(authData, null, 2));
+        
         const user = await findOrCreateUser(profile.emails[0].value, authData);
 
-        done(null, user);
+        // console.log("user data:", JSON.stringify(user, null, 2));
+
+        return done(null, user);
       } catch (error) {
         return done(error, null);
       }
