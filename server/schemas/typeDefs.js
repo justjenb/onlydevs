@@ -20,7 +20,7 @@ type Post {
   description: String!
   link: String
   title: String
-  likes: [ID!]
+  likes: Int
   comments: [ID!]
   reposts: [ID!]
   tags: [Tag]

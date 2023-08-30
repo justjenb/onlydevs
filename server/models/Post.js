@@ -7,11 +7,6 @@ const postSchema = new Schema({
     ref: 'User',
     required: true,
   },
-  username:{
-    type: Schema.Types.String,
-    ref: 'User',
-    required: true,
-  },
   description: {
     type: String,
     required: 'You need to leave text!',
@@ -27,6 +22,7 @@ const postSchema = new Schema({
   },
   likes: {
     type: Number,
+    default: 0,
   },
   createdAt: {
     type: Date,
@@ -37,29 +33,29 @@ const postSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Tag'
   }],
-  comments: [
-    {
-      commentText: {
-        type: String,
-        required: true,
-        minlength: 1,
-        maxlength: 280,
-      },
-      commentAuthor: {
-        type: String,
-        required: true,
-      },
-      createdAt: {
-        type: Date,
-        default: Date.now,
-        get: (timestamp) => dateFormat(timestamp),
-      },
-    },
-  ],
-  reposts: [{
-    type: Schema.Types.ObjectId,
-    ref: "User"
-  }]
+  // comments: [
+  //   {
+  //     commentText: {
+  //       type: String,
+  //       required: true,
+  //       minlength: 1,
+  //       maxlength: 280,
+  //     },
+  //     commentAuthor: {
+  //       type: String,
+  //       required: true,
+  //     },
+  //     createdAt: {
+  //       type: Date,
+  //       default: Date.now,
+  //       get: (timestamp) => dateFormat(timestamp),
+  //     },
+  //   },
+  // ],
+  // reposts: [{
+  //   type: Schema.Types.ObjectId,
+  //   ref: "User"
+  // }]
 });
 
 const Post = model("Post", postSchema);
