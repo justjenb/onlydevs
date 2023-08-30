@@ -6,17 +6,14 @@ function CallbackHandler() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Utility to extract token
+  const getTokenFromParams = (queryParams) => {
+    return queryParams.get('token') || queryParams.get('githubAccessToken');
+  }
+
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-
-    console.log("queryParams data:", JSON.stringify(queryParams, null, 2));
-    console.log("queryParams data:", queryParams);
-
-
-    const token = queryParams.get('token') || queryParams.get('githubAccessToken')
-
-    console.log("token data:", JSON.stringify(token, null, 2));
-    console.log("Parsed token:", token);
+    const token = getTokenFromParams(queryParams);
 
     if (token) {
       AuthService.login(token);

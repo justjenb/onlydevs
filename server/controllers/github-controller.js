@@ -41,13 +41,8 @@ passport.use(
           githubRefreshToken: refreshToken,
           password: "GITHUB_SIGNED_IN_USER",
         };
-
-        // console.log("user data:", JSON.stringify(profile, null, 2));
-        // console.log("auth data:", JSON.stringify(authData, null, 2));
         
         const user = await findOrCreateUser(profile.emails[0].value, authData);
-
-        // console.log("user data:", JSON.stringify(user, null, 2));
 
         return done(null, user);
       } catch (error) {

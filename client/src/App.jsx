@@ -43,7 +43,7 @@ function AppContent() {
     if (token && Auth.loggedIn()) {
       const userProfile = Auth.getProfile();
       setAuthUser(userProfile);
-      console.log(`Auth user ${userProfile}`);
+      // console.log(`Auth user: ${JSON.stringify(userProfile, null, 2)}`);
     } else {
       setAuthUser(null);
     }
