@@ -11,6 +11,75 @@ h6 {
   font-family: 'Rubik Mono One', sans-serif;
 }
 
+/* SECTION: SIDEBAR */
+/* https://stackoverflow.com/questions/60482018/make-a-sidebar-from-react-bootstrap */
+
+ #sidebar-wrapper{
+  min-height: 100vh !important;
+  width: 100vw;
+  margin-left: -1rem;
+  -webkit-transition: margin .25s ease-out;
+  -moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
+} 
+
+#sidebar-wrapper .sidebar-heading {
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+} 
+
+#page-content-wrapper {
+  min-width: 0;
+  width: 100%;
+}
+
+.side-navbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+ justify-content: space-around;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  /* https://www.transparenttextures.com/ */
+  background: url("./assets/images/holo-purp.jpg") no-repeat center center;
+  padding: 1em;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  /* position: fixed;
+  top: 0;
+
+  left: 0;
+  min-height: 100vh !important;
+  z-index: 100;
+  padding: 48px 0 0;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1); */
+}
+
+.nav-item {
+  margin: 10px 0;
+  cursor: pointer;
+  /* transition: #292828 0.3s ease; */
+}
+
+.icon {
+  color:  #9e03ff4b,
+}
+
+/* .nav-item:hover {
+  background-color: #e0e0e0; 
+} */
+
+/* SECTION: notification */
+.notif-count {
+  width:36;
+  height:36;
+  borderRadius:18;   
+  backgroundColor:red;
+ }
+
 .small {
   font-weight: 300;
   font-style: italic;
