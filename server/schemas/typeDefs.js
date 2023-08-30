@@ -4,6 +4,7 @@ type User {
   username: String
   email: String
   password: String
+  posts: [Post]
 }
 
 type Tag {

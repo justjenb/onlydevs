@@ -21,16 +21,65 @@ module.exports = {
     res.json(foundUser);
   },
 
-  async createUser({ body }, res) {
-    const user = await User.create(body);
+  // async createUser({ body }, res) {
+  //   const user = await User.create(body);
 
+  //   if (!user) {
+  //     return res.status(400).json({ message: "Something is wrong!" });
+  //   }
+  //   const token = signToken(user);
+  //   res.json({ token, user });
+  // },
+
+  async findOrCreateUser(email, authData, res) {
+    let user = await User.findOne({ email });
+  
     if (!user) {
-      return res.status(400).json({ message: "Something is wrong!" });
+      // Create a new user based on the authentication data
+      user = new User({
+        ...authData,
+        email,
+      });
+  
+      try {
+        await user.save();
+      } catch (error) {
+        if (error.code === 11000) {
+          user = await User.findOne({ email }); // Find the existing user
+          if (authData.googleId) {
+            user.googleId = authData.googleId;
+            user.googleAccessToken = authData.googleAccessToken;
+            user.googleRefreshToken = authData.googleRefreshToken;
+          }
+          if (authData.githubId) {
+            user.githubId = authData.githubId;
+            user.githubAccessToken = authData.githubAccessToken;
+            user.githubRefreshToken = authData.githubRefreshToken;
+          }
+          await user.save();
+          return user; // Return the user after updating
+        }
+        return res.status(500).json({ message: "Error creating user." });
+      }
+    } else {
+      // Update the user's existing account with additional authentication data
+      if (authData.googleId) {
+        user.googleId = authData.googleId;
+        user.googleAccessToken = authData.googleAccessToken;
+        user.googleRefreshToken = authData.googleRefreshToken;
+      }
+      if (authData.githubId) {
+        user.githubId = authData.githubId;
+        user.githubAccessToken = authData.githubAccessToken;
+        user.githubRefreshToken = authData.githubRefreshToken;
+      }
+  
+      await user.save();
     }
-    const token = signToken(user);
-    res.json({ token, user });
+  
+    return user;
   },
-
+  
   async login({ body }, res) {
     const user = await User.findOne({
       $or: [{ username: body.username }, { email: body.email }],
