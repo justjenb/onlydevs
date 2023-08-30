@@ -11,11 +11,22 @@ db.once('open', async () => {
   await Post.deleteMany({});
   await Tag.deleteMany({});
 
-  await User.collection.insertMany(userData);
+  const userDocs = await User.insertMany(userData);  
 
-  await Post.collection.insertMany(postData);
+  const tagDocs = await Tag.insertMany(staticTagData);
 
-  await Tag.collection.insertMany(staticTagData);
+  const mappedPosts = postData.map((post, index) => {
+    const user = userDocs[index % userDocs.length];
+    const tagNames = post.tags;
+    const postTags = tagDocs.filter(tagDoc => tagNames.includes(tagDoc.name));
+    return {
+      ...post,
+      user: user._id,
+      tags: postTags.map(tag => tag._id)
+    };
+  });
+
+  await Post.insertMany(mappedPosts);
 
   console.log('All data including static tags, users, and posts seeded!');
   process.exit(0);

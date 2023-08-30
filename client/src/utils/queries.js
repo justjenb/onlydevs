@@ -37,6 +37,11 @@ query {
     title
     user
     description
+    tags {
+      _id
+      name
+      description
+    }
   }
 }
 `;
@@ -52,18 +57,21 @@ query {
 `;
 
 export const SEARCH = gql`
-  query Search($query: String!) {
-    search(query: $query) {
-      ... on User {
+query Search($query: String!) {
+  search(query: $query) {
+    ... on User {
+      _id
+      username
+    }
+    ... on Post {
+      title
+      description
+      tags {
         _id
-        username
-      }
-      ... on Post {
-        _id
-        title
+        name
         description
-        tags
       }
     }
   }
+}
 `;
