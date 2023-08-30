@@ -20,7 +20,7 @@ const Profile = () => {
     Auth.loggedIn() && 
     Auth.getProfile().authenticatedPerson.username === userParam
   ) {
-    return <Navigate to="/me" />;
+    return <Navigate to="/profile" />;
   }
 
   if (loading) {

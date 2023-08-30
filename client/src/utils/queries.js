@@ -6,7 +6,7 @@ export const QUERY_ME = gql`
       _id
       username
       email
-      thoughts {
+      posts {
         _id
         postText
         user
@@ -22,7 +22,7 @@ export const QUERY_USER = gql`
       _id
       username
       email
-      thoughts {
+      posts {
         _id
         thoughtText
         createdAt

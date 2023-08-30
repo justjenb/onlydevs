@@ -14,8 +14,6 @@ import { Home, NotificationsActiveSharp, NotificationsNoneSharp, Search, ThreeP,
 import { Tooltip, Grid } from '@mui/material'
 import CreatePostForm from './CreatePostForm';
 
-
-
 const AppNavbar = () => {
   const [showModal, setShowModal] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
@@ -23,7 +21,6 @@ const AppNavbar = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [focusedSuggestionIndex, setFocusedSuggestionIndex] = useState(-1);
   const [isExpanded, setExpanded] = useState(false);
-
 
   const { searchResults, setSearchResults } = useSearch();
 
