@@ -65,7 +65,7 @@ const PostList = ({
 
 
   if (!displayPosts.length) {
-    return <h3>No Thoughts Yet</h3>;
+    return <h3>No Posts Yet</h3>;
   }
 
   return (
