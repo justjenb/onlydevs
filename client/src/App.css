@@ -1,5 +1,6 @@
 body {
 font-family: 'Rubik', sans-serif;
+margin: 0px;
 
 } 
 
@@ -20,10 +21,15 @@ h6 {
 
 #main {
   background-color: #000000;
-  background: url("https://www.transparenttextures.com/patterns/gravel.png") cover;
-  width: 80% !important;
+  background-image: url("https://www.transparenttextures.com/patterns/gravel.png");
+
+  width: 85% !important;
   position: fixed;
   right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
 
 }
 
@@ -62,13 +68,14 @@ h6 {
 } */
 
 .side-navbar {
-  overflow: auto;
+  /* overflow: auto;
   height: 100vh;
   width: 20% !important;
   position: fixed;
   left: 0;
   top: 0;
-  bottom: 0;
+  bottom: 0; */
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -133,6 +140,7 @@ h6 {
     flex-direction: column;
     align-items: center;
     height: 100vh;
+    color: var(--babyblue);
 
  }
 

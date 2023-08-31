@@ -12,14 +12,11 @@ import { Outlet } from "react-router-dom";
 import Auth from "./utils/auth";
 import useStore from "./store/index";
 import { SearchProvider } from "./context/SearchContext";
-import { Grid } from "@mui/material";
+import { Box, Drawer, Divider, AppBar, Toolbar, Typography, CssBaseline  } from "@mui/material";
 import ErrorBoundary from "./components/ErrorBoundary";
 import AppHeader from "./components/Header";
 
-import { Layout, Menu } from 'antd';
-const { Header, Content, Sider, Footer } = Layout;
-// const {  Content, Sider, Footer } = Layout;
-
+const drawerWidth = "15%";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -61,18 +58,36 @@ function AppContent() {
       <ErrorBoundary>
         <SearchProvider>
           <ApolloProvider client={client} >
-            <Layout hasSider >
-              <Sider >
-                <AppNavbar/>
-              </Sider>
-              <Layout id="main">
-                <Header style={{ padding: 0 }}>
-                  <AppHeader />
-                </Header>
+          <Box sx={{ display: 'flex' }}>
+          <CssBaseline />
+          <AppHeader />
+            <AppBar
+             position="fixed" sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+            >
+              <Drawer sx={{
+                width: drawerWidth,
+                flexShrink: 0,
+                '& .MuiDrawer-paper': {
+                width: drawerWidth,
+                boxSizing: 'border-box',
+                },
+                }}
+                variant="permanent"
+                anchor="left"
+                >
+              <AppNavbar>
+              </AppNavbar>
+</Drawer>
+              </AppBar>
+              <Divider /> 
+            <Toolbar />
+            <Box component="main" id="main"
+              sx={{ flexGrow: 1, p: 3 }}
+               >
+               <AppHeader/>
                 <Outlet />
-                <Footer style={{ textAlign: 'center' }}>Copyright ©2023 OnlyDevs</Footer>
-              </Layout>
-            </Layout>
+            </Box>
+            </Box>
           </ApolloProvider>
         </SearchProvider>
       </ErrorBoundary>
