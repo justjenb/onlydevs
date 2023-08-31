@@ -41,39 +41,56 @@ function CreatePostForm() {
 
   const handlePostSubmit = async (event) => {
     event.preventDefault();
-
-    console.log("postContent data:", postContent);
-
-    try {
-      const { data } = await createPost({
-        variables: { postText: postContent },
-      });
-
-    console.log('Post created successfully:', data.createPost);
-    setPostContent('');
-
-    const defaultDescription = "This is a user-generated tag.";
-
-    const newTags = [];
-    for (let tag of selectedTags) {
-      if (!allTags.find(existingTag => existingTag.name === tag.name)) {
-        // Tag does not exist, create it
-        const { data: tagData } = await addTag({
-          variables: { 
-            name: tag.name,
-            description: defaultDescription
-          },
-        });
-        newTags.push(tagData.createTag);
-      }
-    }
   
-    handleUpdatePostTags([...selectedTags, ...newTags], data.createPost._id);
-
+    console.log("Starting post submission.");
+    console.log("postContent data:", postContent);
+    console.log("Selected tags:", selectedTags);
+  
+    const defaultDescription = "This is a user-generated tag.";
+    const newTags = [];
+  
+    try {
+      // Create non-existing tags first
+      for (let tag of selectedTags) {
+        console.log(`Checking if tag '${tag.name}' exists.`);
+        if (!allTags.find(existingTag => existingTag.name === tag.name)) {
+          console.log(`Tag '${tag.name}' not found, attempting to create.`);
+          const { data: tagData } = await addTag({
+            variables: { 
+              name: tag.name,
+              description: defaultDescription
+            },
+          });
+          newTags.push(tagData.createTag);
+          console.log(`Tag '${tag.name}' created successfully:`, tagData.createTag);
+        } else {
+          console.log(`Tag '${tag.name}' already exists.`);
+        }
+      }
+  
+      console.log("Attempting to create post with all tags (old and new).");
+      const { data } = await createPost({
+        variables: {
+          input: {
+            user: user.id, // Ensure you fetch and provide the correct user ID here
+            postText: postContent,
+            tags: [...selectedTags, ...newTags].map(tag => tag._id)
+          }
+        }
+      });      
+      console.log('Post created successfully:', data.createPost);
+      setPostContent('');
+  
+      console.log("Attempting to update post with tags (if needed).");
+      handleUpdatePostTags([...selectedTags, ...newTags], data.createPost._id);
+      console.log("Post updated with tags successfully.");
+  
     } catch (error) {
-    console.error('Error:', error);
+      console.error('An error occurred:', error);
     }
   };
+  
+  
 
   return (
     <Form onSubmit={handlePostSubmit}>
