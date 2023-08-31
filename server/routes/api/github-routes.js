@@ -1,64 +1,35 @@
-const { getAccessToken, getUserData } = require('../../controllers/github-controller');
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const passport = require("passport");
+const jwt = require('jsonwebtoken');
+const expiration = "2h";
 
-router.get('/accessToken', (req, res) => {
-  const code = req.query.code;
-  getAccessToken(code)
-    .then(response => res.json(response))
-    .catch(err => {
-      console.error(err);
-      res.status(500).send('Error retrieving access token.');
-    });
-});
+require('dotenv').config();
 
-router.get('/userData', (req, res) => {
-  const accessToken = req.query.accessToken;
-  getUserData(accessToken)
-    .then(response => res.json(response))
-    .catch(err => {
-      console.error(err);
-      res.status(500).send('Error retrieving user data.');
-    });
-});
+const secret = process.env.PW_SECRET_HASH;
 
-router.get('/callback', async (req, res) => {
-  const code = req.query.code;
-  console.log(`Token code ${tokenData}`)
+router.get("/auth", passport.authenticate("github", { 
+  scope: ['user', 'user:email'] 
+}));
 
-  try {
-    const tokenData = await getAccessToken(code);
-    console.log(`Token Data ${tokenData}`)
-    if (tokenData.error) {
-      return res.status(400).json(tokenData);
-    }
-
-    const githubProfile = await getGitHubProfile(tokenData.access_token);
+router.get("/auth/callback",
+  passport.authenticate("github", { failureRedirect: "/" }),
+  function (req, res) {
+    const { email, githubUsername, _id, name, username, githubAccessToken, githubRefreshToken } = req.user;
     
-    let user = await User.findOne({
-      $or: [{ email: githubProfile.email }, { username: githubProfile.login }],
-    });
-
-    if (!user) {
-      user = await User.create({
-        username: githubProfile.login,
-        email: githubProfile.email,
-        // ... any other fields you want from the GitHub profile
-      });
-    }
-
-    const token = signToken(user);
-
-    res.cookie('jwt', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production'
-    });
-
-    res.redirect('https://localhost:3000');
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    const payload = {
+      email,
+      githubUsername,
+      _id,
+      name,
+      username,
+      githubAccessToken,
+      githubRefreshToken
+    };
+    
+    const token = jwt.sign({ authenticatedPerson: payload }, secret, { expiresIn: expiration });
+    res.redirect(`http://localhost:3000/api/github/auth/callback?token=${token}`);
   }
-});
+);
 
 module.exports = router;

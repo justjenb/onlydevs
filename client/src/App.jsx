@@ -9,13 +9,20 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import AppNavbar from "./components/Navbar";
 import { Outlet } from "react-router-dom";
-import Auth from './utils/auth';
-import useStore from './store/index';
-import { SearchProvider } from './context/SearchContext'; 
-import { Grid } from '@mui/material';
+import Auth from "./utils/auth";
+import useStore from "./store/index";
+import { SearchProvider } from "./context/SearchContext";
+import { Grid } from "@mui/material";
+import ErrorBoundary from "./components/ErrorBoundary";
+import AppHeader from "./components/Header";
+
+import { Layout, Menu } from 'antd';
+const { Header, Content, Sider, Footer } = Layout;
+// const {  Content, Sider, Footer } = Layout;
+
 
 const httpLink = createHttpLink({
-  uri: '/graphql',
+  uri: "/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -42,7 +49,7 @@ function AppContent() {
     if (token && Auth.loggedIn()) {
       const userProfile = Auth.getProfile();
       setAuthUser(userProfile);
-      console.log(`Auth user ${userProfile}`);
+      // console.log(`Auth user: ${JSON.stringify(userProfile, null, 2)}`);
     } else {
       setAuthUser(null);
     }
@@ -50,18 +57,25 @@ function AppContent() {
 
   return (
     <>
-    <SearchProvider>
-    <ApolloProvider client={client}>
-      <Grid container>
-        <Grid xs={3} id="sidebar-wrapper">
-          <AppNavbar />
-        </Grid>
-        <Grid xs={9} id="page-content-wrapper">
-          <Outlet />
-        </Grid>
-      </Grid>
-    </ApolloProvider>
-    </SearchProvider>
+      {" "}
+      <ErrorBoundary>
+        <SearchProvider>
+          <ApolloProvider client={client} >
+            <Layout hasSider >
+              <Sider >
+                <AppNavbar/>
+              </Sider>
+              <Layout id="main">
+                <Header style={{ padding: 0 }}>
+                  <AppHeader />
+                </Header>
+                <Outlet />
+                <Footer style={{ textAlign: 'center' }}>Copyright ©2023 OnlyDevs</Footer>
+              </Layout>
+            </Layout>
+          </ApolloProvider>
+        </SearchProvider>
+      </ErrorBoundary>
     </>
   );
 }
@@ -70,6 +84,5 @@ function AppContent() {
 function App() {
   return <AppContent />;
 }
-
 
 export default App;

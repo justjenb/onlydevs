@@ -1,74 +1,108 @@
 import decode from 'jwt-decode';
 
+const TOKEN_KEY = 'id_token';
+
 class AuthService {
   getProfile() {
-    return decode(this.getToken());
+    const token = this.getToken();
+
+    if (!token) {
+      console.warn('No token found');
+      console.groupEnd();
+      return null;
+    }
+
+    try {
+      const profile = decode(token);
+      console.groupEnd();
+      return profile;
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      console.groupEnd();
+      return null;
+    }
   }
 
   loggedIn() {
     const token = this.getToken();
+
     if (!token) {
+      console.warn('No token found');
+      console.groupEnd();
       return false;
     }
     
     try {
       if (this.isTokenExpired(token)) {
-        console.error("Token has expired.");
+        console.warn("Token has expired.");
+        this.clearToken();
+        console.groupEnd();
         return false;
       } else {
+        console.groupEnd();
         return true;
       }
     } catch (error) {
-      console.error('Error decoding token:', error);
+      console.error('Error validating token:', error);
+      this.clearToken();
+      console.groupEnd();
       return false;
     }
   }
 
   isTokenExpired(token) {
-    const decoded = decode(token);
-    if (decoded.exp < Date.now() / 1000) {
-      localStorage.removeItem('id_token');
+    try {
+      const decoded = decode(token);
+
+      if (decoded.exp < Date.now() / 1000) {
+        console.warn('Token has expired.');
+        console.groupEnd();
+        return true;
+      }
+
+      console.log('Token has not expired.');
+      console.groupEnd();
+      return false;
+    } catch (error) {
+      console.error('Error decoding expiration from token:', error);
+      console.groupEnd();
       return true;
     }
-    return false;
   }
 
   getToken() {
-    return localStorage.getItem('id_token');
+    const token = localStorage.getItem(TOKEN_KEY);
+    console.groupEnd();
+    return token;
+  }
+
+  clearToken() {
+    localStorage.removeItem(TOKEN_KEY);
   }
 
   login(idToken) {
-    localStorage.setItem('id_token', idToken);
+    localStorage.setItem(TOKEN_KEY, idToken);
     window.location.assign('/');
+    console.groupEnd();
   }
 
   async logout(authMethod = 'local') {
     try {
       switch (authMethod) {
         case 'local':
-          localStorage.removeItem('id_token');
-          window.location.reload();
-          break;
-  
         case 'google':
-          localStorage.removeItem('id_token'); // Remove token if you also save Google's token in localStorage.
-          window.location.reload();
-          break;
-  
         case 'github':
-          await this.clearServerToken(); // Clear server side token
+          this.clearToken();
           window.location.reload();
           break;
-  
         default:
           throw new Error('Unknown auth method');
       }
     } catch (error) {
       console.error('Error during logout:', error);
-      // Handle error as needed (e.g., display an error message to the user)
     }
+    console.groupEnd();
   }
-
 }
 
 export default new AuthService();

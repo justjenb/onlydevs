@@ -1,5 +1,5 @@
 const { User, Post, Tag } = require("../models");
-const { signToken, AuthenticationError } = require("../utils/auth");
+const { signToken, createAuthenticationError } = require("../utils/auth");
 
 const resolvers = {
   SearchResult: {
@@ -16,9 +16,9 @@ const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id }).populate("savedPosts");
+        return User.findById(context.user._id).populate("savedPosts");
       }
-      throw new AuthenticationError(ERROR_MESSAGES.auth);
+      throw createAuthenticationError();
     },
     user: async (parent, { username }) => {
       return User.findOne({ username }).populate("posts");
@@ -56,6 +56,7 @@ const resolvers = {
               throw new Error("Tag name is missing");
             }
           });
+          return users;
         }
       } else {
         const posts = await Post.find({
@@ -72,11 +73,11 @@ const resolvers = {
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
       if (!user) {
-        throw AuthenticationError;
+        throw createAuthenticationError();
       }
       const correctPw = await user.isCorrectPassword(password);
       if (!correctPw) {
-        throw AuthenticationError;
+        throw createAuthenticationError();
       }
       const token = signToken(user);
       return { token, user };
@@ -97,26 +98,9 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-
-    addPost: async (parent, { postText }, context) => {
-      if (context.user) {
-        const post = await Post.create({
-          postText,
-          postAuthor: context.user.username,
-        });
-
-        await User.findOneAndUpdate(
-          { _id: context.user._id },
-          { $addToSet: { posts: post._id } }
-        );
-
-        return post;
-      }
-      throw AuthenticationError;
-    },
     addComment: async (parent, { postId, commentText }, context) => {
       if (context.user) {
-        return Post.findOneAndUpdate(
+        const updatedPost = Post.findOneAndUpdate(
           { _id: postId },
           {
             $addToSet: {
@@ -128,8 +112,28 @@ const resolvers = {
             runValidators: true,
           }
         );
+        console.log('Post ID:', postId);
+        console.log('Comment Text:', commentText);
+        console.log('User:', context.user);
+        return updatedPost;
       }
-      throw AuthenticationError('You need to be logged in!');
+       throw createAuthenticationError('You need to be logged in!');
+    },
+    addPost: async (parent, { postText }, context) => {
+      if (context.user) {
+        const post = await Post.create({
+          description: postText,
+          user: context.user._id,
+        });
+
+        await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $addToSet: { posts: post._id } }
+        );
+
+        return post;
+      }
+      throw createAuthenticationError();
     },
     updateLikes: async (parent, { postId }, context) => {
       if (context.user) {
@@ -140,7 +144,7 @@ const resolvers = {
         );
         return post;
       }
-      throw new AuthenticationError('You need to be logged in!');
+      throw createAuthenticationError('You need to be logged in!');
     },
     removePost: async (parent, { postId }, context) => {
       if (context.user) {
@@ -156,7 +160,7 @@ const resolvers = {
 
         return post;
       }
-      throw AuthenticationError;
+      throw createAuthenticationError();
     },
     removeComment: async (parent, { postId, commentId }, context) => {
       if (context.user) {
@@ -173,21 +177,36 @@ const resolvers = {
           { new: true }
         );
       }
-      throw AuthenticationError;
+      throw createAuthenticationError();
     },
     createTag: async (_, { name, description }) => {
-      return await Tag.create({ name, description });
-    },
-    createPost: async (_, { content }, context) => {
-      if (!context.user) {
-        throw new AuthenticationError("Must be logged in to create a post");
+      try {
+        // Check if tag already exists
+        let tag = await TagModel.findOne({ name, description });
+        if (tag) {
+          throw new Error('Tag already exists');
+        }
+        
+        // If not, create a new tag
+        tag = new TagModel({ name, description });
+        await tag.save();
+
+        return tag;
+      } catch (error) {
+        console.error("Error creating tag:", error);
+        throw error;
       }
-      const newPost = await Post.create({
-        description: content,
-        user: context.user._id,
-      });
-      return newPost;
     },
+    // createPost: async (_, { content }, context) => {
+    //   if (!context.user) {
+    //     throw createAuthenticationError("Must be logged in to create a post");
+    //   }
+    //   const newPost = await Post.create({
+    //     content: content,
+    //     user: context.user._id,
+    //   });
+    //   return newPost;
+    // },
     // repost: async (parent, { postId }, context) => {
     //   if (context.user) {
     //     const post = await Post.findByIdAndUpdate(
@@ -201,7 +220,7 @@ const resolvers = {
     //     );
     //     return post;
     //   }
-    //   throw new AuthenticationError('You need to be logged in!');
+    //   throw new createAuthenticationError('You need to be logged in!');
     // },
   },
 };

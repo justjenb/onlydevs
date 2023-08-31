@@ -6,15 +6,20 @@ function CallbackHandler() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Utility to extract token
+  const getTokenFromParams = (queryParams) => {
+    return queryParams.get('token') || queryParams.get('githubAccessToken');
+  }
+
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const token = queryParams.get('token');
+    const token = getTokenFromParams(queryParams);
 
     if (token) {
       AuthService.login(token);
-      navigate('/');  // Or wherever you want
+      navigate('/'); 
     } else {
-      navigate('/login');
+      navigate('/error');
     }
   }, [location, navigate]);
 

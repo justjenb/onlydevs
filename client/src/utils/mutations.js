@@ -20,6 +20,18 @@ mutation Logout {
   }
 }
 `;
+
+export const CREATE_TAG = gql`
+mutation CreateTag($name: String!, $description: String) {
+  createTag(name: $name, description: $description) {
+    _id
+    name
+    description
+  }
+}
+`;
+
+
 export const LOGIN_WITH_GOOGLE = gql`
 mutation LoginWithGoogle($token: String!) {
   loginWithGoogle(token: $token) {

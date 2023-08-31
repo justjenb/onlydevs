@@ -54,6 +54,18 @@ const userSchema = new Schema(
         ref: 'User',
       },
     ],
+    savedPosts: [
+      {
+          type: Schema.Types.ObjectId,
+          ref: 'Post'
+      }
+  ],
+    githubId: {
+      type: String,
+      unique: true,
+    },
+    githubUsername: String,
+    githubAccessToken: String,
   },
   {
     toJSON: {

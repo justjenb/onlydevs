@@ -19,7 +19,7 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/me",
+        path: "/profile",
         element: <Profile />,
       },
       {
@@ -28,6 +28,10 @@ const router = createBrowserRouter([
       },
       {
         path: "/api/google/auth/callback",
+        element: <CallbackHandler />,
+      },  
+      {
+        path: "/api/github/auth/callback",
         element: <CallbackHandler />,
       },      
     ],
