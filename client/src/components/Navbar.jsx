@@ -34,6 +34,7 @@ const AppNavbar = () => {
 
   useEffect(() => {
     if (searchData) {
+      console.log("Updating searchResults with: ", searchData.search);
       setSearchResults(searchData.search);
     }
   }, [searchData]);
@@ -50,6 +51,8 @@ const AppNavbar = () => {
   }, [suggestions]);
 
   const handleSearch = () => {
+    console.log("handleSearch is being called with term: ", searchTerm);
+    console.log("Executing search query");
     search({
       variables: { query: searchTerm }
     });
@@ -57,6 +60,7 @@ const AppNavbar = () => {
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
+    console.log("Search term inside handleSearchChange: ", value);
     setSearchTerm(value);
     const newSuggestions = allPossibleSuggestions.filter(suggestion =>
       suggestion.toLowerCase().includes(value.toLowerCase())
@@ -65,6 +69,7 @@ const AppNavbar = () => {
   };
 
   const handleKeyDown = (e) => {
+    console.log("Key pressed: ", e.key);
     if (e.key === "Tab" && !e.shiftKey) {
       e.preventDefault();
       const nextIndex = (focusedSuggestionIndex + 1) % suggestions.length;
@@ -73,8 +78,11 @@ const AppNavbar = () => {
       e.preventDefault();
       const nextIndex = (focusedSuggestionIndex - 1 + suggestions.length) % suggestions.length;
       setFocusedSuggestionIndex(nextIndex);
-    } else if (e.key === "Enter" && focusedSuggestionIndex !== -1) {
-      handleSuggestionClick(suggestions[focusedSuggestionIndex]);
+    } else if (e.key === "Enter") {
+      e.preventDefault()
+      if (focusedSuggestionIndex !== -1) {
+        handleSuggestionClick(suggestions[focusedSuggestionIndex]);
+      }
       handleSearch();
     }
   };
@@ -89,7 +97,7 @@ const AppNavbar = () => {
     setAuthUser(null);
     navigate('/');
   };
-
+console.log(searchData)
   return (
     <>
      <div className="side-navbar">
