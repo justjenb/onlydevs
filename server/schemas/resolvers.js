@@ -119,8 +119,9 @@ const resolvers = {
       }
        throw createAuthenticationError('You need to be logged in!');
     },
-    addPost: async (parent, { description }, context) => {
+    addPost: async (parent, { description, tags }, context) => {
       console.log("addPost resolver called");
+      console.log("Backend received tags:", tags);
       console.log("Received description:", description);
       console.log("Context user:", context.user);
   
@@ -130,6 +131,7 @@ const resolvers = {
           try {
               const post = await Post.create({
                   description: description,
+                  tags,
                   user: context.user._id,
               });
               console.log("Post created:", post);
@@ -140,8 +142,10 @@ const resolvers = {
                   { new: true }
               );
               console.log("User after update:", updatedUser);
+              console.log("Received tags:", tags);
   
               return post;
+
           } catch (error) {
               console.error("Error while creating post or updating user:", error);
               throw error;
