@@ -79,6 +79,15 @@ export const ADD_COMMENT = gql`
   }
 `;
 
+export const UPDATE_BIO = gql`
+mutation UpdateBio($bio: String!) {
+  updateBio(bio: $bio) {
+      _id
+      bio
+  }
+}
+`;
+
 export const UPDATE_TAGS = gql`
   mutation updateTags($userId: ID!, $tags: [ID!]) {
     updateTags(userId: $userId, tags: $tags) {

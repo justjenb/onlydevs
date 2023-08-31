@@ -5,11 +5,18 @@ const cors = require("cors");
 const session = require('express-session');
 const passport = require("passport");
 require('dotenv');
-
 const { authMiddleware } = require("./utils/auth");
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
 const routes = require("./routes");
+
+const RedisStore = require("connect-redis").default;
+let redisClient = require('redis').createClient();
+
+let redisStore = new RedisStore({
+  client: redisClient,
+  prefix: "onlydevs:"
+});
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -21,8 +28,10 @@ app.use(
   })
 );
 
+// Using Redis store for session
 app.use(
   session({
+    store: redisStore,
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
