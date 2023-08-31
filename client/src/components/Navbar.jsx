@@ -60,12 +60,16 @@ const AppNavbar = () => {
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
-    console.log("Search term inside handleSearchChange: ", value);
     setSearchTerm(value);
+
+    if (value.includes("#")) {
     const newSuggestions = allPossibleSuggestions.filter(suggestion =>
-      suggestion.toLowerCase().includes(value.toLowerCase())
+      suggestion.toLowerCase().includes(value.toLowerCase().replace("#", ""))
     );
     setSuggestions(newSuggestions);
+  }else {
+    setSuggestions([]);
+  }
   };
 
   const handleKeyDown = (e) => {
@@ -88,7 +92,11 @@ const AppNavbar = () => {
   };
 
   const handleSuggestionClick = (suggestion) => {
-    setSearchTerm(suggestion);
+    if (searchTerm.includes("#")) {
+      setSearchTerm("#" + suggestion);
+    } else {
+      setSearchTerm(suggestion);
+    }
     setSuggestions([]);
   };
 

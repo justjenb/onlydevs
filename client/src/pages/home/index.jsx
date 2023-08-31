@@ -8,8 +8,10 @@ import { UPDATE_LIKES } from '../../utils/mutations';
 import PostList from "../../components/PostList/index";
 import { useSearch } from '../../context/SearchContext';
 import { Container, Box } from '@mui/material';
+
 const { Header, Content } = Layout;
 const { Text } = Typography;
+
 const Home = () => {
   const [userDataGithub, setUserDataGithub] = useState(null);
   const [userDataGoogle, setUserDataGoogle] = useState(null);
@@ -29,10 +31,16 @@ const Home = () => {
     performSearch(queryData, allPosts);
   }, [queryData, allPosts]);
   useEffect(() => {
+    performSearch(queryData, allPosts);
+  }, [queryData, allPosts]);
+
+  useEffect(() => {
     if (searchResults.length > 0) {
       setAllPosts(searchResults);
     }
   }, [searchResults]);
+
+
   const handleLike = async (postId) => {
     try {
       const { data: mutationData } = await updateLikes({
@@ -43,11 +51,13 @@ const Home = () => {
       console.error('Error updating likes:', err);
     }
   };
+  
   const setLogOut = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("loginWith");
     navigate("/");
   };
+  
   if (!userDataGithub && !userDataGoogle) {
     return (
       <Layout>
@@ -68,6 +78,7 @@ const Home = () => {
       </Layout>
     );
   }
+  
   return (
     <Container fixed>
       <Box style={{ height: '100vh' }}>
