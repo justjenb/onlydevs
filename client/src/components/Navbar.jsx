@@ -92,7 +92,11 @@ const AppNavbar = () => {
   };
 
   const handleSuggestionClick = (suggestion) => {
-    setSearchTerm(suggestion);
+    if (searchTerm.includes("#")) {
+      setSearchTerm("#" + suggestion);
+    } else {
+      setSearchTerm(suggestion);
+    }
     setSuggestions([]);
   };
 

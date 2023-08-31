@@ -68,6 +68,6 @@
     "description": "This is a sample post by Harry.",
     "postId": "sample_post_10",
     "title": "Harry's Hobbies",
-    "tags": ["TypeScript", "Angular"]
+    "tags": ["JavaScript", "Angular"]
   }
 ]
