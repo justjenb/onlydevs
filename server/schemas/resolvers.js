@@ -151,6 +151,23 @@ const resolvers = {
       console.log("User not authenticated, throwing authentication error");
       throw createAuthenticationError();
   },  
+  updateBio: async (parent, { newBio }, context) => {
+    if (!context.user) {
+        throw new Error("You need to be logged in to update your bio!");
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+        context.user._id,
+        { bio: bio },
+        { new: true }
+    );
+
+    if (!updatedUser) {
+        throw new Error("Couldn't find user with this id!");
+    }
+
+    return updatedUser;
+},
     updateLikes: async (parent, { postId }, context) => {
       if (context.user) {
         const post = await Post.findByIdAndUpdate(
