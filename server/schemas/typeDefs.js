@@ -70,6 +70,7 @@ type LogoutResponse {
     loginWithGoogle(token: String!): Auth
     logout: LogoutResponse!
     repost(postId: ID!): Post
+    updateBio(bio: String!): User
   }
 
   type Query {
