@@ -36,7 +36,20 @@ const Home = () => {
     }
   }, [searchResults]);
 
-
+  useEffect(() => {
+    if (queryData && queryData.posts) {
+      setAllPosts(queryData.posts);
+    }
+  }, [queryData]);
+  useEffect(() => {
+    performSearch(queryData, allPosts);
+  }, [queryData, allPosts]);
+  useEffect(() => {
+    if (searchResults.length > 0) {
+      setAllPosts(searchResults);
+    }
+  }, [searchResults]);
+  
   const handleLike = async (postId) => {
     try {
       const { data: mutationData } = await updateLikes({
@@ -47,12 +60,12 @@ const Home = () => {
       console.error('Error updating likes:', err);
     }
   };
-
   const setLogOut = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("loginWith");
     navigate("/");
   };
+
 
 // console.log("Posts" , allPosts)
 // If user data is not available, show a log in message
