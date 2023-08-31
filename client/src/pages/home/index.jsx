@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Avatar, Row, Col, Layout, Typography } from "antd";
+import { Layout, Typography } from "antd";
+const { Header, Content } = Layout;
+const { Text } = Typography;
 import { LogoutOutlined } from "@ant-design/icons";
 import { useQuery, useMutation } from "@apollo/client";
 import { QUERY_POSTS } from "../../utils/queries";
@@ -10,17 +12,11 @@ import PostList from "../../components/PostList/index";
 import { useSearch } from '../../context/SearchContext';
 import { Grid } from "@mui/material";
 
-
-
 import {
 getAccessTokenGithub,
 getUserDataGithub,
 getUserDataGoogle,
 } from "./services/home-services";
-
-
-const { Header, Content } = Layout;
-const { Text } = Typography;
 
 
 const Home = () => {
@@ -102,27 +98,26 @@ navigate("/");
 // If user data is not available, show a log in message
 if (!userDataGithub && !userDataGoogle) {
 return (
-
-<Grid container rowSpacing={2}>
-<Grid item xs={12} className="main-content">
-{loading && <div>Loading...</div>}
-{error && <div>Error: {error.message}</div>}
-{allPosts.length > 0 && (
-<div>
-<h3>Posts</h3>
-<ul>
-{allPosts.map((post, index) => (
-// console.log("Current post object:", post),
-<li key={index}>
-<strong>Title:</strong> {post.title} <br />
-<strong>Description:</strong> {post.description} <br />
-<button onClick={() => handleLike(post._id)}>Like</button>
-</li>
-))}
-</ul>
-</div>
-)}
-</Grid>
+  <Grid container rowSpacing={2}>
+    <Grid item xs={12} className="main-content">
+      {loading && <div>Loading...</div>}
+      {error && <div>Error: {error.message}</div>}
+      {allPosts.length > 0 && (
+        <div>
+          <h3>Posts</h3>
+          <ul>
+            {allPosts.map((post, index) => (
+            // console.log("Current post object:", post),
+            <li key={index}>
+            <strong>Title:</strong> {post.title} <br />
+            <strong>Description:</strong> {post.description} <br />
+            <button onClick={() => handleLike(post._id)}>Like</button>
+            </li>
+            ))}
+          </ul>
+        </div>
+        )}  
+    </Grid>
 </Grid>
 // </Content>
 );
@@ -131,30 +126,10 @@ return (
 // If user data is available, show user details
 return (
 <Grid container rowSpacing={2}>
-<Grid item xs={12} className="main-content">
-<Header
-style={{
-display: "flex",
-alignItems: "center",
-justifyContent: "space-between",
-
-}}
->
-<Avatar
-size="large"
-src={
-loginWith.current === "GitHub"
-? userDataGithub?.avatar_url
-: userDataGoogle?.picture
-}
-/>
-<Button type="primary" icon={<LogoutOutlined />} onClick={setLogOut}>
-Log out
-</Button>
-</Header>
-<div>Hello</div>
-<PostList posts={allPosts} searchResults={searchResults} title="Recent Posts"/>
-</Grid>
+  <Grid item xs={12} className="main-content">
+    <div>Hello</div>
+      <PostList posts={allPosts} searchResults={searchResults} title="Recent Posts"/>
+    </Grid>
 </Grid>
 );
 

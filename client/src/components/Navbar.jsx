@@ -93,14 +93,6 @@ const AppNavbar = () => {
   return (
     <>
      <div className="side-navbar">
-      <div className="nav-item">
-      <Tooltip className="nav-item" title="Home">
-      <Link to="/" className="notif icon">
-        OD <br/>
-          {/* <img src={logo} width="50" height="50" className="logo"/> */}
-        </Link>
-      </Tooltip>
-      </div>
       <Tooltip className="nav-item" title="Home">
         <Link to="/" className="home-nav icon">
         <Fab size="small" color="secondary" aria-label="home">
@@ -152,21 +144,22 @@ const AppNavbar = () => {
         ) : ( <CreatePostForm onClick={() => setExpanded(false)}/>)
         } */}
         </Tooltip>
-      <Tooltip className="nav-item" title="Notifications">
+      {/* <Tooltip className="nav-item" title="Notifications"> */}
       {/* TODO Set Link */}
-        <Link to="/" className="notif icon">
-        <Fab size="small" color="secondary" aria-label="notification">
+        {/* <Link to="/" className="notif icon"> */}
+        {/* <Fab size="small" color="secondary" aria-label="notification">
           <NotificationsNoneSharp />
           </Fab>
         </Link>
-      </Tooltip>
-      <Tooltip className="nav-item" title="Messages">
+      </Tooltip> */}
+      {/* <Tooltip className="nav-item" title="Messages">
         <Link to="/messages">
         <Fab size="small" color="secondary" aria-label="messages">
             <ThreeP className="icon"/>
             </Fab>
         </Link>
-      </Tooltip>
+
+      </Tooltip> */}
       {user ? (
         <div>
           <Tooltip className="nav-item" title="Account">
@@ -191,7 +184,7 @@ const AppNavbar = () => {
       )}
    
     </div>
-       <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} aria-labelledby="login-modal">
+       <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} aria-labelledby="login-modal" className="login-modal">
         <Modal.Header closeButton>
           <Modal.Title id="login-modal">
             {showSignup ? "Sign Up" : "Login"}
@@ -213,6 +206,7 @@ const AppNavbar = () => {
             <Button variant="secondary" onClick={() => setShowSignup(true)}>
               Don't have an account? Sign Up
             </Button>
+ 
           )}
         </Modal.Footer>
       </Modal>
