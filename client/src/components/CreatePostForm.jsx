@@ -1,65 +1,43 @@
-import React, { useState } from "react";
-import { useMutation } from "@apollo/client";
+import React, { useState, useEffect } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import { Form, Button } from "react-bootstrap";
 import { ADD_POST } from "../utils/mutations";
-
+import { GET_ALL_TAGS } from "../utils/queries";
 
 function CreatePostForm() {
   const [postContent, setPostContent] = useState("");
+  const [selectedTags, setSelectedTags] = useState([]);
   const [createPost] = useMutation(ADD_POST);
-  const [tags, setTags] = useState([]);
-  
+
+  const { loading, error, data } = useQuery(GET_ALL_TAGS);
+
+  useEffect(() => {
+      setSelectedTags(["64eff07ec41fe9085ca94b70"]);  
+    }, []);
 
   const handlePostSubmit = async (event) => {
     event.preventDefault();
 
-    console.log("Tags before sending:", tags);
+    
     console.log("postContent data:", postContent);
 
     try {
       const { data: postData } = await createPost({
-        variables: { description: postContent, tags: tags },
+        variables: { description: postContent, tags: selectedTags },
       });
-      console.log("Tags before sending:", tags);
+
       console.log('Post created successfully:', postData.createPost);
       setPostContent('');
+      setSelectedTags([]);
+
 
     } catch (error) {
       console.error('Error:', error);
     }
   };
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
 
-    if (value.includes("#")) {
-    const newSuggestions = allPossibleSuggestions.filter(suggestion =>
-      suggestion.toLowerCase().includes(value.toLowerCase().replace("#", ""))
-    );
-    setSuggestions(newSuggestions);
-  }else {
-    setSuggestions([]);
-  }
-  };
-
-  const handleKeyDown = (e) => {
-    console.log("Key pressed: ", e.key);
-    if (e.key === "Tab" && !e.shiftKey) {
-      e.preventDefault();
-      const nextIndex = (focusedSuggestionIndex + 1) % suggestions.length;
-      setFocusedSuggestionIndex(nextIndex);
-    } else if (e.key === "Tab" && e.shiftKey) {
-      e.preventDefault();
-      const nextIndex = (focusedSuggestionIndex - 1 + suggestions.length) % suggestions.length;
-      setFocusedSuggestionIndex(nextIndex);
-    } else if (e.key === "Enter") {
-      e.preventDefault()
-      if (focusedSuggestionIndex !== -1) {
-        handleSuggestionClick(suggestions[focusedSuggestionIndex]);
-      }
-      handleSearch();
-    }
-  };
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <Form onSubmit={handlePostSubmit}>
@@ -74,15 +52,19 @@ function CreatePostForm() {
         />
       </Form.Group>
       <Form.Group className="mb-3">
-      <Form.Control
-        type="text"
-        value={tags.join(', ')}
-        onChange={(e) => {
-          console.log("Input changed:", e.target.value);
-          setTags(e.target.value.split(', '));
-        }}
-        placeholder="Tags (comma-separated)"
-      />
+      <Form.Control as="select" multiple onChange={(e) => {
+        const selected = Array.from(e.target.selectedOptions).map(option => option.value);
+        console.log("Selected tags:", selected);
+        setSelectedTags(selected);
+      }}>
+        {data && data.getAllTags ? (
+          data.getAllTags.map(tag => (
+            <option key={tag._id} value={tag._id}>{tag.name}</option>
+          ))
+        ) : (
+          <option disabled>No tags available</option>
+        )}
+      </Form.Control>
     </Form.Group>
       <Button type="submit" variant="success">
         Post
