@@ -16,6 +16,7 @@ const Home = () => {
   const [userDataGithub, setUserDataGithub] = useState(null);
   const [userDataGoogle, setUserDataGoogle] = useState(null);
   const [allPosts, setAllPosts] = useState([]);
+  const { performSearch } = useSearch();
   const { searchResults } = useSearch();
   const { loading, error, data: queryData } = useQuery(QUERY_POSTS);
   const [updateLikes] = useMutation(UPDATE_LIKES);
@@ -27,6 +28,10 @@ const Home = () => {
       setAllPosts(queryData.posts);
     }
   }, [queryData]);
+
+  useEffect(() => {
+    performSearch(queryData, allPosts);
+  }, [queryData, allPosts]);
 
   useEffect(() => {
     if (searchResults.length > 0) {
