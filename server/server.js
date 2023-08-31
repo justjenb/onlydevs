@@ -11,6 +11,8 @@ const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
 const routes = require("./routes");
 
+const { InMemoryLRUCache } = require('apollo-server-caching');
+
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -40,6 +42,7 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: authMiddleware,
+  persistedQueries: false
 });
 
 const startApolloServer = async () => {

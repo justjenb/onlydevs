@@ -103,6 +103,7 @@ const Profile = () => {
 
         <div className="col-12 col-md-10 mb-3 p-3">
             <h4>Profile Information</h4>
+            <p>Id: {user._id}</p>
             <p>Username: {user.username}</p>
             <p>Email: {user.email}</p>
             <p>Bio: {user.bio}</p>
@@ -128,6 +129,7 @@ const Profile = () => {
                 </Button>
             )}
         </div>
+        <CreatePostForm />
 
         <div className="col-12 col-md-10 mb-5">
           <PostList
@@ -143,7 +145,6 @@ const Profile = () => {
             className="col-12 col-md-10 mb-3 p-3"
             style={{ border: "1px dotted #1a1a1a" }}
           >
-            <CreatePostForm />
           </div>
         )}
       </div>
