@@ -10,16 +10,6 @@ export const QUERY_ME = gql`
         _id
         user
         description
-        link
-        title
-        likes
-        comments
-        reposts
-        tags {
-          _id
-          name
-          description
-        }
       }
     }
   }

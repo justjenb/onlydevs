@@ -2,7 +2,6 @@ import { Navigate, useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 
 import CreatePostForm from "../../components/CreatePostForm";
-import PostList from "../../components/PostList";
 
 import { QUERY_USER, QUERY_ME } from "../../utils/queries";
 
@@ -48,16 +47,7 @@ const Profile = () => {
         {/* <h2 className="col-12 col-md-10 bg-dark text-light p-3 mb-5"> */}
           Viewing {userParam ? `${user.username}'s` : "your"} profile.
         </h2>
-
-        <div className="col-12 col-md-10 mb-5">
-          <PostList
-            posts={user.posts}
-            title={`${user.username}'s posts...`}
-            showTitle={false}
-            showUsername={false}
-          />
-        </div>
-
+        
         {!userParam && (
           <div
             className="col-12 col-md-10 mb-3 p-3"

@@ -17,7 +17,7 @@ type Tag {
 type Post {
   _id: ID!
   user: String
-  description: String!
+  description: String
   title: String
   likes: Int
   comments: [ID!]
@@ -44,7 +44,7 @@ input CreateTagInput {
 
 input CreatePostInput {
   user: ID!
-  postText: String!
+  description: String!
   link: String
   title: String
   tags: [ID]
@@ -63,7 +63,7 @@ type LogoutResponse {
     updateTags(userId: ID!, tags: [ID!]): User
     updatePostTags(postId: ID!, tags: [ID!]): Post
     updateLikes(postId: ID!): Post
-    addPost(postText: String!): Post
+    addPost(description: String!): Post
     addComment(postId: ID!, commentText: String!): Post
     removePost(postId: ID!): Post
     removeComment(postId: ID!, commentId: ID!): Post
