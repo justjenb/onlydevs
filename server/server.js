@@ -3,13 +3,19 @@ const { ApolloServer } = require("apollo-server-express");
 const path = require("path");
 const cors = require("cors");
 const session = require('express-session');
-const passport = require("passport");
 require('dotenv');
 
 const { authMiddleware } = require("./utils/auth");
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
 const routes = require("./routes");
+
+const MongoDBStore = require('connect-mongodb-session')(session);
+
+const store = new MongoDBStore({
+  uri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/onlydevsDB',
+  collection: 'sessions'
+});
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -23,12 +29,17 @@ app.use(
 
 app.use(
   session({
+    store: store,
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: 'auto' }
   })
 );
+
+store.on('error', function(error) {
+  console.error(error);
+});
 
 const githubPassport = require('./controllers/github-controller');
 app.use(githubPassport.initialize());
@@ -40,6 +51,7 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: authMiddleware,
+  persistedQueries: false
 });
 
 const startApolloServer = async () => {
