@@ -74,6 +74,13 @@ const PostList = ({
           </h4>
           <div className="card-body bg-light p-2">
             <p>{post.description}</p>
+            {post.tags && post.tags.length > 0 ? (
+              post.tags.map((tag) => (
+                <span key={tag._id}>{tag.name || "Unnamed Tag"}</span>
+              ))
+            ) : (
+              <span>No tags available</span>
+            )}
           </div>
           <button onClick={() => handleLike(post._id)}>Like</button>
           <button onClick={() => handleRepost(post._id)}>Repost</button>

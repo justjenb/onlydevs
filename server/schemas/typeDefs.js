@@ -63,7 +63,7 @@ type LogoutResponse {
     updateTags(userId: ID!, tags: [ID!]): User
     updatePostTags(postId: ID!, tags: [ID!]): Post
     updateLikes(postId: ID!): Post
-    addPost(description: String!): Post
+    addPost(description: String!, tags: [ID]): Post
     addComment(postId: ID!, commentText: String!): Post
     removePost(postId: ID!): Post
     removeComment(postId: ID!, commentId: ID!): Post

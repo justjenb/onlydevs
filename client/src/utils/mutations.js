@@ -59,11 +59,15 @@ export const ADD_USER = gql`
 
 
 export const ADD_POST = gql`
-  mutation addPost($description: String!) {
-    addPost(description: $description) {
-      description
+mutation addPost($description: String!, $tags: [ID!]) {
+  addPost(description: $description, tags: $tags) {
+    description
+    tags {
+      _id
+      name
     }
   }
+}
 `;
 
 export const ADD_COMMENT = gql`
