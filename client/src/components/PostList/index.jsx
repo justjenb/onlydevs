@@ -73,7 +73,7 @@ const PostList = ({
             )}
           </h4>
           <div className="card-body bg-light p-2">
-            <p>{post.description}</p>
+            <p>{post.postText}</p>
           </div>
           <button onClick={() => handleLike(post._id)}>Like</button>
           <button onClick={() => handleRepost(post._id)}>Repost</button>

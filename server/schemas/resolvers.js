@@ -120,21 +120,37 @@ const resolvers = {
        throw createAuthenticationError('You need to be logged in!');
     },
     addPost: async (parent, { description }, context) => {
+      console.log("addPost resolver called");
+      console.log("Received description:", description);
+      console.log("Context user:", context.user);
+  
       if (context.user) {
-        const post = await Post.create({
-          description: description,
-          user: context.user._id,
-        });
-
-        await User.findOneAndUpdate(
-          { _id: context.user._id },
-          { $addToSet: { posts: post._id } }
-        );
-
-        return post;
+          console.log("User is authenticated, attempting to create post");
+  
+          try {
+              const post = await Post.create({
+                  description: description,
+                  user: context.user._id,
+              });
+              console.log("Post created:", post);
+  
+              const updatedUser = await User.findOneAndUpdate(
+                  { _id: context.user._id },
+                  { $addToSet: { posts: post._id } },
+                  { new: true }
+              );
+              console.log("User after update:", updatedUser);
+  
+              return post;
+          } catch (error) {
+              console.error("Error while creating post or updating user:", error);
+              throw error;
+          }
       }
+  
+      console.log("User not authenticated, throwing authentication error");
       throw createAuthenticationError();
-    },
+  },  
     updateLikes: async (parent, { postId }, context) => {
       if (context.user) {
         const post = await Post.findByIdAndUpdate(
