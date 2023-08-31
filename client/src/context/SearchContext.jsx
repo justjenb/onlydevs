@@ -9,9 +9,20 @@ export const useSearch = () => {
 export const SearchProvider = ({ children }) => {
   const [searchResults, setSearchResults] = useState([]);
 
+  const performSearch = (searchQuery = "", allPosts) => {
+    if (typeof searchQuery === "string") {
+    const results = allPosts.filter(post => 
+      post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      post.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setSearchResults(results);
+    }
+  };
+
   const value = {
     searchResults,
     setSearchResults,
+    performSearch,
   };
 
   return (

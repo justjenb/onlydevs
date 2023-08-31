@@ -11,8 +11,9 @@ import { GET_ALL_TAGS, SEARCH } from '../utils/queries';
 import { useSearch } from '../context/SearchContext';
 import '../App.css';
 import { Home, NotificationsActiveSharp, NotificationsNoneSharp, Search, ThreeP, AddCircle, AccountCircle }  from '@mui/icons-material';
-import { Tooltip, Grid } from '@mui/material'
+import { Tooltip, Grid, Fab } from '@mui/material'
 import CreatePostForm from './CreatePostForm';
+import logo from '../assets/images/olives.svg';
 
 const AppNavbar = () => {
   const [showModal, setShowModal] = useState(false);
@@ -33,6 +34,7 @@ const AppNavbar = () => {
 
   useEffect(() => {
     if (searchData) {
+      console.log("Updating searchResults with: ", searchData.search);
       setSearchResults(searchData.search);
     }
   }, [searchData]);
@@ -49,6 +51,8 @@ const AppNavbar = () => {
   }, [suggestions]);
 
   const handleSearch = () => {
+    console.log("handleSearch is being called with term: ", searchTerm);
+    console.log("Executing search query");
     search({
       variables: { query: searchTerm }
     });
@@ -57,13 +61,19 @@ const AppNavbar = () => {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
+
+    if (value.includes("#")) {
     const newSuggestions = allPossibleSuggestions.filter(suggestion =>
-      suggestion.toLowerCase().includes(value.toLowerCase())
+      suggestion.toLowerCase().includes(value.toLowerCase().replace("#", ""))
     );
     setSuggestions(newSuggestions);
+  }else {
+    setSuggestions([]);
+  }
   };
 
   const handleKeyDown = (e) => {
+    console.log("Key pressed: ", e.key);
     if (e.key === "Tab" && !e.shiftKey) {
       e.preventDefault();
       const nextIndex = (focusedSuggestionIndex + 1) % suggestions.length;
@@ -72,14 +82,21 @@ const AppNavbar = () => {
       e.preventDefault();
       const nextIndex = (focusedSuggestionIndex - 1 + suggestions.length) % suggestions.length;
       setFocusedSuggestionIndex(nextIndex);
-    } else if (e.key === "Enter" && focusedSuggestionIndex !== -1) {
-      handleSuggestionClick(suggestions[focusedSuggestionIndex]);
+    } else if (e.key === "Enter") {
+      e.preventDefault()
+      if (focusedSuggestionIndex !== -1) {
+        handleSuggestionClick(suggestions[focusedSuggestionIndex]);
+      }
       handleSearch();
     }
   };
 
   const handleSuggestionClick = (suggestion) => {
-    setSearchTerm(suggestion);
+    if (searchTerm.includes("#")) {
+      setSearchTerm("#" + suggestion);
+    } else {
+      setSearchTerm(suggestion);
+    }
     setSuggestions([]);
   };
 
@@ -88,25 +105,23 @@ const AppNavbar = () => {
     setAuthUser(null);
     navigate('/');
   };
-
+console.log(searchData)
   return (
     <>
      <div className="side-navbar">
-  
-      <div className="nav-item">
-        <Link to="/" className="logo">
-          OnlyDevs
-        </Link>
-      </div>
       <Tooltip className="nav-item" title="Home">
         <Link to="/" className="home-nav icon">
-          <Home />
+        <Fab size="small" color="secondary" aria-label="home">
+        <Home />
+        </Fab>
         </Link>
       </Tooltip>
       <Tooltip className="nav-item" title="Search">
         {!isExpanded ? (
           <span onClick={() => setExpanded(true)}>
+          <Fab size="small" color="secondary" aria-label="search">
             <Search className="icon"/>
+            </Fab>
             </span>
         ) : (
           <Form onKeyDown={handleKeyDown}>
@@ -138,30 +153,37 @@ const AppNavbar = () => {
       {/* TODO Set Link */}
       {/* {!isExpanded ? (
         <span onClick={() => setExpanded(true)}> */}
+        <Fab size="small" color="secondary" aria-label="post">
           <AddCircle className="icon post"/>
-
+          </Fab>
             {/* </span>
         ) : ( <CreatePostForm onClick={() => setExpanded(false)}/>)
         } */}
-
         </Tooltip>
-      <Tooltip className="nav-item" title="Notifications">
+      {/* <Tooltip className="nav-item" title="Notifications"> */}
       {/* TODO Set Link */}
-        <Link to="/" className="notif icon">
+        {/* <Link to="/" className="notif icon"> */}
+        {/* <Fab size="small" color="secondary" aria-label="notification">
           <NotificationsNoneSharp />
+          </Fab>
         </Link>
-      </Tooltip>
-      <Tooltip className="nav-item" title="Messages">
+      </Tooltip> */}
+      {/* <Tooltip className="nav-item" title="Messages">
         <Link to="/messages">
+        <Fab size="small" color="secondary" aria-label="messages">
             <ThreeP className="icon"/>
+            </Fab>
         </Link>
-      </Tooltip>
+
+      </Tooltip> */}
       {user ? (
         <div>
           <Tooltip className="nav-item" title="Account">
           {/* NOTES: Add to show image? */}
             <Link to="/profile">
+            <Fab size="small" color="secondary" aria-label="messages">
               <AccountCircle className="icon account"/>
+              </Fab>
             </Link>
           </Tooltip>
           <Tooltip className="nav-item" title="Logout">
@@ -178,7 +200,7 @@ const AppNavbar = () => {
       )}
    
     </div>
-       <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} aria-labelledby="login-modal">
+       <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} aria-labelledby="login-modal" className="login-modal">
         <Modal.Header closeButton>
           <Modal.Title id="login-modal">
             {showSignup ? "Sign Up" : "Login"}
@@ -200,11 +222,14 @@ const AppNavbar = () => {
             <Button variant="secondary" onClick={() => setShowSignup(true)}>
               Don't have an account? Sign Up
             </Button>
+ 
           )}
         </Modal.Footer>
       </Modal>
     </>
   );  
   }
+
+// export default AppNavbar;
 
 export default AppNavbar;

@@ -4,7 +4,8 @@
     "description": "This is a sample post by John.",
     "postId": "sample_post_1",
     "title": "Exploring YouTube",
-    "tags": ["JavaScript", "Node.js"]
+    "tags": ["JavaScript", "Node.js"],
+    "likes" : 5
   },
   {
     "user": "jane_doe",
@@ -67,6 +68,6 @@
     "description": "This is a sample post by Harry.",
     "postId": "sample_post_10",
     "title": "Harry's Hobbies",
-    "tags": ["TypeScript", "Angular"]
+    "tags": ["JavaScript", "Angular"]
   }
 ]
