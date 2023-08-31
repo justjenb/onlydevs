@@ -59,10 +59,10 @@ export const ADD_USER = gql`
 
 
 export const ADD_POST = gql`
-  mutation addPost($postText: String!) {
-    addThought(postText: $postText) {
+  mutation addPost($description: String!) {
+    addThought(description: $description) {
       _id
-      postText
+      description
       user
       createdAt
       comments {

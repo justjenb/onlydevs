@@ -119,10 +119,10 @@ const resolvers = {
       }
        throw createAuthenticationError('You need to be logged in!');
     },
-    addPost: async (parent, { postText }, context) => {
+    addPost: async (parent, { description }, context) => {
       if (context.user) {
         const post = await Post.create({
-          description: postText,
+          description: description,
           user: context.user._id,
         });
 
