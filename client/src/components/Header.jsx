@@ -15,7 +15,7 @@ import {
   getUserDataGoogle,
   } from "../pages/home/services/home-services";
 
-  const { Header } = Layout;
+  // const { Header } = Layout;
 
   const AppHeader = () => {
     const [userDataGithub, setUserDataGithub] = useState(null);
@@ -77,7 +77,7 @@ import {
 
   if (!userDataGithub && !userDataGoogle) {
     return (
-      <Header id="header">
+      <div id="header">
             <Tooltip className="nav-item" title="Home">
       <Link to="/" className="notif icon">
         OD <br/>
@@ -89,11 +89,11 @@ import {
           size="large"
           id="header-avatar"
         />
-        </Header>
+        </div>
     );}
 
     return (
-      <Header style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+      <div style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
         <Avatar
           size="large"
           src={
@@ -105,7 +105,7 @@ import {
         <Button icon={<LogoutOutlined />} onClick= {setLogOut}>
         Log out
         </Button> 
-  </Header>
+  </div>
         );
             }
 
