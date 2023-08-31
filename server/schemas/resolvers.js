@@ -98,7 +98,27 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-
+    addComment: async (parent, { postId, commentText }, context) => {
+      if (context.user) {
+        const updatedPost = Post.findOneAndUpdate(
+          { _id: postId },
+          {
+            $addToSet: {
+              comments: { commentText, commentAuthor: context.user.username },
+            },
+          },
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+        console.log('Post ID:', postId);
+        console.log('Comment Text:', commentText);
+        console.log('User:', context.user);
+        return updatedPost;
+      }
+       throw createAuthenticationError('You need to be logged in!');
+    },
     addPost: async (parent, { postText }, context) => {
       if (context.user) {
         const post = await Post.create({
@@ -114,23 +134,6 @@ const resolvers = {
         return post;
       }
       throw createAuthenticationError();
-    },
-    addComment: async (parent, { postId, commentText }, context) => {
-      if (context.user) {
-        return Post.findOneAndUpdate(
-          { _id: postId },
-          {
-            $addToSet: {
-              comments: { commentText, commentAuthor: context.user.username },
-            },
-          },
-          {
-            new: true,
-            runValidators: true,
-          }
-        );
-      }
-       throw createAuthenticationError('You need to be logged in!');
     },
     updateLikes: async (parent, { postId }, context) => {
       if (context.user) {
