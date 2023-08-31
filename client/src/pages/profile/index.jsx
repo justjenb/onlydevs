@@ -10,14 +10,14 @@ import Auth from "../../utils/auth";
 
 const Profile = () => {
   const { username: userParam } = useParams();
-  
+
   const queryOptions = userParam
     ? { query: QUERY_USER, variables: { username: userParam } }
     : { query: QUERY_ME };
 
   const { loading, error, data } = useQuery(queryOptions.query, {
     variables: userParam ? { username: userParam } : {},
-    fetchPolicy: "no-cache"
+    fetchPolicy: "no-cache",
   });
 
   if (loading) return <div>Loading...</div>;
@@ -63,7 +63,7 @@ const Profile = () => {
             className="col-12 col-md-10 mb-3 p-3"
             style={{ border: "1px dotted #1a1a1a" }}
           >
-            <CreatePostForm />
+            {!userParam && <CreatePostForm user={user} />}
           </div>
         )}
       </div>

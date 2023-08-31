@@ -6,7 +6,7 @@ import TextField from "@mui/material/TextField";
 import { CREATE_TAG, CREATE_POST, UPDATE_POST_TAGS } from "../utils/mutations";
 import { GET_ALL_TAGS } from "../utils/queries";
 
-function CreatePostForm() {
+function CreatePostForm({ user }) {
   const [postContent, setPostContent] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [createPost] = useMutation(CREATE_POST);
@@ -72,7 +72,7 @@ function CreatePostForm() {
       const { data } = await createPost({
         variables: {
           input: {
-            user: user.id, // Ensure you fetch and provide the correct user ID here
+            user: user.id,
             postText: postContent,
             tags: [...selectedTags, ...newTags].map(tag => tag._id)
           }
