@@ -22,13 +22,14 @@ const Home = () => {
   const [updateLikes] = useMutation(UPDATE_LIKES);
   const loginWith = useRef(localStorage.getItem("loginWith"));
   const navigate = useNavigate();
-
   useEffect(() => {
     if (queryData && queryData.posts) {
       setAllPosts(queryData.posts);
     }
   }, [queryData]);
-
+  useEffect(() => {
+    performSearch(queryData, allPosts);
+  }, [queryData, allPosts]);
   useEffect(() => {
     performSearch(queryData, allPosts);
   }, [queryData, allPosts]);
@@ -50,13 +51,13 @@ const Home = () => {
       console.error('Error updating likes:', err);
     }
   };
-
+  
   const setLogOut = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("loginWith");
     navigate("/");
   };
-
+  
   if (!userDataGithub && !userDataGoogle) {
     return (
       <Layout>
@@ -77,7 +78,7 @@ const Home = () => {
       </Layout>
     );
   }
-
+  
   return (
     <Container fixed>
       <Box style={{ height: '100vh' }}>
@@ -98,5 +99,4 @@ const Home = () => {
     </Container>
   );
 };
-
 export default Home;
