@@ -7,7 +7,6 @@ import { LogoutOutlined } from "@ant-design/icons";
 import { useQuery, useMutation } from "@apollo/client";
 import { QUERY_POSTS } from "../../utils/queries";
 import { UPDATE_LIKES } from '../../utils/mutations';
-import AppNavbar from "../../components/Navbar";
 import PostList from "../../components/PostList/index";
 import { useSearch } from '../../context/SearchContext';
 import { Grid } from "@mui/material";
@@ -20,21 +19,26 @@ getUserDataGoogle,
 
 
 const Home = () => {
-const [userDataGithub, setUserDataGithub] = useState(null);
-const [userDataGoogle, setUserDataGoogle] = useState(null);
-const [allPosts, setAllPosts] = useState([]);
+  const [userDataGithub, setUserDataGithub] = useState(null);
+  const [userDataGoogle, setUserDataGoogle] = useState(null);
+  const [allPosts, setAllPosts] = useState([]);
+  const { searchResults } = useSearch();
+  const { loading, error, data: queryData } = useQuery(QUERY_POSTS);
+  const [updateLikes] = useMutation(UPDATE_LIKES);
+  const loginWith = useRef(localStorage.getItem("loginWith"));
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (queryData && queryData.posts) {
+      setAllPosts(queryData.posts);
+    }
+  }, [queryData]);
 
-const { searchResults } = useSearch();
-const { loading, error, data: queryData } = useQuery(QUERY_POSTS);
-const [updateLikes] = useMutation(UPDATE_LIKES);
-
-
-useEffect(() => {
-if (queryData && queryData.posts) {
-setAllPosts(queryData.posts);
-}
-}, [queryData]);
+  useEffect(() => {
+    if (searchResults.length > 0) {
+      setAllPosts(searchResults);
+    }
+  }, [searchResults]);
 
 
 const handleLike = async (postId) => {
@@ -167,6 +171,5 @@ return (
 // );
 
 };
-
 
 export default Home;

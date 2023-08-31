@@ -18,7 +18,6 @@ type Post {
   _id: ID!
   user: String
   description: String!
-  link: String
   title: String
   likes: Int
   comments: [ID!]
@@ -68,7 +67,6 @@ type LogoutResponse {
     addComment(postId: ID!, commentText: String!): Post
     removePost(postId: ID!): Post
     removeComment(postId: ID!, commentId: ID!): Post
-    createPost(input: CreatePostInput!): Post
     loginWithGoogle(token: String!): Auth
     logout: LogoutResponse!
     repost(postId: ID!): Post
