@@ -60,6 +60,7 @@ const Home = () => {
   
   if (!userDataGithub && !userDataGoogle) {
     return (
+      <>
       <Layout>
         <Content style={{ padding: "20px", textAlign: "center" }}>
           <Row justify="center">
@@ -76,10 +77,13 @@ const Home = () => {
           </Row>
         </Content>
       </Layout>
+      </>
     );
   }
+
   
   return (
+    <>
     <Container fixed>
       <Box style={{ height: '100vh' }}>
         <Avatar
@@ -97,6 +101,7 @@ const Home = () => {
         <PostList posts={allPosts} title="Recent Posts" />
       </Box>
     </Container>
+    </>
   );
 };
 export default Home;
