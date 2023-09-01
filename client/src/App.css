@@ -1,11 +1,12 @@
-html, body, #root {
+/* html, body, #root {
   height: 100%;
   margin: 0;
-}
+} */
 
 body {
 font-family: 'Rubik', sans-serif;
 color: white !important;
+min-height:100vh !important;
 } 
 
 h1,
