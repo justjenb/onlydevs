@@ -14,8 +14,11 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 
 const store = new MongoDBStore({
   uri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/onlydevsDB',
-  collection: 'sessions'
+  collection: 'sessions',
+  touchAfter: 24 * 3600,  // time period in seconds
+  ttl: 24 * 3600  // session expiration in seconds
 });
+
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -27,15 +30,25 @@ app.use(
   })
 );
 
+app.set('trust proxy', 1);
+
+const isProduction = process.env.NODE_ENV === "production";
+
 app.use(
   session({
     store: store,
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: 'auto' }
+    rolling: true,
+    cookie: { 
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: isProduction ? 'auto' : false,
+      sameSite: 'lax'
+    }
   })
 );
+
 
 store.on('error', function(error) {
   console.error(error);
