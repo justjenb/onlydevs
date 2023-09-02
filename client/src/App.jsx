@@ -12,9 +12,18 @@ import { Outlet } from "react-router-dom";
 import Auth from "./utils/auth";
 import useStore from "./store/index";
 import { SearchProvider } from "./context/SearchContext";
-import { Box, Drawer, Divider, AppBar, Toolbar, Typography, CssBaseline  } from "@mui/material";
+import {
+  Box,
+  Drawer,
+  Divider,
+  AppBar,
+  Toolbar,
+  Typography,
+  CssBaseline,
+} from "@mui/material";
 import ErrorBoundary from "./components/ErrorBoundary";
 import AppHeader from "./components/Header";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const drawerWidth = "15%";
 
@@ -57,36 +66,37 @@ function AppContent() {
       {" "}
       <ErrorBoundary>
         <SearchProvider>
-          <ApolloProvider client={client} >
-          <Box sx={{ display: 'flex' }}>
-          <CssBaseline />
-          <AppHeader />
-            <AppBar
-             position="fixed" sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
-            >
-              <Drawer sx={{
-                width: drawerWidth,
-                flexShrink: 0,
-                '& .MuiDrawer-paper': {
-                width: drawerWidth,
-                boxSizing: 'border-box',
-                },
+          <ApolloProvider client={client}>
+            <Box sx={{ display: "flex" }}>
+              <CssBaseline />
+              <AppBar
+                position="fixed"
+                sx={{
+                  width: `calc(100% - ${drawerWidth}px)`,
+                  ml: `${drawerWidth}px`,
                 }}
-                variant="permanent"
-                anchor="left"
+              >
+                <Drawer
+                  sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    "& .MuiDrawer-paper": {
+                      width: drawerWidth,
+                      boxSizing: "border-box",
+                    },
+                  }}
+                  variant="permanent"
+                  anchor="left"
                 >
-              <AppNavbar>
-              </AppNavbar>
-</Drawer>
+                  <AppNavbar></AppNavbar>
+                </Drawer>
               </AppBar>
-              <Divider /> 
-            <Toolbar />
-            <Box component="main" id="main"
-              sx={{ flexGrow: 1, p: 3 }}
-               >
-               <AppHeader/>
+              <Divider />
+              <Toolbar />
+              <Box component="main" id="main" sx={{ flexGrow: 1, p: 3 }}>
+                <AppHeader />
                 <Outlet />
-            </Box>
+              </Box>
             </Box>
           </ApolloProvider>
         </SearchProvider>
@@ -94,7 +104,6 @@ function AppContent() {
     </>
   );
 }
-
 
 function App() {
   return <AppContent />;
