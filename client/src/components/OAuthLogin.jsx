@@ -12,14 +12,22 @@ const OAuthLogin = () => {
     }
   }, []);
 
+  const setBaseUrl = () => {
+    if (process.env.NODE_ENV === "production") {
+      return "https://onlydevs-504c5476d7ee.herokuapp.com";
+    } else {
+      return "http://localhost:3001";
+    }
+  };
+
   const loginToGithub = () => {
     localStorage.setItem("loginWith", "GitHub");
-    window.location.assign(`http://localhost:3001/api/github/auth`);
+    window.location.assign(`${setBaseUrl()}/api/github/auth`);
   };
 
   const loginToGoogle = () => {
     localStorage.setItem("loginWith", "Google");
-    window.location.assign("http://localhost:3001/api/google/auth");
+    window.location.assign(`${setBaseUrl()}/api/google/auth`);
   };
 
   return (
