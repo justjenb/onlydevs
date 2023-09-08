@@ -1,7 +1,7 @@
 import { Navigate, useParams } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
 
 import CreatePostForm from "../../components/CreatePostForm";
 import PostList from "../../components/PostList/index";
@@ -12,6 +12,35 @@ import { UPDATE_BIO } from "../../utils/mutations";
 import Auth from "../../utils/auth";
 
 import "./Profile.css";
+
+const ProfileInfo = ({ user, editingBio, handleEditBio, handleSaveBio, bioContent, handleBioChange }) => (
+  <Card className="mb-4">
+    <Card.Header>Profile Information</Card.Header>
+    <Card.Body>
+      <p>Id: {user._id}</p>
+      <p>Username: {user.username}</p>
+      <p>Email: {user.email}</p>
+      <p>Bio: {user.bio}</p>
+      {editingBio ? (
+        <Form onSubmit={handleSaveBio}>
+          <Form.Group className="mb-3">
+            <Form.Control
+              as="textarea"
+              rows={4}
+              value={bioContent}
+              onChange={handleBioChange}
+              placeholder="Edit your bio here"
+              required
+            />
+          </Form.Group>
+          <Button type="submit" variant="success">Save</Button>
+        </Form>
+      ) : (
+        <Button variant="primary" onClick={handleEditBio}>Edit Bio</Button>
+      )}
+    </Card.Body>
+  </Card>
+);
 
 const Profile = () => {
   const [editingBio, setEditingBio] = useState(false);
@@ -95,60 +124,36 @@ const Profile = () => {
   }
 
   return (
-    <div className="profile-container">
-    <div className="flex-row justify-center mb-3">
-        <h2 className="col-12 col-md-10 bg-dark text-light p-3 mb-5">
+    <Container className="profile-container mt-4">
+      <Row>
+        <Col>
+          <h2 className="text-center bg-dark text-light p-3 mb-4">
             Viewing {userParam ? `${user.username}'s` : "your"} profile.
-        </h2>
-
-        <div className="col-12 col-md-10 mb-3 p-3">
-            <h4>Profile Information</h4>
-            <p>Id: {user._id}</p>
-            <p>Username: {user.username}</p>
-            <p>Email: {user.email}</p>
-            <p>Bio: {user.bio}</p>
-            {editingBio ? (
-                <Form onSubmit={handleSaveBio}>
-                    <Form.Group className="mb-3">
-                        <Form.Control
-                            as="textarea"
-                            rows={4}
-                            value={bioContent}
-                            onChange={handleBioChange}
-                            placeholder="Edit your bio here"
-                            required
-                        />
-                    </Form.Group>
-                    <Button type="submit" variant="success">
-                        Save
-                    </Button>
-                </Form>
-            ) : (
-                <Button variant="primary" onClick={handleEditBio}>
-                    Edit Bio
-                </Button>
-            )}
-        </div>
-        <CreatePostForm />
-
-        <div className="col-12 col-md-10 mb-5">
+          </h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col md={8}>
+          <ProfileInfo 
+            user={user}
+            editingBio={editingBio}
+            handleEditBio={handleEditBio}
+            handleSaveBio={handleSaveBio}
+            bioContent={bioContent}
+            handleBioChange={handleBioChange}
+          />
           <PostList
             posts={user.posts}
             title={`${user.username}'s posts...`}
             showTitle={true}
             showUsername={false}
           />
-        </div>
-
-        {!userParam && (
-          <div
-            className="col-12 col-md-10 mb-3 p-3"
-            style={{ border: "1px dotted #1a1a1a" }}
-          >
-          </div>
-        )}
-      </div>
-    </div>
+        </Col>
+        <Col md={4}>
+          <CreatePostForm />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

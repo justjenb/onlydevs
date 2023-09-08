@@ -8,7 +8,6 @@ export const QUERY_ME = gql`
       email
       posts {
         _id
-        user
         description
       }
     }

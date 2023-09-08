@@ -1,13 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { QUERY_POSTS } from "../utils/queries";
 import { Link, useNavigate } from "react-router-dom";
-import { Layout, Typography } from "antd";
-import { LogoutOutlined } from "@ant-design/icons";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useSearch } from '../context/SearchContext';
-import { Grid } from "@mui/material";
-import {Avatar, Button, Tooltip} from '@mui/material';
-const { Text } = Typography;
+import { Avatar, Button, Tooltip } from '@mui/material';
+import { Container, Row, Col } from 'react-bootstrap';
 
 import {
   getAccessTokenGithub,
@@ -15,17 +12,13 @@ import {
   getUserDataGoogle,
   } from "../pages/home/services/home-services";
 
-  // const { Header } = Layout;
-
   const AppHeader = () => {
     const [userDataGithub, setUserDataGithub] = useState(null);
     const [userDataGoogle, setUserDataGoogle] = useState(null);
     const [allPosts, setAllPosts] = useState([]);
     
-    
     const { searchResults } = useSearch();
     const { loading, error, data: queryData } = useQuery(QUERY_POSTS);
-    
     
     useEffect(() => {
     if (queryData && queryData.posts) {
@@ -77,36 +70,32 @@ import {
 
   if (!userDataGithub && !userDataGoogle) {
     return (
-      <div id="header">
-            <Tooltip className="nav-item" title="Home">
-      <Link to="/" className="notif icon">
-        OD <br/>
-          {/* <img src={logo} width="50" height="50" className="logo"/> */}
-        </Link>
-      </Tooltip>
-        Welcome to OnlyDevs!
-        <Avatar
-          size="large"
-          id="header-avatar"
-        />
-        </div>
-    );}
+      <Container fluid>
+        <Row>
+          <Col className="text-end">
+            <Avatar id="header-avatar" />
+          </Col>
+        </Row>
+      </Container>
+    );
+  }
 
-    return (
-      <div style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
-        <Avatar
-          size="large"
-          src={
+  return (
+    <Container fluid>
+      <Row>
+      <Col className="d-flex justify-content-end">
+          <Avatar
+            src={
               loginWith.current === "GitHub"
-              ? userDataGithub?.avatar_url
-              : userDataGoogle?.picture
-              }
-            />
-        <Button icon={<LogoutOutlined />} onClick= {setLogOut}>
-        Log out
-        </Button> 
-  </div>
-        );
+                ? userDataGithub?.avatar_url
+                : userDataGoogle?.picture
             }
+          />
+        </Col>
+      </Row>
+    </Container>
+  );
+  
+}
 
-            export default AppHeader;
+export default AppHeader;

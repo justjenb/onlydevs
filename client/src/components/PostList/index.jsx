@@ -54,48 +54,100 @@ const PostList = ({
   const displayPosts = searchResults.length > 0 ? searchResults : posts;
 
   if (!displayPosts.length) {
-    return <h3>No Posts Yet</h3>;
+    return <h3 className="text-center">No Posts Yet</h3>;
   }
 
   return (
-    <div>
-      {showTitle && <h3>{title}</h3>}
+    <div className="mt-4">
+      {showTitle && <h3 className="mb-4 text-center">{title}</h3>}
       {displayPosts.map((post) => (
-        <div key={post._id} className="card mb-3">
-          <h4 className="card-header bg-primary text-light p-2 m-0">
-            {showUsername ? (
-              <Link className="text-light" to={`/profiles/${post.postAuthor}`}>
-                {post.postAuthor} <br />
-                <span style={{ fontSize: '1rem' }}>{post.title}</span>
+        <div key={post._id} className="card mb-4">
+          <div className="card-header">
+            {showUsername && (
+              <Link to={`/profiles/${post.postAuthor}`}>
+                {post.postAuthor}
               </Link>
-            ) : (
-              <span style={{ fontSize: '1rem' }}>{post.title}</span>
             )}
-          </h4>
-          <div className="card-body bg-light p-2">
-            <p>{post.description}</p>
-            {post.tags && post.tags.length > 0 ? (
-              post.tags.map((tag) => (
-                <span key={tag._id}>{tag.name || "Unnamed Tag"}</span>
-              ))
-            ) : (
-              <span>No tags available</span>
-            )}
+            <Link to={`/posts/${post._id}`} className="text-primary">
+              <h5 className="card-title">{post.title}</h5>
+            </Link>
+            <small className="text-muted">
+              Posted on: {new Date(post.createdAt).toLocaleDateString()}
+            </small>
           </div>
-          <button onClick={() => handleLike(post._id)}>Like</button>
-          <button onClick={() => handleRepost(post._id)}>Repost</button>
-          <input 
-            type="text" 
-            placeholder="Add a comment..." 
-            value={commentText[post._id] || ''} 
-            onChange={(e) => setCommentText({ ...commentText, [post._id]: e.target.value })} 
-          />
-          <button onClick={() => handleAddComment(post._id, commentText[post._id])}>Comment</button>
+          <div className="card-body">
+            <p className="card-text">
+              {post.description.length > 25
+                ? `${post.description.substring(0, 25)}...`
+                : post.description}
+            </p>
+            <Link to={`/posts/${post._id}`} className="btn btn-primary">
+              Read More
+            </Link>
+          </div>
+          <div className="card-footer">
+            <button className="btn btn-outline-primary mr-2" onClick={() => handleLike(post._id)}>
+              Like
+            </button>
+            <button className="btn btn-outline-secondary mr-2" onClick={() => handleRepost(post._id)}>
+              Repost
+            </button>
+            <input 
+              className="form-control mr-2"
+              type="text" 
+              placeholder="Add a comment..." 
+              value={commentText[post._id] || ''} 
+              onChange={(e) => setCommentText({ ...commentText, [post._id]: e.target.value })} 
+            />
+            <button className="btn btn-outline-info" onClick={() => handleAddComment(post._id, commentText[post._id])}>
+              Comment
+            </button>
+          </div>
         </div>
       ))}
     </div>
   );
 };
+
+//   return (
+//     <div>
+//       {showTitle && <h3>{title}</h3>}
+//       {displayPosts.map((post) => (
+//         <div key={post._id} className="card mb-3">
+//           <h4 className="card-header bg-primary text-light p-2 m-0">
+//             {showUsername ? (
+//               <Link className="text-light" to={`/profiles/${post.postAuthor}`}>
+//                 {post.postAuthor} <br />
+//                 <span style={{ fontSize: '1rem' }}>{post.title}</span>
+//               </Link>
+//             ) : (
+//               <span style={{ fontSize: '1rem' }}>{post.title}</span>
+//             )}
+//           </h4>
+//           <div className="card-body bg-light p-2">
+//             <p>{post.description}</p>
+//             {post.tags && post.tags.length > 0 ? (
+//               post.tags.map((tag) => (
+//                 <span key={tag._id}>{tag.name || "Unnamed Tag"}</span>
+//               ))
+//             ) : (
+//               <span>No tags available</span>
+//             )}
+//           </div>
+//           <button onClick={() => handleLike(post._id)}>Like</button>
+//           <button onClick={() => handleRepost(post._id)}>Repost</button>
+//           <input 
+//             type="text" 
+//             placeholder="Add a comment..." 
+//             value={commentText[post._id] || ''} 
+//             onChange={(e) => setCommentText({ ...commentText, [post._id]: e.target.value })} 
+//           />
+//           <button onClick={() => handleAddComment(post._id, commentText[post._id])}>Comment</button>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
 
 PostList.propTypes = {
   posts: PropTypes.array.isRequired,

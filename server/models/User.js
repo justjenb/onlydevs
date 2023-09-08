@@ -68,6 +68,7 @@ const userSchema = new Schema(
     githubAccessToken: String,
   },
   {
+    timestamps: true,
     toJSON: {
       virtuals: true,
     },

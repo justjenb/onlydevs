@@ -7,6 +7,7 @@ body {
 font-family: 'Rubik', sans-serif;
 color: white !important;
 min-height:100vh !important;
+overflow: hidden;
 } 
 
 h1,

@@ -24,11 +24,6 @@ const postSchema = new Schema({
     type: Number,
     default: 0,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    get: (timestamp) => dateFormat(timestamp),
-  },
   tags: [{
     type: Schema.Types.ObjectId,
     ref: 'Tag'
@@ -56,6 +51,9 @@ const postSchema = new Schema({
   //   type: Schema.Types.ObjectId,
   //   ref: "User"
   // }]
+},
+{
+  timestamps: true,
 });
 
 const Post = model("Post", postSchema);

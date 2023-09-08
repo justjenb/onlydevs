@@ -16,7 +16,7 @@ const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       if (context.user) {
-        return User.findById(context.user._id).populate("savedPosts");
+        return User.findById(context.user._id).populate("posts");
       }
       throw createAuthenticationError();
     },
